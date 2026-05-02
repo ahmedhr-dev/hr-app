@@ -5,84 +5,45 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>HR Pro</title>
+<title>HR Pro System</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
 body{margin:0;font-family:Arial;background:#0b1220;color:white}
-
-.header{
- display:flex;justify-content:space-between;
- padding:15px;background:#020617
-}
-
+.header{display:flex;justify-content:space-between;padding:15px;background:#020617}
 .page{padding:15px;padding-bottom:80px}
-
-.card{
- background:#1e293b;
- margin:12px 0;
- padding:15px;
- border-radius:16px;
- display:flex;
- justify-content:space-between;
- align-items:center;
- cursor:pointer;
-}
-
-.nav{
- position:fixed;bottom:0;width:100%;
- display:flex;justify-content:space-around;
- background:#020617;padding:10px
-}
-
-.nav button{
- background:none;border:none;color:white;font-size:20px
-}
-
-input{
- width:100%;padding:10px;margin:5px 0;
- border-radius:10px;border:none
-}
-
-button{
- width:100%;padding:10px;
- border:none;border-radius:10px;
- background:#facc15;margin-top:5px
-}
-
-.profile{text-align:center}
-.profile img{
- width:90px;height:90px;
- border-radius:50%;margin:10px
-}
+.card{background:#1e293b;margin:10px 0;padding:15px;border-radius:14px;display:flex;justify-content:space-between;align-items:center}
+input,select{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none}
+button{width:100%;padding:10px;margin-top:5px;border:none;border-radius:10px;background:#facc15}
+.nav{position:fixed;bottom:0;width:100%;display:flex;justify-content:space-around;background:#020617;padding:10px}
+.avatar{width:45px;height:45px;border-radius:50%}
 </style>
 
 </head>
 
 <body>
-
 <div id="app"></div>
 
 <script>
 
-// Firebase
+// 🔥 Firebase Config
 firebase.initializeApp({
  apiKey:"AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
- authDomain:"hr-app-710f3.firebaseapp.com"
+ authDomain:"hr-app-710f3.firebaseapp.com",
+ databaseURL:"https://hr-app-710f3-default-rtdb.firebaseio.com"
 });
 
-const auth=firebase.auth();
-let user;
+const auth = firebase.auth();
+const db = firebase.database();
 
-// بيانات محلية
-let files=JSON.parse(localStorage.getItem("files")||"[]");
-let notify=localStorage.getItem("notify")||"";
-let profile=JSON.parse(localStorage.getItem("profile")||"{}");
+let user;
 
 // ================= LOGIN =================
 function loginPage(){
@@ -109,62 +70,57 @@ function home(){
  app.innerHTML=`
  <div class="header">
  <div>👋 ${user.email}</div>
- <div onclick="profilePage()">👤</div>
+ <div onclick="profile()">👤</div>
  </div>
 
  <div class="page">
 
- ${notify?`<div style="background:green;padding:10px">${notify}</div>`:""}
-
- <div class="card" onclick="section('guide')">
- <span>دليل الموظف</span>
- <i class="fa-solid fa-book"></i>
+ <div class="card" onclick="orgPage()">
+ <span>الهيكل التنظيمي</span>
+ <i class="fa-solid fa-sitemap"></i>
  </div>
 
- <div class="card" onclick="section('policy')">
- <span>السياسات</span>
- <i class="fa-solid fa-file"></i>
- </div>
-
- <div class="card" onclick="section('faq')">
- <span>سؤال وجواب</span>
- <i class="fa-solid fa-comments"></i>
+ <div class="card" onclick="admin()">
+ <span>لوحة التحكم</span>
+ <i class="fa-solid fa-crown"></i>
  </div>
 
  </div>
 
  <div class="nav">
  <button onclick="home()">🏠</button>
- <button onclick="profilePage()">👤</button>
- <button onclick="admin()">👑</button>
+ <button onclick="profile()">👤</button>
  </div>`;
 }
 
-// ================= SECTION =================
-function section(type){
- let list=files.filter(f=>f.type==type);
+// ================= ORG =================
+function orgPage(){
+ db.ref("employees").on("value",snap=>{
+  let data=snap.val()||{};
+  let arr=Object.values(data);
 
- let html=`
- <div class="header">
- <div onclick="home()">⬅</div>
- <div>المحتوى</div>
- </div>
-
- <div class="page">`;
-
- list.forEach((f,i)=>{
-  html+=`
-  <div class="card">
-  <div onclick="window.open('${f.link}')">${f.name}</div>
-  <div>
-  <button onclick="edit(${i})">✏</button>
-  <button onclick="del(${i})">🗑</button>
+  let html=`
+  <div class="header">
+  <div onclick="home()">⬅</div>
+  <div>الهيكل</div>
   </div>
-  </div>`;
- });
+  <div class="page">`;
 
- html+=`</div>`;
- app.innerHTML=html;
+  arr.forEach(e=>{
+   html+=`
+   <div class="card">
+    <div>
+     <b>${e.name}</b><br>
+     ${e.job}<br>
+     مدير: ${e.manager}
+    </div>
+    <img class="avatar" src="${e.img||'https://i.imgur.com/6VBx3io.png'}">
+   </div>`;
+  });
+
+  html+=`</div>`;
+  app.innerHTML=html;
+ });
 }
 
 // ================= ADMIN =================
@@ -178,87 +134,41 @@ function admin(){
  <div class="page">
 
  <input id="name" placeholder="اسم">
- <input id="link" placeholder="رابط">
- <select id="type">
- <option value="guide">دليل</option>
- <option value="policy">سياسات</option>
- <option value="faq">أسئلة</option>
- </select>
+ <input id="job" placeholder="وظيفة">
+ <input id="manager" placeholder="مدير">
+ <input id="img" placeholder="صورة">
 
- <button onclick="add()">إضافة</button>
-
- <hr>
-
- <input id="msg" placeholder="إشعار">
- <button onclick="send()">إرسال إشعار</button>
+ <button onclick="addEmployee()">إضافة موظف</button>
 
  </div>`;
 }
 
-// ================= ACTIONS =================
-function add(){
- files.push({
+function addEmployee(){
+ let id = Date.now();
+
+ db.ref("employees/"+id).set({
   name:val("name"),
-  link:val("link"),
-  type:val("type")
+  job:val("job"),
+  manager:val("manager"),
+  img:val("img")
  });
 
- localStorage.setItem("files",JSON.stringify(files));
- home();
-}
-
-function edit(i){
- let n=prompt("تعديل",files[i].name);
- if(n){files[i].name=n;save();}
-}
-
-function del(i){
- files.splice(i,1);
- save();
-}
-
-function save(){
- localStorage.setItem("files",JSON.stringify(files));
- home();
-}
-
-function send(){
- notify=val("msg");
- localStorage.setItem("notify",notify);
+ db.ref("notify").set("تم إضافة موظف جديد");
  home();
 }
 
 // ================= PROFILE =================
-function profilePage(){
+function profile(){
  app.innerHTML=`
  <div class="header">
  <div onclick="home()">⬅</div>
  <div>حسابي</div>
  </div>
 
- <div class="page profile">
- <img src="${profile.img||'https://i.imgur.com/6VBx3io.png'}">
-
- <input id="name" placeholder="اسم" value="${profile.name||''}">
- <input id="job" placeholder="وظيفة" value="${profile.job||''}">
- <input id="dept" placeholder="قسم" value="${profile.dept||''}">
- <input id="img" placeholder="صورة" value="${profile.img||''}">
-
- <button onclick="saveProfile()">حفظ</button>
+ <div class="page">
+ <div class="card">${user.email}</div>
  <button onclick="logout()">🚪 خروج</button>
  </div>`;
-}
-
-function saveProfile(){
- profile={
-  name:val("name"),
-  job:val("job"),
-  dept:val("dept"),
-  img:val("img")
- };
-
- localStorage.setItem("profile",JSON.stringify(profile));
- home();
 }
 
 // ================= HELP =================
