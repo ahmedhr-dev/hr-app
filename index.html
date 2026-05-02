@@ -14,7 +14,6 @@ body{
  color:white;
 }
 
-/* HEADER */
 .header{
  display:flex;
  justify-content:space-between;
@@ -23,22 +22,18 @@ body{
  font-size:18px;
 }
 
-/* PAGE */
 .page{
  padding:15px;
  padding-bottom:80px;
 }
 
-/* CARD */
 .card{
  background:#1e293b;
  margin:10px 0;
  padding:15px;
  border-radius:12px;
- box-shadow:0 0 10px rgba(0,0,0,0.3);
 }
 
-/* NAV */
 .nav{
  position:fixed;
  bottom:0;
@@ -56,7 +51,6 @@ body{
  font-size:18px;
 }
 
-/* BUTTON */
 button.main{
  width:100%;
  padding:12px;
@@ -66,7 +60,6 @@ button.main{
  margin-top:10px;
 }
 
-/* INPUT */
 input{
  width:100%;
  padding:12px;
@@ -85,7 +78,9 @@ input{
 <script>
 
 const app = document.getElementById("app");
-let userName = "Ahmed";
+
+let userName = "";
+let role = "user";
 
 /* LOGIN */
 function loginPage(){
@@ -97,9 +92,16 @@ function loginPage(){
  </div>`;
 }
 
-/* LOGIN ACTION */
+/* LOGIN */
 function login(){
  userName = document.getElementById("name").value || "مستخدم";
+
+ if(userName.toLowerCase() === "admin"){
+  role = "admin";
+ } else {
+  role = "user";
+ }
+
  homePage();
 }
 
@@ -121,7 +123,7 @@ function homePage(){
  <div class="nav">
  <button onclick="homePage()">🏠</button>
  <button onclick="profile()">👤</button>
- <button onclick="admin()">👑</button>
+ ${role === "admin" ? `<button onclick="admin()">👑</button>` : ""}
  </div>
  `;
 }
@@ -136,12 +138,13 @@ function profile(){
 
  <div class="page">
  <div class="card">الاسم: ${userName}</div>
+ <div class="card">الصلاحية: ${role}</div>
  </div>
 
  <div class="nav">
  <button onclick="homePage()">🏠</button>
  <button onclick="profile()">👤</button>
- <button onclick="admin()">👑</button>
+ ${role === "admin" ? `<button onclick="admin()">👑</button>` : ""}
  </div>
  `;
 }
@@ -155,8 +158,8 @@ function admin(){
  </div>
 
  <div class="page">
- <div class="card">رفع ملفات (قريبًا)</div>
- <div class="card">إدارة المستخدمين</div>
+ <div class="card">📤 رفع ملفات (قريبًا)</div>
+ <div class="card">👥 إدارة المستخدمين</div>
  </div>
 
  <div class="nav">
