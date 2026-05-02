@@ -5,32 +5,53 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>HR System</title>
-
-<!-- Firebase -->
-
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
 <style>
-body{margin:0;font-family:Arial;background:#0f172a;color:white}
+body{margin:0;font-family:Arial;background:#0b1220;color:white}
 .header{display:flex;justify-content:space-between;padding:15px;background:#020617}
-.page{padding:15px}
-.card{background:#1e293b;margin:10px 0;padding:15px;border-radius:14px;cursor:pointer}
-button{padding:10px;border:none;border-radius:10px;margin-top:5px;width:100%;background:#facc15}
-input{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none}
+.page{padding:15px;padding-bottom:80px}
+
+.card{
+ background:#1e293b;
+ margin:12px 0;
+ padding:15px;
+ border-radius:16px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ cursor:pointer;
+ transition:.2s;
+}
+.card:hover{transform:scale(1.02)}
+
+.nav{
+ position:fixed;bottom:0;width:100%;
+ display:flex;justify-content:space-around;
+ background:#020617;padding:10px
+}
+
+.nav button{
+ background:none;border:none;color:white;font-size:20px
+}
+
+img.avatar{
+ width:45px;height:45px;border-radius:50%
+}
 </style>
 
 </head>
 
 <body>
-
 <div id="app"></div>
 
 <script>
 
-// 🔥 ضع ID الشيت
+// 🔥 Google Sheet ID
 const SHEET_ID = "1eSNFJPyK8Ak1ZtFuUrf0Zgwjbqrz-EUH";
 
 // Firebase
@@ -39,7 +60,7 @@ firebase.initializeApp({
  authDomain:"hr-app-710f3.firebaseapp.com"
 });
 
-const auth = firebase.auth();
+const auth=firebase.auth();
 let user;
 
 // ================= API =================
@@ -56,7 +77,6 @@ function loginPage(){
  <input id="email" placeholder="Email">
  <input id="pass" type="password" placeholder="Password">
  <button onclick="login()">دخول</button>
- <button onclick="register()">إنشاء حساب</button>
  </div>`;
 }
 
@@ -64,22 +84,36 @@ function login(){
  auth.signInWithEmailAndPassword(val("email"),val("pass"));
 }
 
-function register(){
- auth.createUserWithEmailAndPassword(val("email"),val("pass"));
-}
-
 // ================= HOME =================
 function home(){
  app.innerHTML=`
  <div class="header">
- <div>HR System</div>
- <div onclick="logout()">🚪</div>
+ <div>👋 ${user.email}</div>
+ <div onclick="profile()">👤</div>
  </div>
 
  <div class="page">
- <div class="card" onclick="faqPage()">💬 سؤال وجواب</div>
- <div class="card" onclick="filesPage()">📂 الملفات</div>
- <div class="card" onclick="orgPage()">🏢 الهيكل التنظيمي</div>
+
+ <div class="card" onclick="faqPage()">
+   <span>سؤال وجواب</span>
+   <i class="fa-solid fa-comments"></i>
+ </div>
+
+ <div class="card" onclick="filesPage()">
+   <span>الملفات</span>
+   <i class="fa-solid fa-folder"></i>
+ </div>
+
+ <div class="card" onclick="orgPage()">
+   <span>الهيكل التنظيمي</span>
+   <i class="fa-solid fa-sitemap"></i>
+ </div>
+
+ </div>
+
+ <div class="nav">
+ <button onclick="home()">🏠</button>
+ <button onclick="profile()">👤</button>
  </div>`;
 }
 
@@ -98,10 +132,13 @@ async function faqPage(){
  data.forEach((q,i)=>{
   html+=`
   <div class="card" onclick="toggle(${i})">
-   ❓ ${q.question}
-   <div id="a${i}" style="display:none;margin-top:10px">
-    ${q.answer}
+   <div>
+    ❓ ${q.question}
+    <div id="a${i}" style="display:none;margin-top:10px">
+     ${q.answer}
+    </div>
    </div>
+   <i class="fa-solid fa-chevron-down"></i>
   </div>`;
  });
 
@@ -129,7 +166,8 @@ async function filesPage(){
  data.forEach(f=>{
   html+=`
   <div class="card" onclick="window.open('${f.link}')">
-   📄 ${f.name}
+   <span>${f.name}</span>
+   <i class="fa-solid fa-file"></i>
   </div>`;
  });
 
@@ -144,7 +182,7 @@ async function orgPage(){
  let html=`
  <div class="header">
  <div onclick="home()">⬅</div>
- <div>الهيكل</div>
+ <div>الهيكل التنظيمي</div>
  </div>
 
  <div class="page">`;
@@ -152,15 +190,31 @@ async function orgPage(){
  data.forEach(e=>{
   html+=`
   <div class="card">
-   <img src="${e.img}" width="40">
-   ${e.name}<br>
-   ${e.job}<br>
-   ${e.dept}
+   <div>
+    <b>${e.name}</b><br>
+    ${e.job}<br>
+    ${e.dept}
+   </div>
+   <img class="avatar" src="${e.img}">
   </div>`;
  });
 
  html+=`</div>`;
  app.innerHTML=html;
+}
+
+// ================= PROFILE =================
+function profile(){
+ app.innerHTML=`
+ <div class="header">
+ <div onclick="home()">⬅</div>
+ <div>حسابي</div>
+ </div>
+
+ <div class="page">
+ <div class="card">📧 ${user.email}</div>
+ <button onclick="logout()">🚪 تسجيل خروج</button>
+ </div>`;
 }
 
 // ================= HELP =================
