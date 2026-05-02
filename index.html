@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>HR App</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -14,37 +15,70 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#0f172a;color:white}
-.header{padding:15px;background:#020617}
-.page{padding:15px}
-.card{background:#1e293b;padding:15px;margin:10px 0;border-radius:12px}
-button{width:100%;padding:10px;margin-top:5px;background:#facc15;border:none;border-radius:10px}
-input{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none}
+
+.header{
+ display:flex;
+ justify-content:space-between;
+ padding:15px;
+ background:#020617;
+ font-weight:bold;
+}
+
+.page{
+ padding:15px;
+}
+
+.card{
+ background:#1e293b;
+ padding:15px;
+ margin:10px 0;
+ border-radius:12px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+button{
+ background:#facc15;
+ border:none;
+ padding:10px;
+ border-radius:10px;
+ margin-top:5px;
+ cursor:pointer;
+}
+
+.add-btn{
+ width:100%;
+ padding:15px;
+ font-size:16px;
+}
 </style>
 
 </head>
 
 <body>
+
 <div id="app"></div>
 
 <script>
 
-// 🔥 Firebase
+// 🔥 Firebase Config
 firebase.initializeApp({
  apiKey:"AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
  authDomain:"hr-app-710f3.firebaseapp.com",
  databaseURL:"https://hr-app-710f3-default-rtdb.firebaseio.com"
 });
 
-const auth=firebase.auth();
-const db=firebase.database();
+const auth = firebase.auth();
+const db = firebase.database();
 
 // ================= LOGIN =================
 function loginPage(){
  app.innerHTML=`
  <div class="page">
  <h2>تسجيل الدخول</h2>
- <input id="email" placeholder="Email">
- <input id="pass" type="password">
+ <input id="email" placeholder="Email" style="width:100%;padding:10px;margin:5px 0">
+ <input id="pass" type="password" placeholder="Password" style="width:100%;padding:10px;margin:5px 0">
  <button onclick="login()">دخول</button>
  </div>`;
 }
@@ -57,47 +91,58 @@ function login(){
 // ================= HOME =================
 function home(){
  app.innerHTML=`
- <div class="header">HR App</div>
+ <div class="header">
+ <div>HR App</div>
+ <div>👥 الموظفين</div>
+ </div>
+
  <div class="page">
 
- <div class="card">👥 الموظفين</div>
  <div id="list"></div>
 
- <button onclick="add()">➕ إضافة موظف</button>
+ <button class="add-btn" onclick="add()">➕ إضافة موظف</button>
 
  </div>`;
+
  loadEmployees();
 }
 
 // ================= LOAD =================
 function loadEmployees(){
- db.ref("employees").on("value",snap=>{
-  let data=snap.val()||{};
-  let html="";
 
-  if(Object.keys(data).length==0){
-   html="<div class='card'>لا يوجد بيانات</div>";
+ db.ref("employees").off(); // مهم
+
+ db.ref("employees").on("value",snap=>{
+  let data = snap.val() || {};
+  let html = "";
+
+  if(Object.keys(data).length === 0){
+   html = "<div class='card'>لا يوجد موظفين</div>";
   }
 
   Object.keys(data).forEach(id=>{
-   let e=data[id];
-   html+=`
+   let e = data[id];
+
+   html += `
    <div class="card">
-   ${e.name} - ${e.job}
-   <button onclick="del('${id}')">حذف</button>
+     <div>
+       <b>${e.name}</b><br>
+       ${e.job}
+     </div>
+     <button onclick="del('${id}')">🗑</button>
    </div>`;
   });
 
-  document.getElementById("list").innerHTML=html;
+  document.getElementById("list").innerHTML = html;
  });
 }
 
 // ================= ADD =================
 function add(){
- let name=prompt("اسم الموظف");
- let job=prompt("وظيفته");
+ let name = prompt("اسم الموظف");
+ let job = prompt("الوظيفة");
 
- if(!name)return;
+ if(!name) return;
 
  db.ref("employees/"+Date.now()).set({
   name:name,
