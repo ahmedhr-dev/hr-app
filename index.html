@@ -4,23 +4,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HR App</title>
+<title>HR Pro</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
 <style>
 body{margin:0;font-family:Arial;background:#0f172a;color:white}
+
+/* HEADER */
 .header{display:flex;justify-content:space-between;padding:15px;background:#020617}
+
+/* PAGE */
 .page{padding:15px;padding-bottom:80px}
-.card{background:#1e293b;margin:10px 0;padding:15px;border-radius:12px}
-.nav{position:fixed;bottom:0;width:100%;display:flex;justify-content:space-around;background:#020617;padding:10px 0}
-.nav button{background:none;border:none;color:white;font-size:18px}
-button.main{width:100%;padding:12px;border:none;border-radius:10px;background:#facc15;margin-top:10px}
-input{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:none}
+
+/* CARD */
+.card{
+ background:#1e293b;
+ margin:10px 0;
+ padding:15px;
+ border-radius:12px;
+ font-size:18px;
+}
+
+/* NAV */
+.nav{
+ position:fixed;
+ bottom:0;
+ width:100%;
+ display:flex;
+ justify-content:space-around;
+ background:#020617;
+ padding:10px 0;
+}
+
+.nav button{
+ background:none;
+ border:none;
+ color:white;
+ font-size:18px;
+}
+
+/* BUTTON */
+button.main{
+ width:100%;
+ padding:12px;
+ border:none;
+ border-radius:10px;
+ background:#facc15;
+ margin-top:10px;
+}
+
+/* INPUT */
+input{
+ width:100%;
+ padding:12px;
+ margin:6px 0;
+ border-radius:10px;
+ border:none;
+}
 </style>
 
 </head>
@@ -36,19 +79,18 @@ const firebaseConfig = {
   apiKey: "AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
   authDomain: "hr-app-710f3.firebaseapp.com",
   projectId: "hr-app-710f3",
-  storageBucket: "hr-app-710f3.firebasestorage.app",
-  messagingSenderId: "324936659395",
   appId: "1:324936659395:web:bb5d491b52be3013c00d76"
 };
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-const db = firebase.firestore();
 
 const app = document.getElementById("app");
-let currentUser = null;
 
-/* LOGIN PAGE */
+let currentUser = null;
+let role = "user";
+
+/* LOGIN */
 function loginPage(){
  app.innerHTML = `
  <div class="page">
@@ -66,9 +108,7 @@ function register(){
  let pass = document.getElementById("pass").value;
 
  auth.createUserWithEmailAndPassword(email, pass)
- .then(()=>{
-  alert("تم إنشاء الحساب");
- })
+ .then(()=>alert("تم إنشاء الحساب"))
  .catch(e=>alert(e.message));
 }
 
@@ -90,15 +130,22 @@ function homePage(user){
  </div>
 
  <div class="page">
+
+ <div class="card">
+ ${role === "admin" ? "👑 أنت Admin" : "👤 مستخدم"}
+ </div>
+
  <div class="card">📘 دليل الموظف</div>
  <div class="card">📄 السياسات</div>
- <div class="card">❓ الأسئلة</div>
+ <div class="card">❓ الأسئلة الشائعة</div>
+ <div class="card">⚙️ الإجراءات</div>
+
  </div>
 
  <div class="nav">
  <button onclick="homePage(currentUser)">🏠</button>
  <button onclick="profile()">👤</button>
- <button onclick="admin()">👑</button>
+ ${role === "admin" ? `<button onclick="admin()">👑</button>` : ""}
  </div>
  `;
 }
@@ -107,18 +154,19 @@ function homePage(user){
 function profile(){
  app.innerHTML = `
  <div class="header">
- <div>👤 حسابي</div>
+ <div>👤 الحساب</div>
  <div onclick="logout()">🚪</div>
  </div>
 
  <div class="page">
  <div class="card">${currentUser.email}</div>
+ <div class="card">الصلاحية: ${role}</div>
  </div>
 
  <div class="nav">
  <button onclick="homePage(currentUser)">🏠</button>
  <button onclick="profile()">👤</button>
- <button onclick="admin()">👑</button>
+ ${role === "admin" ? `<button onclick="admin()">👑</button>` : ""}
  </div>
  `;
 }
@@ -132,9 +180,8 @@ function admin(){
  </div>
 
  <div class="page">
- <input id="text" placeholder="اكتب محتوى">
- <button class="main" onclick="addData()">إضافة</button>
- <div id="data"></div>
+ <div class="card">📤 رفع ملفات (قريبًا)</div>
+ <div class="card">👥 إدارة المستخدمين (قريبًا)</div>
  </div>
 
  <div class="nav">
@@ -143,28 +190,6 @@ function admin(){
  <button onclick="admin()">👑</button>
  </div>
  `;
-
- loadData();
-}
-
-/* ADD DATA */
-function addData(){
- let text = document.getElementById("text").value;
-
- db.collection("posts").add({text:text})
- .then(()=>loadData());
-}
-
-/* LOAD DATA */
-function loadData(){
- let box = document.getElementById("data");
- box.innerHTML = "";
-
- db.collection("posts").get().then(snapshot=>{
-  snapshot.forEach(doc=>{
-   box.innerHTML += `<div class="card">${doc.data().text}</div>`;
-  });
- });
 }
 
 /* LOGOUT */
@@ -172,10 +197,18 @@ function logout(){
  auth.signOut();
 }
 
-/* AUTH STATE */
+/* AUTH */
 auth.onAuthStateChanged(user=>{
  if(user){
   currentUser = user;
+
+  // 👑 تحديد الأدمن
+  if(user.email === "ahmed.hr@alkuzama.com"){
+   role = "admin";
+  }else{
+   role = "user";
+  }
+
   homePage(user);
  }else{
   loginPage();
