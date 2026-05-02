@@ -5,7 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>HR System Pro</title>
+<title>HR Mobile App</title>
+
+<link rel="manifest" href="manifest.json">
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
@@ -14,28 +16,57 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
 <style>
-body{margin:0;font-family:Arial;background:#0b1220;color:white}
-.header{display:flex;justify-content:space-between;padding:15px;background:#020617}
-.page{padding:15px}
+body{margin:0;font-family:sans-serif;background:#0f172a;color:white}
 
-.tabs{display:flex;gap:5px;margin-bottom:10px}
-.tab{flex:1;padding:10px;text-align:center;background:#1e293b;border-radius:10px;cursor:pointer}
+.header{
+ display:flex;justify-content:space-between;
+ padding:15px;background:#020617
+}
+
+.page{padding:15px;padding-bottom:90px}
+
+.card{
+ background:#1e293b;
+ padding:15px;margin:10px 0;
+ border-radius:15px
+}
+
+.tabs{
+ display:flex;position:fixed;bottom:0;width:100%;
+ background:#020617
+}
+
+.tab{
+ flex:1;text-align:center;padding:10px;
+ cursor:pointer
+}
+
 .active{background:#facc15;color:black}
 
-.card{background:#1e293b;margin:10px 0;padding:15px;border-radius:12px}
-button{width:100%;padding:10px;border:none;border-radius:10px;background:#facc15;margin-top:5px}
-input{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none}
+button{
+ width:100%;padding:12px;margin-top:5px;
+ border:none;border-radius:10px;background:#facc15
+}
 
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:#000000aa;display:flex;align-items:center;justify-content:center}
-.modal-box{background:#1e293b;padding:20px;border-radius:12px;width:90%}
+input{
+ width:100%;padding:12px;margin:5px 0;
+ border-radius:10px;border:none
+}
 
-.stat{background:#111827;padding:10px;border-radius:10px;text-align:center}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.modal{
+ position:fixed;top:0;left:0;width:100%;height:100%;
+ background:#000000aa;display:flex;align-items:center;justify-content:center
+}
+
+.modal-box{
+ background:#1e293b;padding:20px;border-radius:15px;width:90%
+}
 </style>
 
 </head>
 
 <body>
+
 <div id="app"></div>
 
 <script>
@@ -50,14 +81,13 @@ const auth=firebase.auth();
 const db=firebase.database();
 
 let tab="employees";
-let showModal=false;
-let user;
+let modal=false;
 
 // ================= LOGIN =================
 function loginPage(){
  app.innerHTML=`
  <div class="page">
- <h2>Login</h2>
+ <h2>HR App</h2>
  <input id="email" placeholder="Email">
  <input id="pass" type="password">
  <button onclick="login()">Login</button>
@@ -71,47 +101,41 @@ function login(){
 // ================= MAIN =================
 function main(data){
 
- let employees=data.employees||{};
- let policies=data.policies||{};
- let requests=data.requests||{};
+ let emp=data.employees||{};
+ let pol=data.policies||{};
+ let req=data.requests||{};
 
  app.innerHTML=`
  <div class="header">
- <div>HR Dashboard</div>
+ <div>HR Mobile</div>
  <div onclick="logout()">🚪</div>
  </div>
 
  <div class="page">
 
- <div class="grid">
-  <div class="stat">${Object.keys(employees).length}<br>Employees</div>
-  <div class="stat">${Object.keys(requests).length}<br>Requests</div>
- </div>
-
- <div class="tabs">
-  <div class="tab ${tab=="employees"?"active":""}" onclick="setTab('employees')">Employees</div>
-  <div class="tab ${tab=="policies"?"active":""}" onclick="setTab('policies')">Policies</div>
-  <div class="tab ${tab=="requests"?"active":""}" onclick="setTab('requests')">Requests</div>
- </div>
-
- ${renderTab(employees,policies,requests)}
+ ${render(emp,pol,req)}
 
  <button onclick="openModal()">➕ Add</button>
 
  </div>
 
- ${showModal?modal():""}
+ <div class="tabs">
+ <div class="tab ${tab=='employees'?'active':''}" onclick="setTab('employees')">👥</div>
+ <div class="tab ${tab=='policies'?'active':''}" onclick="setTab('policies')">📄</div>
+ <div class="tab ${tab=='requests'?'active':''}" onclick="setTab('requests')">📨</div>
+ </div>
+
+ ${modal?popup():""}
  `;
 }
 
-// ================= TABS =================
-function renderTab(emp,pol,req){
+// ================= RENDER =================
+function render(emp,pol,req){
 
  if(tab=="employees"){
   return Object.keys(emp).map(id=>{
    let e=emp[id];
-   return `<div class="card">
-   <b>${e.name}</b><br>${e.job}
+   return `<div class="card">${e.name}<br>${e.job}
    <button onclick="del('employees','${id}')">Delete</button>
    </div>`;
   }).join("");
@@ -120,17 +144,14 @@ function renderTab(emp,pol,req){
  if(tab=="policies"){
   return Object.keys(pol).map(id=>{
    let p=pol[id];
-   return `<div class="card">
-   <b>${p.title}</b><br>${p.content}
-   </div>`;
+   return `<div class="card">${p.title}</div>`;
   }).join("");
  }
 
  if(tab=="requests"){
   return Object.keys(req).map(id=>{
    let r=req[id];
-   return `<div class="card">
-   ${r.type}
+   return `<div class="card">${r.type}
    <button onclick="approve('${id}')">Approve</button>
    </div>`;
   }).join("");
@@ -138,31 +159,30 @@ function renderTab(emp,pol,req){
 
 }
 
-// ================= MODAL =================
-function modal(){
+// ================= POPUP =================
+function popup(){
  return `
  <div class="modal">
-  <div class="modal-box">
+ <div class="modal-box">
 
-  ${tab=="employees"?`
-  <input id="name" placeholder="Name">
-  <input id="job" placeholder="Job">
-  <button onclick="addEmployee()">Save</button>`:""}
+ ${tab=="employees"?`
+ <input id="name" placeholder="Name">
+ <input id="job" placeholder="Job">
+ <button onclick="addEmp()">Save</button>`:""}
 
-  ${tab=="policies"?`
-  <input id="title" placeholder="Title">
-  <input id="content" placeholder="Content">
-  <button onclick="addPolicy()">Save</button>`:""}
+ ${tab=="policies"?`
+ <input id="title" placeholder="Title">
+ <button onclick="addPolicy()">Save</button>`:""}
 
-  <button onclick="closeModal()">Close</button>
-  </div>
+ <button onclick="closeModal()">Close</button>
+
+ </div>
  </div>`;
 }
 
 // ================= ACTIONS =================
-function addEmployee(){
- let id=Date.now();
- db.ref("employees/"+id).set({
+function addEmp(){
+ db.ref("employees/"+Date.now()).set({
   name:val("name"),
   job:val("job")
  });
@@ -170,10 +190,8 @@ function addEmployee(){
 }
 
 function addPolicy(){
- let id=Date.now();
- db.ref("policies/"+id).set({
-  title:val("title"),
-  content:val("content")
+ db.ref("policies/"+Date.now()).set({
+  title:val("title")
  });
  closeModal();
 }
@@ -188,8 +206,8 @@ function approve(id){
 
 // ================= STATE =================
 function setTab(t){tab=t;load()}
-function openModal(){showModal=true;load()}
-function closeModal(){showModal=false;load()}
+function openModal(){modal=true;load()}
+function closeModal(){modal=false;load()}
 
 // ================= LOAD =================
 function load(){
@@ -204,7 +222,7 @@ function logout(){auth.signOut()}
 
 // ================= AUTH =================
 auth.onAuthStateChanged(u=>{
- if(u){user=u;load()}else{loginPage()}
+ if(u){load()}else{loginPage()}
 });
 
 </script>
