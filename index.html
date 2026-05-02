@@ -6,25 +6,97 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HR Pro</title>
 
-<!-- Firebase -->
-
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
-<!-- Icons -->
-
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
-body{margin:0;font-family:Arial;background:#0f172a;color:white}
-.header{display:flex;justify-content:space-between;padding:15px;background:#020617}
-.page{padding:15px;padding-bottom:80px}
-.card{background:#1e293b;margin:10px 0;padding:15px;border-radius:12px;font-size:18px;cursor:pointer}
-.nav{position:fixed;bottom:0;width:100%;display:flex;justify-content:space-around;background:#020617;padding:10px 0}
-.nav button{background:none;border:none;color:white;font-size:20px}
-button.main{width:100%;padding:12px;border:none;border-radius:10px;background:#facc15;margin-top:10px}
-input{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:none}
+body{
+ margin:0;
+ font-family:Arial;
+ background:linear-gradient(180deg,#020617,#0f172a);
+ color:white;
+}
+
+/* HEADER */
+.header{
+ display:flex;
+ justify-content:space-between;
+ padding:15px;
+ background:#020617;
+ border-bottom:1px solid #1e293b;
+}
+
+/* PAGE */
+.page{
+ padding:15px;
+ padding-bottom:80px;
+}
+
+/* CARD */
+.card{
+ background:#1e293b;
+ margin:12px 0;
+ padding:18px;
+ border-radius:16px;
+ font-size:18px;
+ display:flex;
+ align-items:center;
+ gap:10px;
+ box-shadow:0 0 10px rgba(0,0,0,0.3);
+ transition:.2s;
+}
+.card:hover{transform:scale(1.02)}
+
+/* NAV */
+.nav{
+ position:fixed;
+ bottom:0;
+ width:100%;
+ display:flex;
+ justify-content:space-around;
+ background:#020617;
+ padding:10px 0;
+ border-top:1px solid #1e293b;
+}
+
+.nav button{
+ background:none;
+ border:none;
+ color:white;
+ font-size:20px;
+}
+
+/* BUTTON */
+button.main{
+ width:100%;
+ padding:12px;
+ border:none;
+ border-radius:10px;
+ background:#facc15;
+ margin-top:10px;
+ font-weight:bold;
+}
+
+/* INPUT */
+input,select{
+ width:100%;
+ padding:12px;
+ margin:6px 0;
+ border-radius:10px;
+ border:none;
+}
+
+/* NOTIFICATION */
+.notify{
+ background:#22c55e;
+ padding:10px;
+ border-radius:10px;
+ margin-bottom:10px;
+ text-align:center;
+}
 </style>
 
 </head>
@@ -46,15 +118,15 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-let currentUser = null;
-let role = "user";
+let currentUser=null;
+let role="user";
 
-// 🧠 تخزين الملفات محلي
-let files = JSON.parse(localStorage.getItem("files") || "[]");
+let files = JSON.parse(localStorage.getItem("files")||"[]");
+let notification = "";
 
 /* LOGIN */
 function loginPage(){
- document.getElementById("app").innerHTML = `
+ app.innerHTML=`
  <div class="page">
  <h2>تسجيل الدخول</h2>
  <input id="email" placeholder="Email">
@@ -64,113 +136,142 @@ function loginPage(){
  </div>`;
 }
 
+/* AUTH */
+auth.onAuthStateChanged(user=>{
+ if(user){
+  currentUser=user;
+  role=user.email==="ahmed.hr@alkuzama.com"?"admin":"user";
+  homePage();
+ }else{
+  loginPage();
+ }
+});
+
+/* LOGIN */
+function login(){
+ auth.signInWithEmailAndPassword(emailVal(),passVal())
+ .catch(e=>alert(e.message));
+}
+
 /* REGISTER */
 function register(){
- let email = emailVal();
- let pass = passVal();
- auth.createUserWithEmailAndPassword(email, pass)
+ auth.createUserWithEmailAndPassword(emailVal(),passVal())
  .then(()=>alert("تم إنشاء الحساب"))
  .catch(e=>alert(e.message));
 }
 
-/* LOGIN */
-function login(){
- let email = emailVal();
- let pass = passVal();
- auth.signInWithEmailAndPassword(email, pass)
- .catch(e=>alert(e.message));
-}
-
-function emailVal(){ return document.getElementById("email").value }
-function passVal(){ return document.getElementById("pass").value }
+function emailVal(){return document.getElementById("email").value}
+function passVal(){return document.getElementById("pass").value}
 
 /* HOME */
 function homePage(){
- document.getElementById("app").innerHTML = `
+ app.innerHTML=`
  <div class="header">
  <div>👋 ${currentUser.email}</div>
  <div onclick="logout()">🚪</div>
  </div>
 
  <div class="page">
- <div class="card" onclick="openSection('guide')"><i class="fa-solid fa-book"></i> دليل الموظف</div>
- <div class="card" onclick="openSection('policy')"><i class="fa-solid fa-file"></i> السياسات</div>
- <div class="card" onclick="openSection('faq')"><i class="fa-solid fa-circle-question"></i> الأسئلة</div>
+
+ ${notification?`<div class="notify">${notification}</div>`:""}
+
+ <div class="card" onclick="openSection('guide')">
+ <i class="fa-solid fa-book"></i> دليل الموظف
+ </div>
+
+ <div class="card" onclick="openSection('policy')">
+ <i class="fa-solid fa-file-lines"></i> السياسات
+ </div>
+
+ <div class="card" onclick="openSection('faq')">
+ <i class="fa-solid fa-comments"></i> سؤال وجواب
+ </div>
+
+ <div class="card" onclick="openSection('org')">
+ <i class="fa-solid fa-sitemap"></i> الهيكل التنظيمي
+ </div>
+
  </div>
 
  <div class="nav">
  <button onclick="homePage()"><i class="fa-solid fa-house"></i></button>
  <button onclick="profile()"><i class="fa-solid fa-user"></i></button>
  ${role==="admin"?`<button onclick="admin()"><i class="fa-solid fa-crown"></i></button>`:""}
- </div>
- `;
+ </div>`;
 }
 
-/* OPEN SECTION */
+/* SECTION */
 function openSection(type){
- let list = files.filter(f=>f.type===type);
+ let list=files.filter(f=>f.type===type);
 
- let html = `
+ let html=`
  <div class="header">
  <div>📂 الملفات</div>
  <div onclick="homePage()">⬅</div>
  </div>
 
- <div class="page">
- `;
+ <div class="page">`;
 
  if(list.length===0){
-  html += `<div class="card">لا يوجد ملفات</div>`;
+  html+=`<div class="card">لا يوجد محتوى</div>`;
  }
 
  list.forEach(f=>{
-  html += `<div class="card" onclick="window.open('${f.link}')">
-  📄 ${f.name}
+  html+=`
+  <div class="card" onclick="window.open('${f.link}')">
+  <i class="fa-solid fa-file"></i> ${f.name}
   </div>`;
  });
 
- html += `</div>`;
- document.getElementById("app").innerHTML = html;
+ html+=`</div>`;
+ app.innerHTML=html;
 }
 
 /* ADMIN */
 function admin(){
- document.getElementById("app").innerHTML = `
+ app.innerHTML=`
  <div class="header">
  <div>👑 لوحة التحكم</div>
  <div onclick="homePage()">⬅</div>
  </div>
 
  <div class="page">
- <input id="name" placeholder="اسم الملف">
- <input id="link" placeholder="رابط الملف">
-
+ <input id="name" placeholder="اسم">
+ <input id="link" placeholder="رابط">
  <select id="type">
-  <option value="guide">دليل الموظف</option>
-  <option value="policy">السياسات</option>
-  <option value="faq">الأسئلة</option>
+ <option value="guide">دليل الموظف</option>
+ <option value="policy">السياسات</option>
+ <option value="faq">سؤال وجواب</option>
+ <option value="org">الهيكل التنظيمي</option>
  </select>
 
- <button class="main" onclick="addFile()">إضافة ملف</button>
- </div>
- `;
+ <button class="main" onclick="addFile()">إضافة</button>
+
+ <button class="main" onclick="sendNotify()">إرسال إشعار</button>
+ </div>`;
 }
 
-/* ADD FILE */
+/* ADD */
 function addFile(){
- let name = document.getElementById("name").value;
- let link = document.getElementById("link").value;
- let type = document.getElementById("type").value;
-
- files.push({name,link,type});
- localStorage.setItem("files", JSON.stringify(files));
-
+ let f={
+  name:val("name"),
+  link:val("link"),
+  type:val("type")
+ };
+ files.push(f);
+ localStorage.setItem("files",JSON.stringify(files));
  alert("تم الإضافة");
+}
+
+/* NOTIFY */
+function sendNotify(){
+ notification="📢 تم إضافة محتوى جديد";
+ homePage();
 }
 
 /* PROFILE */
 function profile(){
- document.getElementById("app").innerHTML = `
+ app.innerHTML=`
  <div class="header">
  <div>👤 الحساب</div>
  <div onclick="homePage()">⬅</div>
@@ -178,26 +279,14 @@ function profile(){
 
  <div class="page">
  <div class="card">${currentUser.email}</div>
- <div class="card">الصلاحية: ${role}</div>
- </div>
- `;
+ <div class="card">${role}</div>
+ </div>`;
 }
+
+function val(id){return document.getElementById(id).value}
 
 /* LOGOUT */
-function logout(){
- auth.signOut();
-}
-
-/* AUTH */
-auth.onAuthStateChanged(user=>{
- if(user){
-  currentUser = user;
-  role = user.email==="ahmed.hr@alkuzama.com" ? "admin" : "user";
-  homePage();
- }else{
-  loginPage();
- }
-});
+function logout(){auth.signOut();}
 
 </script>
 
