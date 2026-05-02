@@ -5,6 +5,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>HR Pro</title>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -13,7 +15,12 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#0b1220;color:white}
-.header{display:flex;justify-content:space-between;padding:15px;background:#020617}
+
+.header{
+ display:flex;justify-content:space-between;
+ padding:15px;background:#020617
+}
+
 .page{padding:15px;padding-bottom:80px}
 
 .card{
@@ -25,9 +32,7 @@ body{margin:0;font-family:Arial;background:#0b1220;color:white}
  justify-content:space-between;
  align-items:center;
  cursor:pointer;
- transition:.2s;
 }
-.card:hover{transform:scale(1.02)}
 
 .nav{
  position:fixed;bottom:0;width:100%;
@@ -39,20 +44,31 @@ body{margin:0;font-family:Arial;background:#0b1220;color:white}
  background:none;border:none;color:white;font-size:20px
 }
 
-img.avatar{
- width:45px;height:45px;border-radius:50%
+input{
+ width:100%;padding:10px;margin:5px 0;
+ border-radius:10px;border:none
+}
+
+button{
+ width:100%;padding:10px;
+ border:none;border-radius:10px;
+ background:#facc15;margin-top:5px
+}
+
+.profile{text-align:center}
+.profile img{
+ width:90px;height:90px;
+ border-radius:50%;margin:10px
 }
 </style>
 
 </head>
 
 <body>
+
 <div id="app"></div>
 
 <script>
-
-// 🔥 Google Sheet ID
-const SHEET_ID = "1eSNFJPyK8Ak1ZtFuUrf0Zgwjbqrz-EUH";
 
 // Firebase
 firebase.initializeApp({
@@ -63,11 +79,10 @@ firebase.initializeApp({
 const auth=firebase.auth();
 let user;
 
-// ================= API =================
-async function getSheet(name){
- let res = await fetch(`https://opensheet.elk.sh/${SHEET_ID}/${name}`);
- return await res.json();
-}
+// بيانات محلية
+let files=JSON.parse(localStorage.getItem("files")||"[]");
+let notify=localStorage.getItem("notify")||"";
+let profile=JSON.parse(localStorage.getItem("profile")||"{}");
 
 // ================= LOGIN =================
 function loginPage(){
@@ -77,6 +92,7 @@ function loginPage(){
  <input id="email" placeholder="Email">
  <input id="pass" type="password" placeholder="Password">
  <button onclick="login()">دخول</button>
+ <button onclick="register()">إنشاء حساب</button>
  </div>`;
 }
 
@@ -84,137 +100,165 @@ function login(){
  auth.signInWithEmailAndPassword(val("email"),val("pass"));
 }
 
+function register(){
+ auth.createUserWithEmailAndPassword(val("email"),val("pass"));
+}
+
 // ================= HOME =================
 function home(){
  app.innerHTML=`
  <div class="header">
  <div>👋 ${user.email}</div>
- <div onclick="profile()">👤</div>
+ <div onclick="profilePage()">👤</div>
  </div>
 
  <div class="page">
 
- <div class="card" onclick="faqPage()">
-   <span>سؤال وجواب</span>
-   <i class="fa-solid fa-comments"></i>
+ ${notify?`<div style="background:green;padding:10px">${notify}</div>`:""}
+
+ <div class="card" onclick="section('guide')">
+ <span>دليل الموظف</span>
+ <i class="fa-solid fa-book"></i>
  </div>
 
- <div class="card" onclick="filesPage()">
-   <span>الملفات</span>
-   <i class="fa-solid fa-folder"></i>
+ <div class="card" onclick="section('policy')">
+ <span>السياسات</span>
+ <i class="fa-solid fa-file"></i>
  </div>
 
- <div class="card" onclick="orgPage()">
-   <span>الهيكل التنظيمي</span>
-   <i class="fa-solid fa-sitemap"></i>
+ <div class="card" onclick="section('faq')">
+ <span>سؤال وجواب</span>
+ <i class="fa-solid fa-comments"></i>
  </div>
 
  </div>
 
  <div class="nav">
  <button onclick="home()">🏠</button>
- <button onclick="profile()">👤</button>
+ <button onclick="profilePage()">👤</button>
+ <button onclick="admin()">👑</button>
  </div>`;
 }
 
-// ================= FAQ =================
-async function faqPage(){
- let data = await getSheet("faq");
+// ================= SECTION =================
+function section(type){
+ let list=files.filter(f=>f.type==type);
 
  let html=`
  <div class="header">
  <div onclick="home()">⬅</div>
- <div>الأسئلة</div>
+ <div>المحتوى</div>
  </div>
 
  <div class="page">`;
 
- data.forEach((q,i)=>{
-  html+=`
-  <div class="card" onclick="toggle(${i})">
-   <div>
-    ❓ ${q.question}
-    <div id="a${i}" style="display:none;margin-top:10px">
-     ${q.answer}
-    </div>
-   </div>
-   <i class="fa-solid fa-chevron-down"></i>
-  </div>`;
- });
-
- html+=`</div>`;
- app.innerHTML=html;
-}
-
-function toggle(i){
- let el=document.getElementById("a"+i);
- el.style.display = el.style.display=="none"?"block":"none";
-}
-
-// ================= FILES =================
-async function filesPage(){
- let data = await getSheet("files");
-
- let html=`
- <div class="header">
- <div onclick="home()">⬅</div>
- <div>الملفات</div>
- </div>
-
- <div class="page">`;
-
- data.forEach(f=>{
-  html+=`
-  <div class="card" onclick="window.open('${f.link}')">
-   <span>${f.name}</span>
-   <i class="fa-solid fa-file"></i>
-  </div>`;
- });
-
- html+=`</div>`;
- app.innerHTML=html;
-}
-
-// ================= ORG =================
-async function orgPage(){
- let data = await getSheet("employees");
-
- let html=`
- <div class="header">
- <div onclick="home()">⬅</div>
- <div>الهيكل التنظيمي</div>
- </div>
-
- <div class="page">`;
-
- data.forEach(e=>{
+ list.forEach((f,i)=>{
   html+=`
   <div class="card">
-   <div>
-    <b>${e.name}</b><br>
-    ${e.job}<br>
-    ${e.dept}
-   </div>
-   <img class="avatar" src="${e.img}">
+  <div onclick="window.open('${f.link}')">${f.name}</div>
+  <div>
+  <button onclick="edit(${i})">✏</button>
+  <button onclick="del(${i})">🗑</button>
+  </div>
   </div>`;
  });
 
  html+=`</div>`;
  app.innerHTML=html;
+}
+
+// ================= ADMIN =================
+function admin(){
+ app.innerHTML=`
+ <div class="header">
+ <div onclick="home()">⬅</div>
+ <div>لوحة التحكم</div>
+ </div>
+
+ <div class="page">
+
+ <input id="name" placeholder="اسم">
+ <input id="link" placeholder="رابط">
+ <select id="type">
+ <option value="guide">دليل</option>
+ <option value="policy">سياسات</option>
+ <option value="faq">أسئلة</option>
+ </select>
+
+ <button onclick="add()">إضافة</button>
+
+ <hr>
+
+ <input id="msg" placeholder="إشعار">
+ <button onclick="send()">إرسال إشعار</button>
+
+ </div>`;
+}
+
+// ================= ACTIONS =================
+function add(){
+ files.push({
+  name:val("name"),
+  link:val("link"),
+  type:val("type")
+ });
+
+ localStorage.setItem("files",JSON.stringify(files));
+ home();
+}
+
+function edit(i){
+ let n=prompt("تعديل",files[i].name);
+ if(n){files[i].name=n;save();}
+}
+
+function del(i){
+ files.splice(i,1);
+ save();
+}
+
+function save(){
+ localStorage.setItem("files",JSON.stringify(files));
+ home();
+}
+
+function send(){
+ notify=val("msg");
+ localStorage.setItem("notify",notify);
+ home();
 }
 
 // ================= PROFILE =================
-function profile(){
+function profilePage(){
  app.innerHTML=`
  <div class="header">
  <div onclick="home()">⬅</div>
  <div>حسابي</div>
  </div>
 
- <div class="page">
- <div class="card">📧 ${user.email}</div>
- <button onclick="logout()">🚪 تسجيل خروج</button>
+ <div class="page profile">
+ <img src="${profile.img||'https://i.imgur.com/6VBx3io.png'}">
+
+ <input id="name" placeholder="اسم" value="${profile.name||''}">
+ <input id="job" placeholder="وظيفة" value="${profile.job||''}">
+ <input id="dept" placeholder="قسم" value="${profile.dept||''}">
+ <input id="img" placeholder="صورة" value="${profile.img||''}">
+
+ <button onclick="saveProfile()">حفظ</button>
+ <button onclick="logout()">🚪 خروج</button>
  </div>`;
+}
+
+function saveProfile(){
+ profile={
+  name:val("name"),
+  job:val("job"),
+  dept:val("dept"),
+  img:val("img")
+ };
+
+ localStorage.setItem("profile",JSON.stringify(profile));
+ home();
 }
 
 // ================= HELP =================
