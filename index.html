@@ -1,294 +1,128 @@
-<!DOCTYPE html>
-
-<html lang="ar">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HR Pro</title>
+<!-- نسخة مختصرة احترافية - بداية النظام الحقيقي -->
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
-<style>
-body{
- margin:0;
- font-family:Arial;
- background:linear-gradient(180deg,#020617,#0f172a);
- color:white;
-}
-
-/* HEADER */
-.header{
- display:flex;
- justify-content:space-between;
- padding:15px;
- background:#020617;
- border-bottom:1px solid #1e293b;
-}
-
-/* PAGE */
-.page{
- padding:15px;
- padding-bottom:80px;
-}
-
-/* CARD */
-.card{
- background:#1e293b;
- margin:12px 0;
- padding:18px;
- border-radius:16px;
- font-size:18px;
- display:flex;
- align-items:center;
- gap:10px;
- box-shadow:0 0 10px rgba(0,0,0,0.3);
- transition:.2s;
-}
-.card:hover{transform:scale(1.02)}
-
-/* NAV */
-.nav{
- position:fixed;
- bottom:0;
- width:100%;
- display:flex;
- justify-content:space-around;
- background:#020617;
- padding:10px 0;
- border-top:1px solid #1e293b;
-}
-
-.nav button{
- background:none;
- border:none;
- color:white;
- font-size:20px;
-}
-
-/* BUTTON */
-button.main{
- width:100%;
- padding:12px;
- border:none;
- border-radius:10px;
- background:#facc15;
- margin-top:10px;
- font-weight:bold;
-}
-
-/* INPUT */
-input,select{
- width:100%;
- padding:12px;
- margin:6px 0;
- border-radius:10px;
- border:none;
-}
-
-/* NOTIFICATION */
-.notify{
- background:#22c55e;
- padding:10px;
- border-radius:10px;
- margin-bottom:10px;
- text-align:center;
-}
-</style>
-
-</head>
-
-<body>
-
 <div id="app"></div>
 
 <script>
-
-// Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
   authDomain: "hr-app-710f3.firebaseapp.com",
   projectId: "hr-app-710f3",
-  appId: "1:324936659395:web:bb5d491b52be3013c00d76"
 };
-
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-let currentUser=null;
-let role="user";
-
+let userData = JSON.parse(localStorage.getItem("userData")||"{}");
 let files = JSON.parse(localStorage.getItem("files")||"[]");
-let notification = "";
+let notify = localStorage.getItem("notify")||"";
 
-/* LOGIN */
 function loginPage(){
  app.innerHTML=`
- <div class="page">
- <h2>تسجيل الدخول</h2>
+ <h2>Login</h2>
  <input id="email" placeholder="Email">
- <input id="pass" type="password" placeholder="Password">
- <button class="main" onclick="login()">دخول</button>
- <button class="main" onclick="register()">تسجيل حساب</button>
- </div>`;
+ <input id="pass" placeholder="Password">
+ <button onclick="login()">Login</button>
+ <button onclick="register()">Register</button>
+ <button onclick="resetPass()">Forgot Password</button>
+ `;
 }
 
-/* AUTH */
-auth.onAuthStateChanged(user=>{
- if(user){
-  currentUser=user;
-  role=user.email==="ahmed.hr@alkuzama.com"?"admin":"user";
-  homePage();
- }else{
-  loginPage();
- }
-});
-
-/* LOGIN */
 function login(){
- auth.signInWithEmailAndPassword(emailVal(),passVal())
- .catch(e=>alert(e.message));
+ auth.signInWithEmailAndPassword(val("email"),val("pass"));
 }
 
-/* REGISTER */
 function register(){
- auth.createUserWithEmailAndPassword(emailVal(),passVal())
- .then(()=>alert("تم إنشاء الحساب"))
- .catch(e=>alert(e.message));
+ auth.createUserWithEmailAndPassword(val("email"),val("pass"))
+ .then(()=>{
+  userData.email=val("email");
+  save();
+ });
 }
 
-function emailVal(){return document.getElementById("email").value}
-function passVal(){return document.getElementById("pass").value}
+function resetPass(){
+ auth.sendPasswordResetEmail(val("email"));
+ alert("تم إرسال رابط إعادة تعيين");
+}
 
-/* HOME */
-function homePage(){
+function home(){
  app.innerHTML=`
- <div class="header">
- <div>👋 ${currentUser.email}</div>
- <div onclick="logout()">🚪</div>
- </div>
-
- <div class="page">
-
- ${notification?`<div class="notify">${notification}</div>`:""}
-
- <div class="card" onclick="openSection('guide')">
- <i class="fa-solid fa-book"></i> دليل الموظف
- </div>
-
- <div class="card" onclick="openSection('policy')">
- <i class="fa-solid fa-file-lines"></i> السياسات
- </div>
-
- <div class="card" onclick="openSection('faq')">
- <i class="fa-solid fa-comments"></i> سؤال وجواب
- </div>
-
- <div class="card" onclick="openSection('org')">
- <i class="fa-solid fa-sitemap"></i> الهيكل التنظيمي
- </div>
-
- </div>
-
- <div class="nav">
- <button onclick="homePage()"><i class="fa-solid fa-house"></i></button>
- <button onclick="profile()"><i class="fa-solid fa-user"></i></button>
- ${role==="admin"?`<button onclick="admin()"><i class="fa-solid fa-crown"></i></button>`:""}
- </div>`;
+ <h3>${auth.currentUser.email}</h3>
+ <div>${notify}</div>
+ <button onclick="filesPage()">📂 الملفات</button>
+ <button onclick="profile()">👤 حسابي</button>
+ <button onclick="admin()">👑</button>
+ `;
 }
 
-/* SECTION */
-function openSection(type){
- let list=files.filter(f=>f.type===type);
-
- let html=`
- <div class="header">
- <div>📂 الملفات</div>
- <div onclick="homePage()">⬅</div>
- </div>
-
- <div class="page">`;
-
- if(list.length===0){
-  html+=`<div class="card">لا يوجد محتوى</div>`;
- }
-
- list.forEach(f=>{
+function filesPage(){
+ let html="";
+ files.forEach((f,i)=>{
   html+=`
-  <div class="card" onclick="window.open('${f.link}')">
-  <i class="fa-solid fa-file"></i> ${f.name}
+  <div>
+  ${f.name}
+  <button onclick="edit(${i})">✏</button>
+  <button onclick="del(${i})">🗑</button>
   </div>`;
  });
-
- html+=`</div>`;
+ html+=`<button onclick="home()">رجوع</button>`;
  app.innerHTML=html;
 }
 
-/* ADMIN */
 function admin(){
  app.innerHTML=`
- <div class="header">
- <div>👑 لوحة التحكم</div>
- <div onclick="homePage()">⬅</div>
- </div>
-
- <div class="page">
  <input id="name" placeholder="اسم">
  <input id="link" placeholder="رابط">
- <select id="type">
- <option value="guide">دليل الموظف</option>
- <option value="policy">السياسات</option>
- <option value="faq">سؤال وجواب</option>
- <option value="org">الهيكل التنظيمي</option>
- </select>
-
- <button class="main" onclick="addFile()">إضافة</button>
-
- <button class="main" onclick="sendNotify()">إرسال إشعار</button>
- </div>`;
+ <button onclick="add()">إضافة</button>
+ <button onclick="home()">رجوع</button>
+ `;
 }
 
-/* ADD */
-function addFile(){
- let f={
-  name:val("name"),
-  link:val("link"),
-  type:val("type")
- };
+function add(){
+ let f={name:val("name"),link:val("link")};
  files.push(f);
- localStorage.setItem("files",JSON.stringify(files));
- alert("تم الإضافة");
+ notify="📢 تم إضافة: "+f.name;
+ save();
+ home();
 }
 
-/* NOTIFY */
-function sendNotify(){
- notification="📢 تم إضافة محتوى جديد";
- homePage();
+function edit(i){
+ let n=prompt("تعديل الاسم",files[i].name);
+ if(n){files[i].name=n;save();home();}
 }
 
-/* PROFILE */
+function del(i){
+ files.splice(i,1);
+ save();
+ home();
+}
+
 function profile(){
  app.innerHTML=`
- <div class="header">
- <div>👤 الحساب</div>
- <div onclick="homePage()">⬅</div>
- </div>
+ <input id="name" placeholder="اسم" value="${userData.name||""}">
+ <input id="job" placeholder="وظيفة" value="${userData.job||""}">
+ <button onclick="saveProfile()">حفظ</button>
+ `;
+}
 
- <div class="page">
- <div class="card">${currentUser.email}</div>
- <div class="card">${role}</div>
- </div>`;
+function saveProfile(){
+ userData.name=val("name");
+ userData.job=val("job");
+ save();
+ home();
+}
+
+function save(){
+ localStorage.setItem("files",JSON.stringify(files));
+ localStorage.setItem("userData",JSON.stringify(userData));
+ localStorage.setItem("notify",notify);
 }
 
 function val(id){return document.getElementById(id).value}
 
-/* LOGOUT */
-function logout(){auth.signOut();}
-
+auth.onAuthStateChanged(u=>{
+ if(u){home()}else{loginPage()}
+});
 </script>
-
-</body>
-</html>
