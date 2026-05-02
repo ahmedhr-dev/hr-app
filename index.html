@@ -4,10 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>HR Mobile App</title>
-
-<link rel="manifest" href="manifest.json">
+<title>HR App</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
@@ -16,61 +13,22 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
 <style>
-body{margin:0;font-family:sans-serif;background:#0f172a;color:white}
-
-.header{
- display:flex;justify-content:space-between;
- padding:15px;background:#020617
-}
-
-.page{padding:15px;padding-bottom:90px}
-
-.card{
- background:#1e293b;
- padding:15px;margin:10px 0;
- border-radius:15px
-}
-
-.tabs{
- display:flex;position:fixed;bottom:0;width:100%;
- background:#020617
-}
-
-.tab{
- flex:1;text-align:center;padding:10px;
- cursor:pointer
-}
-
-.active{background:#facc15;color:black}
-
-button{
- width:100%;padding:12px;margin-top:5px;
- border:none;border-radius:10px;background:#facc15
-}
-
-input{
- width:100%;padding:12px;margin:5px 0;
- border-radius:10px;border:none
-}
-
-.modal{
- position:fixed;top:0;left:0;width:100%;height:100%;
- background:#000000aa;display:flex;align-items:center;justify-content:center
-}
-
-.modal-box{
- background:#1e293b;padding:20px;border-radius:15px;width:90%
-}
+body{margin:0;font-family:Arial;background:#0f172a;color:white}
+.header{padding:15px;background:#020617}
+.page{padding:15px}
+.card{background:#1e293b;padding:15px;margin:10px 0;border-radius:12px}
+button{width:100%;padding:10px;margin-top:5px;background:#facc15;border:none;border-radius:10px}
+input{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none}
 </style>
 
 </head>
 
 <body>
-
 <div id="app"></div>
 
 <script>
 
+// 🔥 Firebase
 firebase.initializeApp({
  apiKey:"AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
  authDomain:"hr-app-710f3.firebaseapp.com",
@@ -80,149 +38,84 @@ firebase.initializeApp({
 const auth=firebase.auth();
 const db=firebase.database();
 
-let tab="employees";
-let modal=false;
-
 // ================= LOGIN =================
 function loginPage(){
  app.innerHTML=`
  <div class="page">
- <h2>HR App</h2>
+ <h2>تسجيل الدخول</h2>
  <input id="email" placeholder="Email">
  <input id="pass" type="password">
- <button onclick="login()">Login</button>
+ <button onclick="login()">دخول</button>
  </div>`;
 }
 
 function login(){
- auth.signInWithEmailAndPassword(val("email"),val("pass"));
+ auth.signInWithEmailAndPassword(val("email"),val("pass"))
+ .catch(e=>alert(e.message));
 }
 
-// ================= MAIN =================
-function main(data){
-
- let emp=data.employees||{};
- let pol=data.policies||{};
- let req=data.requests||{};
-
+// ================= HOME =================
+function home(){
  app.innerHTML=`
- <div class="header">
- <div>HR Mobile</div>
- <div onclick="logout()">🚪</div>
- </div>
-
+ <div class="header">HR App</div>
  <div class="page">
 
- ${render(emp,pol,req)}
+ <div class="card">👥 الموظفين</div>
+ <div id="list"></div>
 
- <button onclick="openModal()">➕ Add</button>
+ <button onclick="add()">➕ إضافة موظف</button>
 
- </div>
-
- <div class="tabs">
- <div class="tab ${tab=='employees'?'active':''}" onclick="setTab('employees')">👥</div>
- <div class="tab ${tab=='policies'?'active':''}" onclick="setTab('policies')">📄</div>
- <div class="tab ${tab=='requests'?'active':''}" onclick="setTab('requests')">📨</div>
- </div>
-
- ${modal?popup():""}
- `;
-}
-
-// ================= RENDER =================
-function render(emp,pol,req){
-
- if(tab=="employees"){
-  return Object.keys(emp).map(id=>{
-   let e=emp[id];
-   return `<div class="card">${e.name}<br>${e.job}
-   <button onclick="del('employees','${id}')">Delete</button>
-   </div>`;
-  }).join("");
- }
-
- if(tab=="policies"){
-  return Object.keys(pol).map(id=>{
-   let p=pol[id];
-   return `<div class="card">${p.title}</div>`;
-  }).join("");
- }
-
- if(tab=="requests"){
-  return Object.keys(req).map(id=>{
-   let r=req[id];
-   return `<div class="card">${r.type}
-   <button onclick="approve('${id}')">Approve</button>
-   </div>`;
-  }).join("");
- }
-
-}
-
-// ================= POPUP =================
-function popup(){
- return `
- <div class="modal">
- <div class="modal-box">
-
- ${tab=="employees"?`
- <input id="name" placeholder="Name">
- <input id="job" placeholder="Job">
- <button onclick="addEmp()">Save</button>`:""}
-
- ${tab=="policies"?`
- <input id="title" placeholder="Title">
- <button onclick="addPolicy()">Save</button>`:""}
-
- <button onclick="closeModal()">Close</button>
-
- </div>
  </div>`;
+ loadEmployees();
 }
-
-// ================= ACTIONS =================
-function addEmp(){
- db.ref("employees/"+Date.now()).set({
-  name:val("name"),
-  job:val("job")
- });
- closeModal();
-}
-
-function addPolicy(){
- db.ref("policies/"+Date.now()).set({
-  title:val("title")
- });
- closeModal();
-}
-
-function del(type,id){
- db.ref(type+"/"+id).remove();
-}
-
-function approve(id){
- db.ref("requests/"+id+"/status").set("approved");
-}
-
-// ================= STATE =================
-function setTab(t){tab=t;load()}
-function openModal(){modal=true;load()}
-function closeModal(){modal=false;load()}
 
 // ================= LOAD =================
-function load(){
- db.ref("/").on("value",snap=>{
-  main(snap.val()||{});
+function loadEmployees(){
+ db.ref("employees").on("value",snap=>{
+  let data=snap.val()||{};
+  let html="";
+
+  if(Object.keys(data).length==0){
+   html="<div class='card'>لا يوجد بيانات</div>";
+  }
+
+  Object.keys(data).forEach(id=>{
+   let e=data[id];
+   html+=`
+   <div class="card">
+   ${e.name} - ${e.job}
+   <button onclick="del('${id}')">حذف</button>
+   </div>`;
+  });
+
+  document.getElementById("list").innerHTML=html;
  });
+}
+
+// ================= ADD =================
+function add(){
+ let name=prompt("اسم الموظف");
+ let job=prompt("وظيفته");
+
+ if(!name)return;
+
+ db.ref("employees/"+Date.now()).set({
+  name:name,
+  job:job
+ });
+}
+
+// ================= DELETE =================
+function del(id){
+ db.ref("employees/"+id).remove();
 }
 
 // ================= HELP =================
 function val(id){return document.getElementById(id).value}
-function logout(){auth.signOut()}
 
 // ================= AUTH =================
 auth.onAuthStateChanged(u=>{
- if(u){load()}else{loginPage()}
+ if(u){home()}else{loginPage()}
 });
 
 </script>
