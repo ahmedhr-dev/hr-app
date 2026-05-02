@@ -1,148 +1,47 @@
-<!DOCTYPE html>
-
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
-<style>
-body{margin:0;font-family:Arial;background:#0f172a;color:white}
-.header{display:flex;justify-content:space-between;padding:15px;background:#020617}
-.page{padding:15px;padding-bottom:80px}
-.card{background:#1e293b;margin:10px 0;padding:15px;border-radius:14px;cursor:pointer}
-.nav{position:fixed;bottom:0;width:100%;display:flex;justify-content:space-around;background:#020617;padding:10px}
-.nav button{background:none;border:none;color:white;font-size:18px}
-input{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none}
-button{width:100%;padding:10px;margin-top:5px;border:none;border-radius:10px;background:#facc15}
-.profile{text-align:center}
-.profile img{width:90px;height:90px;border-radius:50%;margin:10px}
-</style>
-
-</head>
-
-<body>
-<div id="app"></div>
-
 <script>
 
-// Firebase
-firebase.initializeApp({
- apiKey:"AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
- authDomain:"hr-app-710f3.firebaseapp.com"
-});
+const SHEET_ID = "1eSNFJPyK8Ak1ZtFuUrf0Zgwjbqrz-EUH";
 
-const auth=firebase.auth();
-let user=null;
-
-// بيانات
-let files=JSON.parse(localStorage.getItem("files")||"[]");
-let profile=JSON.parse(localStorage.getItem("profile")||"{}");
-
-// ================= LOGIN =================
-function loginPage(){
- app.innerHTML=`
- <div class="page">
- <h2>تسجيل الدخول</h2>
- <input id="email" placeholder="Email">
- <input id="pass" type="password" placeholder="Password">
- <button onclick="login()">دخول</button>
- <button onclick="register()">إنشاء حساب</button>
- <button onclick="reset()">نسيت كلمة السر</button>
- </div>`;
-}
-
-function login(){
- auth.signInWithEmailAndPassword(val("email"),val("pass"));
-}
-
-function register(){
- auth.createUserWithEmailAndPassword(val("email"),val("pass"));
-}
-
-function reset(){
- auth.sendPasswordResetEmail(val("email"));
- alert("تم إرسال إعادة التعيين");
+// API قراءة الشيت
+async function getSheet(name){
+ let res = await fetch(`https://opensheet.elk.sh/${SHEET_ID}/${name}`);
+ return await res.json();
 }
 
 // ================= HOME =================
 function home(){
  app.innerHTML=`
  <div class="header">
- <div>👋 ${user.email}</div>
+ <div>HR System</div>
  <div onclick="profilePage()">👤</div>
  </div>
 
  <div class="page">
-
- <div class="card" onclick="section('guide')">📘 دليل الموظف</div>
- <div class="card" onclick="section('policy')">📄 السياسات</div>
- <div class="card" onclick="section('faq')">💬 سؤال وجواب</div>
- <div class="card" onclick="org()">🏢 الهيكل التنظيمي</div>
-
- </div>
-
- <div class="nav">
- <button onclick="home()">🏠</button>
- <button onclick="profilePage()">👤</button>
- ${isAdmin()?`<button onclick="admin()">👑</button>`:""}
+ <div class="card" onclick="faqPage()">💬 سؤال وجواب</div>
+ <div class="card" onclick="orgPage()">🏢 الهيكل التنظيمي</div>
+ <div class="card" onclick="filesPage()">📂 الملفات</div>
  </div>`;
 }
 
-// ================= PROFILE =================
-function profilePage(){
- app.innerHTML=`
- <div class="header">
- <div onclick="home()">⬅ رجوع</div>
- <div>حسابي</div>
- </div>
+// ================= FAQ =================
+async function faqPage(){
+ let data = await getSheet("faq");
 
- <div class="page profile">
- <img src="${profile.img||'https://i.imgur.com/6VBx3io.png'}">
- <input id="name" placeholder="اسم" value="${profile.name||''}">
- <input id="job" placeholder="وظيفة" value="${profile.job||''}">
- <input id="dept" placeholder="قسم" value="${profile.dept||''}">
- <input id="img" placeholder="رابط صورة" value="${profile.img||''}">
-
- <button onclick="saveProfile()">حفظ</button>
- <button onclick="logout()">🚪 تسجيل خروج</button>
- </div>`;
-}
-
-function saveProfile(){
- profile={
-  name:val("name"),
-  job:val("job"),
-  dept:val("dept"),
-  img:val("img")
- };
- localStorage.setItem("profile",JSON.stringify(profile));
- home();
-}
-
-// ================= FILES =================
-function section(type){
- let list=files.filter(f=>f.type==type);
  let html=`
  <div class="header">
- <div onclick="home()">⬅ رجوع</div>
- <div>المحتوى</div>
+ <div onclick="home()">⬅</div>
+ <div>سؤال وجواب</div>
  </div>
 
  <div class="page">`;
 
- list.forEach((f,i)=>{
+ data.forEach((q,i)=>{
   html+=`
-  <div class="card">
-  ${f.name}
-  ${isAdmin()?`
-  <button onclick="edit(${i})">تعديل</button>
-  <button onclick="del(${i})">حذف</button>`:""}
+  <div class="card" onclick="toggle(${i})">
+    ❓ ${q.question}
+    <div id="a${i}" style="display:none;margin-top:10px">
+      ${q.answer}
+    </div>
   </div>`;
  });
 
@@ -150,81 +49,58 @@ function section(type){
  app.innerHTML=html;
 }
 
-// ================= ADMIN =================
-function admin(){
- app.innerHTML=`
+function toggle(i){
+ let el=document.getElementById("a"+i);
+ el.style.display = el.style.display=="none"?"block":"none";
+}
+
+// ================= FILES =================
+async function filesPage(){
+ let data = await getSheet("files");
+
+ let html=`
  <div class="header">
- <div onclick="home()">⬅ رجوع</div>
- <div>لوحة التحكم</div>
+ <div onclick="home()">⬅</div>
+ <div>الملفات</div>
  </div>
 
- <div class="page">
- <input id="name" placeholder="اسم">
- <input id="link" placeholder="رابط">
- <select id="type">
- <option value="guide">دليل</option>
- <option value="policy">سياسات</option>
- <option value="faq">أسئلة</option>
- </select>
+ <div class="page">`;
 
- <button onclick="add()">إضافة</button>
- </div>`;
-}
-
-function add(){
- files.push({
-  name:val("name"),
-  link:val("link"),
-  type:val("type")
+ data.forEach(f=>{
+  html+=`
+  <div class="card" onclick="window.open('${f.link}')">
+   📄 ${f.name}
+  </div>`;
  });
- localStorage.setItem("files",JSON.stringify(files));
- home();
-}
 
-function edit(i){
- let n=prompt("تعديل",files[i].name);
- if(n){files[i].name=n;save();}
-}
-
-function del(i){
- files.splice(i,1);
- save();
-}
-
-function save(){
- localStorage.setItem("files",JSON.stringify(files));
- home();
+ html+=`</div>`;
+ app.innerHTML=html;
 }
 
 // ================= ORG =================
-function org(){
- app.innerHTML=`
+async function orgPage(){
+ let data = await getSheet("employees");
+
+ let html=`
  <div class="header">
- <div onclick="home()">⬅ رجوع</div>
+ <div onclick="home()">⬅</div>
  <div>الهيكل التنظيمي</div>
  </div>
 
- <div class="page">
- <div class="card">👑 CEO</div>
- <div class="card">👨‍💼 Manager</div>
- <div class="card">👨‍💻 Employee</div>
- </div>`;
+ <div class="page">`;
+
+ data.forEach(e=>{
+  html+=`
+  <div class="card">
+   <img src="${e.img}" style="width:40px;border-radius:50%">
+   ${e.name} <br>
+   ${e.job} <br>
+   ${e.dept}
+  </div>`;
+ });
+
+ html+=`</div>`;
+ app.innerHTML=html;
 }
-
-// ================= HELP =================
-function val(id){return document.getElementById(id).value}
-function isAdmin(){return user.email=="ahmed.hr@alkuzama.com"}
-
-function logout(){
- auth.signOut();
-}
-
-// ================= AUTH =================
-auth.onAuthStateChanged(u=>{
- if(u){user=u;home()}else{loginPage()}
-});
 
 </script>
-
-</body>
-</html>
