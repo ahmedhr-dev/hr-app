@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>HR App</title>
+<title>HR System</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
@@ -17,41 +17,42 @@
 body{margin:0;font-family:Arial;background:#0f172a;color:white}
 
 .header{
- display:flex;
- justify-content:space-between;
- padding:15px;
- background:#020617;
- font-weight:bold;
+ display:flex;justify-content:space-between;
+ padding:15px;background:#020617;
+ font-weight:bold
 }
 
-.page{
- padding:15px;
-}
+.page{padding:15px}
 
 .card{
  background:#1e293b;
- padding:15px;
- margin:10px 0;
- border-radius:12px;
- display:flex;
- justify-content:space-between;
- align-items:center;
+ padding:15px;margin:10px 0;
+ border-radius:15px;
+ display:flex;justify-content:space-between;align-items:center;
+ cursor:pointer
 }
 
 button{
  background:#facc15;
- border:none;
- padding:10px;
- border-radius:10px;
- margin-top:5px;
- cursor:pointer;
+ border:none;padding:10px;
+ border-radius:10px;margin-top:5px
 }
 
-.add-btn{
- width:100%;
- padding:15px;
- font-size:16px;
+input{
+ width:100%;padding:10px;margin:5px 0;
+ border-radius:10px;border:none
 }
+
+.tabs{
+ position:fixed;bottom:0;width:100%;
+ display:flex;background:#020617
+}
+
+.tab{
+ flex:1;text-align:center;padding:10px
+}
+
+.active{background:#facc15;color:black}
 </style>
 
 </head>
@@ -62,7 +63,7 @@ button{
 
 <script>
 
-// 🔥 Firebase Config
+// 🔥 Firebase
 firebase.initializeApp({
  apiKey:"AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
  authDomain:"hr-app-710f3.firebaseapp.com",
@@ -72,13 +73,15 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db = firebase.database();
 
+let tab="home";
+
 // ================= LOGIN =================
 function loginPage(){
  app.innerHTML=`
  <div class="page">
  <h2>تسجيل الدخول</h2>
- <input id="email" placeholder="Email" style="width:100%;padding:10px;margin:5px 0">
- <input id="pass" type="password" placeholder="Password" style="width:100%;padding:10px;margin:5px 0">
+ <input id="email" placeholder="Email">
+ <input id="pass" type="password">
  <button onclick="login()">دخول</button>
  </div>`;
 }
@@ -88,79 +91,172 @@ function login(){
  .catch(e=>alert(e.message));
 }
 
-// ================= HOME =================
-function home(){
+// ================= MAIN =================
+function main(){
+
  app.innerHTML=`
  <div class="header">
- <div>HR App</div>
- <div>👥 الموظفين</div>
+ <div>HR System</div>
+ <div onclick="logout()">🚪</div>
  </div>
 
  <div class="page">
 
- <div id="list"></div>
+ ${renderPage()}
 
- <button class="add-btn" onclick="add()">➕ إضافة موظف</button>
+ </div>
 
- </div>`;
+ <div class="tabs">
+ <div class="tab ${tab=='home'?'active':''}" onclick="setTab('home')">🏠</div>
+ <div class="tab ${tab=='employees'?'active':''}" onclick="setTab('employees')">👥</div>
+ <div class="tab ${tab=='policies'?'active':''}" onclick="setTab('policies')">📄</div>
+ <div class="tab ${tab=='faq'?'active':''}" onclick="setTab('faq')">❓</div>
+ <div class="tab ${tab=='org'?'active':''}" onclick="setTab('org')">🏢</div>
+ </div>
+ `;
+}
 
- loadEmployees();
+// ================= PAGES =================
+function renderPage(){
+
+ if(tab=="home"){
+  return `
+  <div class="card" onclick="setTab('employees')">👥 الموظفين</div>
+  <div class="card" onclick="setTab('policies')">📄 السياسات</div>
+  <div class="card" onclick="setTab('faq')">❓ الأسئلة</div>
+  <div class="card" onclick="setTab('org')">🏢 الهيكل التنظيمي</div>
+  `;
+ }
+
+ if(tab=="employees"){
+  return `
+  <h3>الموظفين</h3>
+  <div id="list"></div>
+  <button onclick="addEmp()">➕ إضافة موظف</button>
+  `;
+ }
+
+ if(tab=="policies"){
+  return `
+  <h3>السياسات</h3>
+  <div id="pol"></div>
+  <button onclick="addPolicy()">➕ إضافة سياسة</button>
+  `;
+ }
+
+ if(tab=="faq"){
+  return `
+  <h3>سؤال وجواب</h3>
+  <div id="faq"></div>
+  <button onclick="addFaq()">➕ إضافة سؤال</button>
+  `;
+ }
+
+ if(tab=="org"){
+  return `
+  <h3>الهيكل التنظيمي</h3>
+  <div id="org"></div>
+  <button onclick="addOrg()">➕ إضافة موظف</button>
+  `;
+ }
 }
 
 // ================= LOAD =================
-function loadEmployees(){
+function load(){
 
- db.ref("employees").off(); // مهم
+ db.ref("/").on("value",snap=>{
+  let d=snap.val()||{};
+  main();
 
- db.ref("employees").on("value",snap=>{
-  let data = snap.val() || {};
-  let html = "";
-
-  if(Object.keys(data).length === 0){
-   html = "<div class='card'>لا يوجد موظفين</div>";
-  }
-
-  Object.keys(data).forEach(id=>{
-   let e = data[id];
-
-   html += `
-   <div class="card">
-     <div>
-       <b>${e.name}</b><br>
-       ${e.job}
-     </div>
-     <button onclick="del('${id}')">🗑</button>
-   </div>`;
-  });
-
-  document.getElementById("list").innerHTML = html;
+  if(tab=="employees") showEmp(d.employees||{});
+  if(tab=="policies") showPol(d.policies||{});
+  if(tab=="faq") showFaq(d.faq||{});
+  if(tab=="org") showOrg(d.org||{});
  });
 }
 
-// ================= ADD =================
-function add(){
- let name = prompt("اسم الموظف");
- let job = prompt("الوظيفة");
+// ================= EMP =================
+function showEmp(data){
+ let html="";
+ if(Object.keys(data).length==0) html="لا يوجد";
 
- if(!name) return;
-
- db.ref("employees/"+Date.now()).set({
-  name:name,
-  job:job
+ Object.keys(data).forEach(id=>{
+  let e=data[id];
+  html+=`<div class="card">
+  ${e.name} - ${e.job}
+  <button onclick="del('employees','${id}')">🗑</button>
+  </div>`;
  });
+
+ list.innerHTML=html;
 }
 
-// ================= DELETE =================
-function del(id){
- db.ref("employees/"+id).remove();
+function addEmp(){
+ let n=prompt("الاسم");
+ let j=prompt("الوظيفة");
+ if(!n)return;
+ db.ref("employees/"+Date.now()).set({name:n,job:j});
+}
+
+// ================= POLICY =================
+function showPol(data){
+ let html="";
+ Object.keys(data).forEach(id=>{
+  html+=`<div class="card">${data[id].title}</div>`;
+ });
+ pol.innerHTML=html;
+}
+
+function addPolicy(){
+ let t=prompt("عنوان");
+ db.ref("policies/"+Date.now()).set({title:t});
+}
+
+// ================= FAQ =================
+function showFaq(data){
+ let html="";
+ Object.keys(data).forEach(id=>{
+  let f=data[id];
+  html+=`<div class="card">
+  <b>${f.q}</b><br>${f.a}
+  </div>`;
+ });
+ faq.innerHTML=html;
+}
+
+function addFaq(){
+ let q=prompt("السؤال");
+ let a=prompt("الجواب");
+ db.ref("faq/"+Date.now()).set({q:q,a:a});
+}
+
+// ================= ORG =================
+function showOrg(data){
+ let html="";
+ Object.keys(data).forEach(id=>{
+  let o=data[id];
+  html+=`<div class="card">
+  ${o.name} - ${o.manager}
+  </div>`;
+ });
+ org.innerHTML=html;
+}
+
+function addOrg(){
+ let n=prompt("الاسم");
+ let m=prompt("المدير");
+ db.ref("org/"+Date.now()).set({name:n,manager:m});
 }
 
 // ================= HELP =================
+function setTab(t){tab=t;load()}
+function del(type,id){db.ref(type+"/"+id).remove()}
 function val(id){return document.getElementById(id).value}
+function logout(){auth.signOut()}
 
 // ================= AUTH =================
 auth.onAuthStateChanged(u=>{
- if(u){home()}else{loginPage()}
+ if(u){load()}else{loginPage()}
 });
 
 </script>
