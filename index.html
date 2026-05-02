@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>HR Pro System</title>
+<title>HR System PRO</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
@@ -20,10 +20,12 @@ body{margin:0;font-family:Arial;background:#0b1220;color:white}
 .header{display:flex;justify-content:space-between;padding:15px;background:#020617}
 .page{padding:15px;padding-bottom:80px}
 .card{background:#1e293b;margin:10px 0;padding:15px;border-radius:14px;display:flex;justify-content:space-between;align-items:center}
-input,select{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none}
+input{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none}
 button{width:100%;padding:10px;margin-top:5px;border:none;border-radius:10px;background:#facc15}
 .nav{position:fixed;bottom:0;width:100%;display:flex;justify-content:space-around;background:#020617;padding:10px}
 .avatar{width:45px;height:45px;border-radius:50%}
+.admin{background:red;color:white;padding:5px;border-radius:6px}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:green;padding:10px;border-radius:10px}
 </style>
 
 </head>
@@ -33,17 +35,17 @@ button{width:100%;padding:10px;margin-top:5px;border:none;border-radius:10px;bac
 
 <script>
 
-// 🔥 Firebase Config
 firebase.initializeApp({
  apiKey:"AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
  authDomain:"hr-app-710f3.firebaseapp.com",
  databaseURL:"https://hr-app-710f3-default-rtdb.firebaseio.com"
 });
 
-const auth = firebase.auth();
-const db = firebase.database();
+const auth=firebase.auth();
+const db=firebase.database();
 
 let user;
+let isAdmin=false;
 
 // ================= LOGIN =================
 function loginPage(){
@@ -53,7 +55,6 @@ function loginPage(){
  <input id="email" placeholder="Email">
  <input id="pass" type="password" placeholder="Password">
  <button onclick="login()">دخول</button>
- <button onclick="register()">إنشاء حساب</button>
  </div>`;
 }
 
@@ -61,16 +62,12 @@ function login(){
  auth.signInWithEmailAndPassword(val("email"),val("pass"));
 }
 
-function register(){
- auth.createUserWithEmailAndPassword(val("email"),val("pass"));
-}
-
 // ================= HOME =================
 function home(){
  app.innerHTML=`
  <div class="header">
- <div>👋 ${user.email}</div>
- <div onclick="profile()">👤</div>
+ <div>${user.email}</div>
+ <div>${isAdmin?'<span class="admin">ADMIN</span>':''}</div>
  </div>
 
  <div class="page">
@@ -80,16 +77,17 @@ function home(){
  <i class="fa-solid fa-sitemap"></i>
  </div>
 
- <div class="card" onclick="admin()">
+ ${isAdmin?`
+ <div class="card" onclick="adminPage()">
  <span>لوحة التحكم</span>
  <i class="fa-solid fa-crown"></i>
- </div>
+ </div>`:''}
 
  </div>
 
  <div class="nav">
  <button onclick="home()">🏠</button>
- <button onclick="profile()">👤</button>
+ <button onclick="logout()">🚪</button>
  </div>`;
 }
 
@@ -97,8 +95,6 @@ function home(){
 function orgPage(){
  db.ref("employees").on("value",snap=>{
   let data=snap.val()||{};
-  let arr=Object.values(data);
-
   let html=`
   <div class="header">
   <div onclick="home()">⬅</div>
@@ -106,7 +102,9 @@ function orgPage(){
   </div>
   <div class="page">`;
 
-  arr.forEach(e=>{
+  Object.keys(data).forEach(id=>{
+   let e=data[id];
+
    html+=`
    <div class="card">
     <div>
@@ -114,7 +112,13 @@ function orgPage(){
      ${e.job}<br>
      مدير: ${e.manager}
     </div>
-    <img class="avatar" src="${e.img||'https://i.imgur.com/6VBx3io.png'}">
+    <div>
+     <img class="avatar" src="${e.img||''}">
+     ${isAdmin?`
+     <button onclick="edit('${id}')">✏</button>
+     <button onclick="removeEmp('${id}')">🗑</button>
+     `:''}
+    </div>
    </div>`;
   });
 
@@ -124,27 +128,24 @@ function orgPage(){
 }
 
 // ================= ADMIN =================
-function admin(){
+function adminPage(){
  app.innerHTML=`
  <div class="header">
  <div onclick="home()">⬅</div>
- <div>لوحة التحكم</div>
+ <div>إضافة موظف</div>
  </div>
 
  <div class="page">
-
  <input id="name" placeholder="اسم">
  <input id="job" placeholder="وظيفة">
  <input id="manager" placeholder="مدير">
- <input id="img" placeholder="صورة">
-
- <button onclick="addEmployee()">إضافة موظف</button>
-
+ <input id="img" placeholder="رابط صورة">
+ <button onclick="add()">إضافة</button>
  </div>`;
 }
 
-function addEmployee(){
- let id = Date.now();
+function add(){
+ let id=Date.now();
 
  db.ref("employees/"+id).set({
   name:val("name"),
@@ -153,22 +154,38 @@ function addEmployee(){
   img:val("img")
  });
 
- db.ref("notify").set("تم إضافة موظف جديد");
+ notify("تم إضافة موظف");
  home();
 }
 
-// ================= PROFILE =================
-function profile(){
- app.innerHTML=`
- <div class="header">
- <div onclick="home()">⬅</div>
- <div>حسابي</div>
- </div>
+// ================= EDIT =================
+function edit(id){
+ let name=prompt("اسم جديد");
+ if(!name)return;
 
- <div class="page">
- <div class="card">${user.email}</div>
- <button onclick="logout()">🚪 خروج</button>
- </div>`;
+ db.ref("employees/"+id).update({
+  name:name
+ });
+
+ notify("تم التعديل");
+}
+
+// ================= DELETE =================
+function removeEmp(id){
+ if(confirm("حذف؟")){
+  db.ref("employees/"+id).remove();
+  notify("تم الحذف");
+ }
+}
+
+// ================= NOTIFY =================
+function notify(msg){
+ let div=document.createElement("div");
+ div.className="toast";
+ div.innerText=msg;
+ document.body.appendChild(div);
+
+ setTimeout(()=>div.remove(),2000);
 }
 
 // ================= HELP =================
@@ -177,7 +194,18 @@ function logout(){auth.signOut()}
 
 // ================= AUTH =================
 auth.onAuthStateChanged(u=>{
- if(u){user=u;home()}else{loginPage()}
+ if(u){
+  user=u;
+
+  // 🔥 admin email
+  if(u.email=="ahmed.hr@alkuzama.com"){
+   isAdmin=true;
+  }
+
+  home();
+ }else{
+  loginPage();
+ }
 });
 
 </script>
