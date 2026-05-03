@@ -5,11 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>HR System</title>
+<title>HR Pro</title>
 
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f172a">
-<meta name="apple-mobile-web-app-capable" content="yes">
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
@@ -18,15 +16,51 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
 <style>
-body{margin:0;font-family:Arial;background:#0f172a;color:white}
-.header{display:flex;justify-content:space-between;padding:15px;background:#020617}
+body{margin:0;font-family:sans-serif;background:#0b1220;color:white}
+.header{
+ display:flex;justify-content:space-between;
+ padding:15px;background:#020617;font-weight:bold
+}
 .page{padding:15px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.card{background:#1e293b;padding:15px;border-radius:12px;margin:5px 0}
-button{background:#facc15;border:none;padding:10px;border-radius:10px;width:100%;margin-top:10px}
-input{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none}
-.profile{text-align:center}
-.profile img{width:80px;height:80px;border-radius:50%}
+.grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px
+}
+.card{
+ background:#1e293b;
+ padding:20px;
+ border-radius:16px;
+ text-align:center;
+ cursor:pointer;
+ box-shadow:0 5px 15px #00000030
+}
+.card:hover{transform:scale(1.05)}
+button{
+ background:#facc15;
+ border:none;
+ padding:12px;
+ border-radius:12px;
+ width:100%;
+ margin-top:10px;
+ font-size:14px
+}
+input{
+ width:100%;
+ padding:12px;
+ border-radius:12px;
+ border:none;
+ margin:5px 0
+}
+.profile img{
+ width:90px;height:90px;border-radius:50%
+}
+.noti{
+ background:#111827;
+ padding:10px;
+ border-radius:10px;
+ margin:5px 0
+}
 </style>
 
 </head>
@@ -36,7 +70,7 @@ input{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none}
 
 <script>
 
-// 🔥 Firebase
+// Firebase
 firebase.initializeApp({
  apiKey:"AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
  authDomain:"hr-app-710f3.firebaseapp.com",
@@ -71,6 +105,7 @@ function dashboard(){
  app.innerHTML=`
  <div class="header">
  <div>👤 ${user.email}</div>
+ <div onclick="openPage('noti')">🔔</div>
  <div onclick="logout()">🚪</div>
  </div>
 
@@ -89,6 +124,20 @@ function dashboard(){
 // NAV
 function openPage(p){
 
+// إشعارات
+if(p==="noti"){
+ app.innerHTML=back("الإشعارات")+`<div id="noti"></div>`;
+ db.ref("notifications").on("value",snap=>{
+ let d=snap.val()||{};
+ let html="";
+ Object.values(d).reverse().forEach(n=>{
+ html+=`<div class="noti">${n.text}<br><small>${n.time}</small></div>`;
+ });
+ noti.innerHTML=html||"لا يوجد إشعارات";
+ });
+}
+
+// PROFILE
 if(p==="profile"){
  db.ref("profiles/"+user.uid).once("value").then(s=>{
  let p=s.val()||{};
@@ -98,13 +147,13 @@ if(p==="profile"){
  </div>
  <div class="card">
  الاسم: ${p.name||'---'}<br>
- الوظيفة: ${p.job||'---'}<br>
- البريد: ${user.email}
+ الوظيفة: ${p.job||'---'}
  </div>
  <button onclick="editProfile()">تعديل</button>`;
  });
 }
 
+// FAQ
 if(p==="faq"){
  app.innerHTML=back("FAQ")+`
  <div id="faq"></div>
@@ -113,9 +162,11 @@ if(p==="faq"){
  loadFAQ();
 }
 
+// GUIDE / POLICIES
 if(p==="guide"){renderList("guide","guide");}
 if(p==="policies"){renderList("policies","policies");}
 
+// ORG
 if(p==="org"){
  app.innerHTML=back("الهيكل")+`
  <div id="org"></div>
@@ -124,6 +175,7 @@ if(p==="org"){
  loadOrg();
 }
 
+// AI
 if(p==="ai"){
  app.innerHTML=back("المساعد")+`
  <input id="q" placeholder="اسأل">
@@ -134,10 +186,10 @@ if(p==="ai"){
 }
 
 // UI
-function back(title){
+function back(t){
  return `<div class="header">
  <button onclick="dashboard()">⬅</button>
- <div>${title}</div>
+ <div>${t}</div>
  </div><div class="page">`;
 }
 
@@ -155,29 +207,23 @@ function renderList(path,id){
  <div id="${id}"></div>
  ${role==="admin"?`<button onclick="add('${path}')">➕</button>`:""}
  `;
- load(path,id);
-}
-
-function load(path,el){
  db.ref(path).on("value",snap=>{
- let data=snap.val()||{};
+ let d=snap.val()||{};
  let html="";
- Object.keys(data).forEach(k=>{
- html+=`
- <div class="card">
- ${data[k].text}
+ Object.keys(d).forEach(k=>{
+ html+=`<div class="card">
+ ${d[k].text}
  ${role==="admin"?`<button onclick="del('${path}','${k}')">🗑</button>`:""}
  </div>`;
  });
- document.getElementById(el).innerHTML=html||"لا يوجد";
+ document.getElementById(id).innerHTML=html||"لا يوجد";
  });
 }
 
 function add(type){
  let t=prompt("اكتب");
- if(!t)return;
  db.ref(type+"/"+Date.now()).set({text:t});
- notify("تم إضافة جديد");
+ notify("تم إضافة محتوى جديد");
 }
 
 // FAQ
@@ -187,8 +233,7 @@ function loadFAQ(){
  let html="";
  Object.keys(allFAQ).forEach(id=>{
  let f=allFAQ[id];
- html+=`
- <div class="card">
+ html+=`<div class="card">
  <b>${f.q}</b><br>${f.a}
  ${role==="admin"?`<button onclick="del('faq','${id}')">🗑</button>`:""}
  </div>`;
@@ -201,29 +246,27 @@ function addFAQ(){
  let q=prompt("السؤال");
  let a=prompt("الإجابة");
  db.ref("faq/"+Date.now()).set({q,a});
+ notify("تم إضافة سؤال");
 }
 
 // AI
 function ask(){
  let q=document.getElementById("q").value.toLowerCase();
- let best="❗ تواصل مع HR";
+ let ans="❗ تواصل مع HR";
  Object.values(allFAQ).forEach(f=>{
- if(q.includes(f.q.toLowerCase())) best=f.a;
+ if(q.includes(f.q.toLowerCase())) ans=f.a;
  });
- answer.innerHTML=`<div class="card">${best}</div>`;
+ answer.innerHTML=`<div class="card">${ans}</div>`;
 }
 
 // ORG
 function loadOrg(){
  db.ref("org").on("value",snap=>{
- let data=snap.val()||{};
+ let d=snap.val()||{};
  let html="";
- Object.values(data).forEach(o=>{
- html+=`
- <div class="card">
- 👤 ${o.name}<br>
- 🏢 ${o.dep}<br>
- 👔 ${o.manager}
+ Object.values(d).forEach(o=>{
+ html+=`<div class="card">
+ 👤 ${o.name}<br>🏢 ${o.dep}<br>👔 ${o.manager}
  </div>`;
  });
  org.innerHTML=html||"لا يوجد";
@@ -231,15 +274,19 @@ function loadOrg(){
 }
 
 function addOrg(){
- let name=prompt("اسم الموظف");
- let dep=prompt("القسم");
- let manager=prompt("المدير");
- db.ref("org/"+Date.now()).set({name,dep,manager});
+ let n=prompt("اسم");
+ let d=prompt("قسم");
+ let m=prompt("مدير");
+ db.ref("org/"+Date.now()).set({name:n,dep:d,manager:m});
+ notify("تم تحديث الهيكل");
 }
 
-// NOTIFY
+// إشعار
 function notify(msg){
- db.ref("notifications/"+Date.now()).set({text:msg});
+ db.ref("notifications/"+Date.now()).set({
+ text:msg,
+ time:new Date().toLocaleString()
+ });
 }
 
 // DELETE
