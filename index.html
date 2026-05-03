@@ -4,7 +4,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HR System Pro</title>
+
+<title>HR System</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
@@ -45,7 +50,7 @@ let user=null;
 let role="user";
 let allFAQ={};
 
-// ================= LOGIN =================
+// LOGIN
 function loginPage(){
  app.innerHTML=`
  <div class="page">
@@ -61,7 +66,7 @@ function login(){
  .catch(e=>alert(e.message));
 }
 
-// ================= DASHBOARD =================
+// DASHBOARD
 function dashboard(){
  app.innerHTML=`
  <div class="header">
@@ -76,15 +81,14 @@ function dashboard(){
   <div class="card" onclick="openPage('guide')">📘 دليل</div>
   <div class="card" onclick="openPage('policies')">📄 سياسات</div>
   <div class="card" onclick="openPage('org')">🏢 الهيكل</div>
-  <div class="card" onclick="openPage('ai')">🤖 مساعد HR</div>
+  <div class="card" onclick="openPage('ai')">🤖 مساعد</div>
  </div>
  </div>`;
 }
 
-// ================= NAV =================
+// NAV
 function openPage(p){
 
-// PROFILE
 if(p==="profile"){
  db.ref("profiles/"+user.uid).once("value").then(s=>{
  let p=s.val()||{};
@@ -101,7 +105,6 @@ if(p==="profile"){
  });
 }
 
-// FAQ
 if(p==="faq"){
  app.innerHTML=back("FAQ")+`
  <div id="faq"></div>
@@ -110,17 +113,9 @@ if(p==="faq"){
  loadFAQ();
 }
 
-// GUIDE
-if(p==="guide"){
- renderList("guide","guide");
-}
+if(p==="guide"){renderList("guide","guide");}
+if(p==="policies"){renderList("policies","policies");}
 
-// POLICIES
-if(p==="policies"){
- renderList("policies","policies");
-}
-
-// ORG
 if(p==="org"){
  app.innerHTML=back("الهيكل")+`
  <div id="org"></div>
@@ -129,17 +124,16 @@ if(p==="org"){
  loadOrg();
 }
 
-// AI
 if(p==="ai"){
  app.innerHTML=back("المساعد")+`
- <input id="q" placeholder="اسأل HR">
+ <input id="q" placeholder="اسأل">
  <button onclick="ask()">اسأل</button>
  <div id="answer"></div>`;
 }
 
 }
 
-// ================= UI =================
+// UI
 function back(title){
  return `<div class="header">
  <button onclick="dashboard()">⬅</button>
@@ -147,21 +141,19 @@ function back(title){
  </div><div class="page">`;
 }
 
-// ================= PROFILE =================
+// PROFILE
 function editProfile(){
  let name=prompt("الاسم");
  let job=prompt("الوظيفة");
  let img=prompt("رابط الصورة");
-
  db.ref("profiles/"+user.uid).set({name,job,img});
- alert("تم الحفظ");
 }
 
-// ================= LIST =================
+// LIST
 function renderList(path,id){
  app.innerHTML=back(path)+`
  <div id="${id}"></div>
- ${role==="admin"?`<button onclick="add('${path}')">➕ إضافة</button>`:""}
+ ${role==="admin"?`<button onclick="add('${path}')">➕</button>`:""}
  `;
  load(path,id);
 }
@@ -185,10 +177,10 @@ function add(type){
  let t=prompt("اكتب");
  if(!t)return;
  db.ref(type+"/"+Date.now()).set({text:t});
- notify("تم إضافة محتوى جديد");
+ notify("تم إضافة جديد");
 }
 
-// ================= FAQ =================
+// FAQ
 function loadFAQ(){
  db.ref("faq").on("value",snap=>{
  allFAQ=snap.val()||{};
@@ -209,22 +201,19 @@ function addFAQ(){
  let q=prompt("السؤال");
  let a=prompt("الإجابة");
  db.ref("faq/"+Date.now()).set({q,a});
- notify("تم إضافة سؤال جديد");
 }
 
-// ================= AI =================
+// AI
 function ask(){
  let q=document.getElementById("q").value.toLowerCase();
  let best="❗ تواصل مع HR";
-
  Object.values(allFAQ).forEach(f=>{
  if(q.includes(f.q.toLowerCase())) best=f.a;
  });
-
  answer.innerHTML=`<div class="card">${best}</div>`;
 }
 
-// ================= ORG =================
+// ORG
 function loadOrg(){
  db.ref("org").on("value",snap=>{
  let data=snap.val()||{};
@@ -245,24 +234,18 @@ function addOrg(){
  let name=prompt("اسم الموظف");
  let dep=prompt("القسم");
  let manager=prompt("المدير");
-
  db.ref("org/"+Date.now()).set({name,dep,manager});
- notify("تم تعديل الهيكل");
 }
 
-// ================= NOTIFY =================
+// NOTIFY
 function notify(msg){
- db.ref("notifications/"+Date.now()).set({
- text:msg,time:new Date().toLocaleString()
- });
+ db.ref("notifications/"+Date.now()).set({text:msg});
 }
 
-// ================= DELETE =================
-function del(type,id){
- db.ref(type+"/"+id).remove();
-}
+// DELETE
+function del(type,id){db.ref(type+"/"+id).remove();}
 
-// ================= AUTH =================
+// AUTH
 function logout(){auth.signOut();}
 
 function loadRole(uid){
@@ -274,12 +257,8 @@ function loadRole(uid){
 }
 
 auth.onAuthStateChanged(u=>{
- if(u){
- user=u;
- loadRole(u.uid);
- }else{
- loginPage();
- }
+ if(u){user=u;loadRole(u.uid);}
+ else{loginPage();}
 });
 
 </script>
