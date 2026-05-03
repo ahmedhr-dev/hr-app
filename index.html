@@ -4,44 +4,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HR System Pro</title>
+<title>HR System</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
 <style>
 body{margin:0;font-family:Arial;background:#0f172a;color:white}
-
-.header{
- display:flex;
- justify-content:space-between;
- padding:15px;
- background:#020617;
-}
-
+.header{padding:15px;background:#020617;text-align:center}
 .page{padding:15px}
-
-.card{
- background:#1e293b;
- padding:15px;
- margin:10px 0;
- border-radius:15px;
-}
-
-button{
- background:#facc15;
- border:none;
- padding:10px;
- border-radius:10px;
- margin-top:10px;
- width:100%;
- cursor:pointer;
-}
-
-input{
- width:100%;
- padding:10px;
- margin:5px 0;
- border-radius:10px;
- border:none;
-}
+.card{background:#1e293b;padding:15px;margin:10px 0;border-radius:12px}
+button{background:#facc15;border:none;padding:10px;border-radius:10px;width:100%;margin-top:10px}
+input{padding:10px;width:100%;margin:5px 0;border-radius:10px;border:none}
 </style>
 
 </head>
@@ -52,195 +29,175 @@ input{
 
 <script>
 
-let currentUser = JSON.parse(localStorage.getItem("user")) || null;
-let page = "home";
+// 🔥 Firebase
+firebase.initializeApp({
+ apiKey:"AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
+ authDomain:"hr-app-710f3.firebaseapp.com",
+ databaseURL:"https://hr-app-710f3-default-rtdb.firebaseio.com"
+});
 
-// ================= USERS =================
-function initUsers(){
- if(!localStorage.getItem("users")){
-  let users = {
-   "admin": {email:"admin",pass:"1234",role:"admin",name:"Admin"},
-   "ahmed": {email:"ahmed",pass:"1234",role:"employee",name:"Ahmed"}
-  };
-  localStorage.setItem("users",JSON.stringify(users));
- }
-}
+const auth = firebase.auth();
+const db = firebase.database();
+
+let user=null;
+let allFAQ={};
 
 // ================= LOGIN =================
 function loginPage(){
  app.innerHTML=`
  <div class="page">
  <h2>تسجيل الدخول</h2>
- <input id="email" placeholder="username">
+ <input id="email" placeholder="Email">
  <input id="pass" type="password">
  <button onclick="login()">دخول</button>
  </div>`;
 }
 
 function login(){
- let users = JSON.parse(localStorage.getItem("users"));
- let email = document.getElementById("email").value;
- let pass = document.getElementById("pass").value;
-
- if(users[email] && users[email].pass === pass){
-  localStorage.setItem("user",JSON.stringify(users[email]));
-  location.reload();
- }else{
-  alert("بيانات غلط");
- }
+ auth.signInWithEmailAndPassword(
+  document.getElementById("email").value,
+  document.getElementById("pass").value
+ ).catch(e=>alert(e.message));
 }
 
 // ================= MAIN =================
-function render(){
-
- if(!currentUser){
-  loginPage();
-  return;
- }
-
+function main(){
  app.innerHTML=`
- <div class="header">
- <div>👤 ${currentUser.name}</div>
- <div onclick="logout()">🚪</div>
- </div>
+ <div class="header">HR System - ${user.email}</div>
 
  <div class="page">
 
- ${homePage()}
+ <div class="card" onclick="goGuide()">📘 دليل الموظف</div>
+ <div class="card" onclick="goPolicies()">📄 السياسات</div>
+ <div class="card" onclick="goFAQ()">❓ سؤال وجواب</div>
+ <div class="card" onclick="goAI()">🤖 مساعد HR</div>
+
+ <button onclick="logout()">🚪 تسجيل خروج</button>
 
  </div>`;
 }
 
-// ================= HOME =================
-function homePage(){
- return `
- <div class="card" onclick="go('employees')">👥 الموظفين</div>
- <div class="card" onclick="go('profile')">👤 حسابي</div>
- <div class="card" onclick="go('notifications')">🔔 الإشعارات</div>
- `;
+// ================= GUIDE =================
+function goGuide(){
+ app.innerHTML=`
+ <button onclick="main()">⬅ رجوع</button>
+ <div id="guide"></div>
+ <button onclick="add('guide')">➕ إضافة</button>`;
+ load("guide","guide");
 }
 
-// ================= NAV =================
-function go(p){
- page = p;
- renderPage();
+// ================= POLICIES =================
+function goPolicies(){
+ app.innerHTML=`
+ <button onclick="main()">⬅ رجوع</button>
+ <div id="policies"></div>
+ <button onclick="add('policies')">➕ إضافة</button>`;
+ load("policies","policies");
 }
 
-function renderPage(){
+// ================= FAQ =================
+function goFAQ(){
+ app.innerHTML=`
+ <button onclick="main()">⬅ رجوع</button>
+ <div id="faq"></div>
+ <button onclick="addFAQ()">➕ إضافة سؤال</button>`;
+ loadFAQ();
+}
 
- if(page==="employees"){
-  app.innerHTML=`
-  <div class="header">
-   <button onclick="render()">⬅</button>
-   <div>الموظفين</div>
-  </div>
+// ================= AI =================
+function goAI(){
+ app.innerHTML=`
+ <button onclick="main()">⬅ رجوع</button>
+ <input id="q" placeholder="اسأل...">
+ <button onclick="ask()">اسأل</button>
+ <div id="answer"></div>`;
+}
 
-  <div class="page">
-   <div id="list"></div>
-   ${currentUser.role==="admin" ? `<button onclick="addEmp()">➕ إضافة</button>` : ""}
-  </div>
-  `;
-  loadEmp();
- }
-
- if(page==="profile"){
-  app.innerHTML=`
-  <div class="header">
-   <button onclick="render()">⬅</button>
-   <div>حسابي</div>
-  </div>
-
-  <div class="page">
-   <div class="card">
-    الاسم: ${currentUser.name}<br>
-    الدور: ${currentUser.role}
-   </div>
-   <button onclick="logout()">تسجيل خروج</button>
-  </div>
-  `;
- }
-
- if(page==="notifications"){
-  let noti = JSON.parse(localStorage.getItem("noti")||"[]");
-
+// ================= LOAD =================
+function load(path,el){
+ db.ref(path).on("value",snap=>{
+  let data=snap.val()||{};
   let html="";
-  noti.forEach(n=>{
-   html+=`<div class="card">${n}</div>`;
+
+  Object.keys(data).forEach(id=>{
+   html+=`
+   <div class="card">
+   ${data[id].text}
+   <button onclick="del('${path}','${id}')">🗑</button>
+   </div>`;
   });
 
-  app.innerHTML=`
-  <div class="header">
-   <button onclick="render()">⬅</button>
-   <div>الإشعارات</div>
-  </div>
-
-  <div class="page">
-   ${html || "لا يوجد"}
-  </div>
-  `;
- }
-
+  document.getElementById(el).innerHTML=html||"لا يوجد";
+ });
 }
 
-// ================= EMP =================
-function loadEmp(){
- let data = JSON.parse(localStorage.getItem("employees")||"{}");
- let html="";
+// ================= ADD =================
+function add(type){
+ let t=prompt("اكتب المحتوى");
+ if(!t) return;
+ db.ref(type+"/"+Date.now()).set({text:t});
+}
 
- Object.keys(data).forEach(id=>{
-  let e=data[id];
+// ================= FAQ =================
+function loadFAQ(){
+ db.ref("faq").on("value",snap=>{
+  allFAQ=snap.val()||{};
+  let html="";
 
-  html+=`
-  <div class="card">
-   ${e.name} - ${e.job}
-   ${currentUser.role==="admin" ? `<button onclick="del('${id}')">🗑</button>` : ""}
-  </div>`;
+  Object.keys(allFAQ).forEach(id=>{
+   let f=allFAQ[id];
+   html+=`
+   <div class="card">
+   <b>${f.q}</b><br>${f.a}
+   <button onclick="del('faq','${id}')">🗑</button>
+   </div>`;
+  });
+
+  faq.innerHTML=html||"لا يوجد";
+ });
+}
+
+function addFAQ(){
+ let q=prompt("السؤال");
+ let a=prompt("الإجابة");
+ if(!q||!a) return;
+ db.ref("faq/"+Date.now()).set({q:q,a:a});
+}
+
+// ================= AI =================
+function ask(){
+ let q=document.getElementById("q").value.toLowerCase();
+ let answer="❗ لم أجد إجابة، تواصل مع HR";
+
+ Object.values(allFAQ).forEach(f=>{
+  if(q.includes(f.q.toLowerCase())){
+   answer=f.a;
+  }
  });
 
- list.innerHTML=html||"لا يوجد";
+ document.getElementById("answer").innerHTML=
+ `<div class="card">${answer}</div>`;
 }
 
-function addEmp(){
- let n=prompt("اسم الموظف");
- let j=prompt("الوظيفة");
-
- let data = JSON.parse(localStorage.getItem("employees")||"{}");
- data[Date.now()]={name:n,job:j};
-
- localStorage.setItem("employees",JSON.stringify(data));
-
- addNoti("تم إضافة موظف: "+n);
-
- loadEmp();
-}
-
-function del(id){
- let data = JSON.parse(localStorage.getItem("employees")||"{}");
- delete data[id];
-
- localStorage.setItem("employees",JSON.stringify(data));
-
- addNoti("تم حذف موظف");
-
- loadEmp();
-}
-
-// ================= NOTI =================
-function addNoti(msg){
- let n = JSON.parse(localStorage.getItem("noti")||"[]");
- n.unshift(msg);
- localStorage.setItem("noti",JSON.stringify(n));
+// ================= DELETE =================
+function del(type,id){
+ db.ref(type+"/"+id).remove();
 }
 
 // ================= LOGOUT =================
 function logout(){
- localStorage.removeItem("user");
- location.reload();
+ auth.signOut();
 }
 
-// ================= START =================
-initUsers();
-render();
+// ================= AUTH =================
+auth.onAuthStateChanged(u=>{
+ if(u){
+  user=u;
+  main();
+ }else{
+  loginPage();
+ }
+});
 
 </script>
 
