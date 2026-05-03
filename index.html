@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HR Pro</title>
+<title>HR System Pro</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
@@ -14,53 +14,38 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#0f172a;color:white}
-.header{
- display:flex;justify-content:space-between;
- padding:15px;background:#020617;font-size:14px
-}
+.header{display:flex;justify-content:space-between;padding:15px;background:#020617}
 .page{padding:15px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.card{
- background:#1e293b;
- padding:20px;
- border-radius:15px;
- text-align:center;
- cursor:pointer;
- transition:.2s
-}
-.card:hover{transform:scale(1.05)}
-button{
- background:#facc15;border:none;
- padding:10px;border-radius:10px;margin-top:10px;width:100%
-}
-input{
- width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none
-}
+.card{background:#1e293b;padding:15px;border-radius:12px;margin:5px 0}
+button{background:#facc15;border:none;padding:10px;border-radius:10px;width:100%;margin-top:10px}
+input{width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none}
+.profile{text-align:center}
+.profile img{width:80px;height:80px;border-radius:50%}
 </style>
 
 </head>
 
 <body>
-
 <div id="app"></div>
 
 <script>
 
-// Firebase
+// 🔥 Firebase
 firebase.initializeApp({
  apiKey:"AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
  authDomain:"hr-app-710f3.firebaseapp.com",
  databaseURL:"https://hr-app-710f3-default-rtdb.firebaseio.com"
 });
 
-const auth = firebase.auth();
-const db = firebase.database();
+const auth=firebase.auth();
+const db=firebase.database();
 
 let user=null;
 let role="user";
 let allFAQ={};
 
-// LOGIN
+// ================= LOGIN =================
 function loginPage(){
  app.innerHTML=`
  <div class="page">
@@ -76,7 +61,7 @@ function login(){
  .catch(e=>alert(e.message));
 }
 
-// DASHBOARD
+// ================= DASHBOARD =================
 function dashboard(){
  app.innerHTML=`
  <div class="header">
@@ -86,52 +71,75 @@ function dashboard(){
 
  <div class="page">
  <div class="grid">
+  <div class="card" onclick="openPage('profile')">👤 حسابي</div>
+  <div class="card" onclick="openPage('faq')">❓ الأسئلة</div>
   <div class="card" onclick="openPage('guide')">📘 دليل</div>
   <div class="card" onclick="openPage('policies')">📄 سياسات</div>
-  <div class="card" onclick="openPage('faq')">❓ FAQ</div>
-  <div class="card" onclick="openPage('ai')">🤖 مساعد</div>
-  <div class="card" onclick="openPage('profile')">👤 حسابي</div>
+  <div class="card" onclick="openPage('org')">🏢 الهيكل</div>
+  <div class="card" onclick="openPage('ai')">🤖 مساعد HR</div>
  </div>
  </div>`;
 }
 
-// NAV
+// ================= NAV =================
 function openPage(p){
 
- if(p==="profile"){
-  app.innerHTML=back("حسابي")+`
-  <div class="card">
-  البريد: ${user.email}<br>
-  الدور: ${role}
-  </div>`;
- }
+// PROFILE
+if(p==="profile"){
+ db.ref("profiles/"+user.uid).once("value").then(s=>{
+ let p=s.val()||{};
+ app.innerHTML=back("حسابي")+`
+ <div class="profile">
+ <img src="${p.img||'https://i.pravatar.cc/100'}">
+ </div>
+ <div class="card">
+ الاسم: ${p.name||'---'}<br>
+ الوظيفة: ${p.job||'---'}<br>
+ البريد: ${user.email}
+ </div>
+ <button onclick="editProfile()">تعديل</button>`;
+ });
+}
 
- if(p==="guide"){
-  renderList("guide","guide");
- }
+// FAQ
+if(p==="faq"){
+ app.innerHTML=back("FAQ")+`
+ <div id="faq"></div>
+ ${role==="admin"?'<button onclick="addFAQ()">➕</button>':""}
+ `;
+ loadFAQ();
+}
 
- if(p==="policies"){
-  renderList("policies","policies");
- }
+// GUIDE
+if(p==="guide"){
+ renderList("guide","guide");
+}
 
- if(p==="faq"){
-  app.innerHTML=back("FAQ")+`
-  <div id="faq"></div>
-  ${role==="admin"?'<button onclick="addFAQ()">➕</button>':""}
-  `;
-  loadFAQ();
- }
+// POLICIES
+if(p==="policies"){
+ renderList("policies","policies");
+}
 
- if(p==="ai"){
-  app.innerHTML=back("المساعد")+`
-  <input id="q" placeholder="اكتب سؤالك">
-  <button onclick="ask()">اسأل</button>
-  <div id="answer"></div>`;
- }
+// ORG
+if(p==="org"){
+ app.innerHTML=back("الهيكل")+`
+ <div id="org"></div>
+ ${role==="admin"?'<button onclick="addOrg()">➕</button>':""}
+ `;
+ loadOrg();
+}
+
+// AI
+if(p==="ai"){
+ app.innerHTML=back("المساعد")+`
+ <input id="q" placeholder="اسأل HR">
+ <button onclick="ask()">اسأل</button>
+ <div id="answer"></div>`;
+}
 
 }
 
-// UI
+// ================= UI =================
 function back(title){
  return `<div class="header">
  <button onclick="dashboard()">⬅</button>
@@ -139,6 +147,17 @@ function back(title){
  </div><div class="page">`;
 }
 
+// ================= PROFILE =================
+function editProfile(){
+ let name=prompt("الاسم");
+ let job=prompt("الوظيفة");
+ let img=prompt("رابط الصورة");
+
+ db.ref("profiles/"+user.uid).set({name,job,img});
+ alert("تم الحفظ");
+}
+
+// ================= LIST =================
 function renderList(path,id){
  app.innerHTML=back(path)+`
  <div id="${id}"></div>
@@ -147,21 +166,18 @@ function renderList(path,id){
  load(path,id);
 }
 
-// DATA
 function load(path,el){
  db.ref(path).on("value",snap=>{
-  let data=snap.val()||{};
-  let html="";
-
-  Object.keys(data).forEach(k=>{
-   html+=`
-   <div class="card">
-   ${data[k].text}
-   ${role==="admin"?`<button onclick="del('${path}','${k}')">🗑</button>`:""}
-   </div>`;
-  });
-
-  document.getElementById(el).innerHTML=html||"لا يوجد";
+ let data=snap.val()||{};
+ let html="";
+ Object.keys(data).forEach(k=>{
+ html+=`
+ <div class="card">
+ ${data[k].text}
+ ${role==="admin"?`<button onclick="del('${path}','${k}')">🗑</button>`:""}
+ </div>`;
+ });
+ document.getElementById(el).innerHTML=html||"لا يوجد";
  });
 }
 
@@ -169,68 +185,100 @@ function add(type){
  let t=prompt("اكتب");
  if(!t)return;
  db.ref(type+"/"+Date.now()).set({text:t});
+ notify("تم إضافة محتوى جديد");
 }
 
-// FAQ
+// ================= FAQ =================
 function loadFAQ(){
  db.ref("faq").on("value",snap=>{
-  allFAQ=snap.val()||{};
-  let html="";
-
-  Object.values(allFAQ).forEach(f=>{
-   html+=`
-   <div class="card">
-   <b>${f.q}</b><br>${f.a}
-   ${role==="admin"?`<button onclick="del('faq','${f.id}')">🗑</button>`:""}
-   </div>`;
-  });
-
-  faq.innerHTML=html||"لا يوجد";
+ allFAQ=snap.val()||{};
+ let html="";
+ Object.keys(allFAQ).forEach(id=>{
+ let f=allFAQ[id];
+ html+=`
+ <div class="card">
+ <b>${f.q}</b><br>${f.a}
+ ${role==="admin"?`<button onclick="del('faq','${id}')">🗑</button>`:""}
+ </div>`;
+ });
+ faq.innerHTML=html||"لا يوجد";
  });
 }
 
 function addFAQ(){
  let q=prompt("السؤال");
  let a=prompt("الإجابة");
- db.ref("faq/"+Date.now()).set({q:q,a:a});
+ db.ref("faq/"+Date.now()).set({q,a});
+ notify("تم إضافة سؤال جديد");
 }
 
-// AI
+// ================= AI =================
 function ask(){
  let q=document.getElementById("q").value.toLowerCase();
  let best="❗ تواصل مع HR";
 
  Object.values(allFAQ).forEach(f=>{
-  if(q.includes(f.q.toLowerCase())){
-   best=f.a;
-  }
+ if(q.includes(f.q.toLowerCase())) best=f.a;
  });
 
  answer.innerHTML=`<div class="card">${best}</div>`;
 }
 
-// DELETE
+// ================= ORG =================
+function loadOrg(){
+ db.ref("org").on("value",snap=>{
+ let data=snap.val()||{};
+ let html="";
+ Object.values(data).forEach(o=>{
+ html+=`
+ <div class="card">
+ 👤 ${o.name}<br>
+ 🏢 ${o.dep}<br>
+ 👔 ${o.manager}
+ </div>`;
+ });
+ org.innerHTML=html||"لا يوجد";
+ });
+}
+
+function addOrg(){
+ let name=prompt("اسم الموظف");
+ let dep=prompt("القسم");
+ let manager=prompt("المدير");
+
+ db.ref("org/"+Date.now()).set({name,dep,manager});
+ notify("تم تعديل الهيكل");
+}
+
+// ================= NOTIFY =================
+function notify(msg){
+ db.ref("notifications/"+Date.now()).set({
+ text:msg,time:new Date().toLocaleString()
+ });
+}
+
+// ================= DELETE =================
 function del(type,id){
  db.ref(type+"/"+id).remove();
 }
 
-// AUTH
+// ================= AUTH =================
 function logout(){auth.signOut();}
 
 function loadRole(uid){
  db.ref("users/"+uid+"/role").once("value")
  .then(s=>{
-  role=s.val()||"user";
-  dashboard();
+ role=s.val()||"user";
+ dashboard();
  });
 }
 
 auth.onAuthStateChanged(u=>{
  if(u){
-  user=u;
-  loadRole(u.uid);
+ user=u;
+ loadRole(u.uid);
  }else{
-  loginPage();
+ loginPage();
  }
 });
 
