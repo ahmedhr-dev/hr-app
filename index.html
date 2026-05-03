@@ -4,16 +4,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HR System</title>
+<title>HR System Pro</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#0f172a;color:white}
 
 .header{
+ display:flex;
+ justify-content:space-between;
  padding:15px;
  background:#020617;
- text-align:center;
- font-size:18px;
 }
 
 .page{padding:15px}
@@ -23,98 +23,163 @@ body{margin:0;font-family:Arial;background:#0f172a;color:white}
  padding:15px;
  margin:10px 0;
  border-radius:15px;
- cursor:pointer;
- display:flex;
- justify-content:space-between;
 }
 
 button{
  background:#facc15;
  border:none;
- padding:12px;
+ padding:10px;
  border-radius:10px;
- cursor:pointer;
  margin-top:10px;
  width:100%;
+ cursor:pointer;
 }
 
-.top-btn{
- width:auto;
- margin:5px;
+input{
+ width:100%;
+ padding:10px;
+ margin:5px 0;
+ border-radius:10px;
+ border:none;
 }
-
 </style>
 
 </head>
 
 <body>
 
-<div class="header">HR System</div>
-
-<div class="page" id="app"></div>
+<div id="app"></div>
 
 <script>
 
+let currentUser = JSON.parse(localStorage.getItem("user")) || null;
 let page = "home";
+
+// ================= USERS =================
+function initUsers(){
+ if(!localStorage.getItem("users")){
+  let users = {
+   "admin": {email:"admin",pass:"1234",role:"admin",name:"Admin"},
+   "ahmed": {email:"ahmed",pass:"1234",role:"employee",name:"Ahmed"}
+  };
+  localStorage.setItem("users",JSON.stringify(users));
+ }
+}
+
+// ================= LOGIN =================
+function loginPage(){
+ app.innerHTML=`
+ <div class="page">
+ <h2>تسجيل الدخول</h2>
+ <input id="email" placeholder="username">
+ <input id="pass" type="password">
+ <button onclick="login()">دخول</button>
+ </div>`;
+}
+
+function login(){
+ let users = JSON.parse(localStorage.getItem("users"));
+ let email = document.getElementById("email").value;
+ let pass = document.getElementById("pass").value;
+
+ if(users[email] && users[email].pass === pass){
+  localStorage.setItem("user",JSON.stringify(users[email]));
+  location.reload();
+ }else{
+  alert("بيانات غلط");
+ }
+}
 
 // ================= MAIN =================
 function render(){
 
- if(page==="home"){
-  app.innerHTML=`
-  <div class="card" onclick="go('employees')">👥 الموظفين</div>
-  <div class="card" onclick="go('policies')">📄 السياسات</div>
-  <div class="card" onclick="go('faq')">❓ سؤال وجواب</div>
-  <div class="card" onclick="go('org')">🏢 الهيكل التنظيمي</div>
-  `;
+ if(!currentUser){
+  loginPage();
+  return;
  }
 
- if(page==="employees"){
-  app.innerHTML=`
-  <button class="top-btn" onclick="go('home')">⬅ رجوع</button>
-  <h3>الموظفين</h3>
-  <div id="list"></div>
-  <button onclick="addEmp()">➕ إضافة موظف</button>
-  `;
-  loadEmp();
- }
+ app.innerHTML=`
+ <div class="header">
+ <div>👤 ${currentUser.name}</div>
+ <div onclick="logout()">🚪</div>
+ </div>
 
- if(page==="policies"){
-  app.innerHTML=`
-  <button class="top-btn" onclick="go('home')">⬅ رجوع</button>
-  <h3>السياسات</h3>
-  <div id="pol"></div>
-  <button onclick="addPolicy()">➕ إضافة</button>
-  `;
-  loadPol();
- }
+ <div class="page">
 
- if(page==="faq"){
-  app.innerHTML=`
-  <button class="top-btn" onclick="go('home')">⬅ رجوع</button>
-  <h3>سؤال وجواب</h3>
-  <div id="faq"></div>
-  <button onclick="addFaq()">➕ إضافة</button>
-  `;
-  loadFaq();
- }
+ ${homePage()}
 
- if(page==="org"){
-  app.innerHTML=`
-  <button class="top-btn" onclick="go('home')">⬅ رجوع</button>
-  <h3>الهيكل التنظيمي</h3>
-  <div id="org"></div>
-  <button onclick="addOrg()">➕ إضافة</button>
-  `;
-  loadOrg();
- }
+ </div>`;
+}
 
+// ================= HOME =================
+function homePage(){
+ return `
+ <div class="card" onclick="go('employees')">👥 الموظفين</div>
+ <div class="card" onclick="go('profile')">👤 حسابي</div>
+ <div class="card" onclick="go('notifications')">🔔 الإشعارات</div>
+ `;
 }
 
 // ================= NAV =================
 function go(p){
  page = p;
- render();
+ renderPage();
+}
+
+function renderPage(){
+
+ if(page==="employees"){
+  app.innerHTML=`
+  <div class="header">
+   <button onclick="render()">⬅</button>
+   <div>الموظفين</div>
+  </div>
+
+  <div class="page">
+   <div id="list"></div>
+   ${currentUser.role==="admin" ? `<button onclick="addEmp()">➕ إضافة</button>` : ""}
+  </div>
+  `;
+  loadEmp();
+ }
+
+ if(page==="profile"){
+  app.innerHTML=`
+  <div class="header">
+   <button onclick="render()">⬅</button>
+   <div>حسابي</div>
+  </div>
+
+  <div class="page">
+   <div class="card">
+    الاسم: ${currentUser.name}<br>
+    الدور: ${currentUser.role}
+   </div>
+   <button onclick="logout()">تسجيل خروج</button>
+  </div>
+  `;
+ }
+
+ if(page==="notifications"){
+  let noti = JSON.parse(localStorage.getItem("noti")||"[]");
+
+  let html="";
+  noti.forEach(n=>{
+   html+=`<div class="card">${n}</div>`;
+  });
+
+  app.innerHTML=`
+  <div class="header">
+   <button onclick="render()">⬅</button>
+   <div>الإشعارات</div>
+  </div>
+
+  <div class="page">
+   ${html || "لا يوجد"}
+  </div>
+  `;
+ }
+
 }
 
 // ================= EMP =================
@@ -122,114 +187,59 @@ function loadEmp(){
  let data = JSON.parse(localStorage.getItem("employees")||"{}");
  let html="";
 
- if(Object.keys(data).length===0){
-  html="لا يوجد موظفين";
- }
-
  Object.keys(data).forEach(id=>{
   let e=data[id];
+
   html+=`
   <div class="card">
    ${e.name} - ${e.job}
-   <button onclick="del('employees','${id}')">🗑</button>
+   ${currentUser.role==="admin" ? `<button onclick="del('${id}')">🗑</button>` : ""}
   </div>`;
  });
 
- list.innerHTML=html;
+ list.innerHTML=html||"لا يوجد";
 }
 
 function addEmp(){
- let n=prompt("الاسم");
+ let n=prompt("اسم الموظف");
  let j=prompt("الوظيفة");
-
- if(!n) return;
 
  let data = JSON.parse(localStorage.getItem("employees")||"{}");
  data[Date.now()]={name:n,job:j};
 
  localStorage.setItem("employees",JSON.stringify(data));
+
+ addNoti("تم إضافة موظف: "+n);
+
  loadEmp();
 }
 
-// ================= POLICY =================
-function loadPol(){
- let data = JSON.parse(localStorage.getItem("policies")||"{}");
- let html="";
-
- Object.keys(data).forEach(id=>{
-  html+=`<div class="card">${data[id].title}</div>`;
- });
-
- pol.innerHTML=html||"لا يوجد";
-}
-
-function addPolicy(){
- let t=prompt("عنوان السياسة");
-
- let data = JSON.parse(localStorage.getItem("policies")||"{}");
- data[Date.now()]={title:t};
-
- localStorage.setItem("policies",JSON.stringify(data));
- loadPol();
-}
-
-// ================= FAQ =================
-function loadFaq(){
- let data = JSON.parse(localStorage.getItem("faq")||"{}");
- let html="";
-
- Object.keys(data).forEach(id=>{
-  let f=data[id];
-  html+=`<div class="card"><b>${f.q}</b><br>${f.a}</div>`;
- });
-
- faq.innerHTML=html||"لا يوجد";
-}
-
-function addFaq(){
- let q=prompt("السؤال");
- let a=prompt("الإجابة");
-
- let data = JSON.parse(localStorage.getItem("faq")||"{}");
- data[Date.now()]={q:q,a:a};
-
- localStorage.setItem("faq",JSON.stringify(data));
- loadFaq();
-}
-
-// ================= ORG =================
-function loadOrg(){
- let data = JSON.parse(localStorage.getItem("org")||"{}");
- let html="";
-
- Object.keys(data).forEach(id=>{
-  let o=data[id];
-  html+=`<div class="card">${o.name} ➝ ${o.manager}</div>`;
- });
-
- org.innerHTML=html||"لا يوجد";
-}
-
-function addOrg(){
- let n=prompt("اسم الموظف");
- let m=prompt("المدير");
-
- let data = JSON.parse(localStorage.getItem("org")||"{}");
- data[Date.now()]={name:n,manager:m};
-
- localStorage.setItem("org",JSON.stringify(data));
- loadOrg();
-}
-
-// ================= DELETE =================
-function del(type,id){
- let data = JSON.parse(localStorage.getItem(type)||"{}");
+function del(id){
+ let data = JSON.parse(localStorage.getItem("employees")||"{}");
  delete data[id];
- localStorage.setItem(type,JSON.stringify(data));
- render();
+
+ localStorage.setItem("employees",JSON.stringify(data));
+
+ addNoti("تم حذف موظف");
+
+ loadEmp();
+}
+
+// ================= NOTI =================
+function addNoti(msg){
+ let n = JSON.parse(localStorage.getItem("noti")||"[]");
+ n.unshift(msg);
+ localStorage.setItem("noti",JSON.stringify(n));
+}
+
+// ================= LOGOUT =================
+function logout(){
+ localStorage.removeItem("user");
+ location.reload();
 }
 
 // ================= START =================
+initUsers();
 render();
 
 </script>
