@@ -4,15 +4,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HR App</title>
+<title>HR System</title>
 
 <style>
-body{
- margin:0;
- font-family:Arial;
- background:#0f172a;
- color:white;
-}
+body{margin:0;font-family:Arial;background:#0f172a;color:white}
 
 .header{
  padding:15px;
@@ -21,34 +16,33 @@ body{
  font-size:18px;
 }
 
-.page{
- padding:15px;
-}
+.page{padding:15px}
 
 .card{
  background:#1e293b;
  padding:15px;
  margin:10px 0;
- border-radius:12px;
+ border-radius:15px;
+ cursor:pointer;
  display:flex;
  justify-content:space-between;
- align-items:center;
 }
 
 button{
  background:#facc15;
  border:none;
- padding:10px;
+ padding:12px;
  border-radius:10px;
  cursor:pointer;
+ margin-top:10px;
+ width:100%;
 }
 
-.add-btn{
- width:100%;
- padding:15px;
- margin-top:10px;
- font-size:16px;
+.top-btn{
+ width:auto;
+ margin:5px;
 }
+
 </style>
 
 </head>
@@ -57,75 +51,186 @@ button{
 
 <div class="header">HR System</div>
 
-<div class="page">
-
-<div id="list"></div>
-
-<button class="add-btn" onclick="add()">➕ إضافة موظف</button>
-
-</div>
+<div class="page" id="app"></div>
 
 <script>
 
-// تحميل البيانات
-function load(){
- let data = JSON.parse(localStorage.getItem("employees") || "{}");
- let html = "";
+let page = "home";
 
- if(Object.keys(data).length === 0){
-  html = "<div class='card'>لا يوجد موظفين</div>";
+// ================= MAIN =================
+function render(){
+
+ if(page==="home"){
+  app.innerHTML=`
+  <div class="card" onclick="go('employees')">👥 الموظفين</div>
+  <div class="card" onclick="go('policies')">📄 السياسات</div>
+  <div class="card" onclick="go('faq')">❓ سؤال وجواب</div>
+  <div class="card" onclick="go('org')">🏢 الهيكل التنظيمي</div>
+  `;
+ }
+
+ if(page==="employees"){
+  app.innerHTML=`
+  <button class="top-btn" onclick="go('home')">⬅ رجوع</button>
+  <h3>الموظفين</h3>
+  <div id="list"></div>
+  <button onclick="addEmp()">➕ إضافة موظف</button>
+  `;
+  loadEmp();
+ }
+
+ if(page==="policies"){
+  app.innerHTML=`
+  <button class="top-btn" onclick="go('home')">⬅ رجوع</button>
+  <h3>السياسات</h3>
+  <div id="pol"></div>
+  <button onclick="addPolicy()">➕ إضافة</button>
+  `;
+  loadPol();
+ }
+
+ if(page==="faq"){
+  app.innerHTML=`
+  <button class="top-btn" onclick="go('home')">⬅ رجوع</button>
+  <h3>سؤال وجواب</h3>
+  <div id="faq"></div>
+  <button onclick="addFaq()">➕ إضافة</button>
+  `;
+  loadFaq();
+ }
+
+ if(page==="org"){
+  app.innerHTML=`
+  <button class="top-btn" onclick="go('home')">⬅ رجوع</button>
+  <h3>الهيكل التنظيمي</h3>
+  <div id="org"></div>
+  <button onclick="addOrg()">➕ إضافة</button>
+  `;
+  loadOrg();
+ }
+
+}
+
+// ================= NAV =================
+function go(p){
+ page = p;
+ render();
+}
+
+// ================= EMP =================
+function loadEmp(){
+ let data = JSON.parse(localStorage.getItem("employees")||"{}");
+ let html="";
+
+ if(Object.keys(data).length===0){
+  html="لا يوجد موظفين";
  }
 
  Object.keys(data).forEach(id=>{
-  let e = data[id];
-
-  html += `
+  let e=data[id];
+  html+=`
   <div class="card">
-   <div>
-    <b>${e.name}</b><br>
-    ${e.job}
-   </div>
-   <button onclick="del('${id}')">🗑</button>
+   ${e.name} - ${e.job}
+   <button onclick="del('employees','${id}')">🗑</button>
   </div>`;
  });
 
- document.getElementById("list").innerHTML = html;
+ list.innerHTML=html;
 }
 
-// إضافة موظف
-function add(){
- let name = prompt("اسم الموظف");
- let job = prompt("الوظيفة");
+function addEmp(){
+ let n=prompt("الاسم");
+ let j=prompt("الوظيفة");
 
- if(!name) return;
+ if(!n) return;
 
- let data = JSON.parse(localStorage.getItem("employees") || "{}");
+ let data = JSON.parse(localStorage.getItem("employees")||"{}");
+ data[Date.now()]={name:n,job:j};
 
- let id = Date.now();
-
- data[id] = {
-  name:name,
-  job:job
- };
-
- localStorage.setItem("employees", JSON.stringify(data));
-
- load();
+ localStorage.setItem("employees",JSON.stringify(data));
+ loadEmp();
 }
 
-// حذف
-function del(id){
- let data = JSON.parse(localStorage.getItem("employees") || "{}");
+// ================= POLICY =================
+function loadPol(){
+ let data = JSON.parse(localStorage.getItem("policies")||"{}");
+ let html="";
 
+ Object.keys(data).forEach(id=>{
+  html+=`<div class="card">${data[id].title}</div>`;
+ });
+
+ pol.innerHTML=html||"لا يوجد";
+}
+
+function addPolicy(){
+ let t=prompt("عنوان السياسة");
+
+ let data = JSON.parse(localStorage.getItem("policies")||"{}");
+ data[Date.now()]={title:t};
+
+ localStorage.setItem("policies",JSON.stringify(data));
+ loadPol();
+}
+
+// ================= FAQ =================
+function loadFaq(){
+ let data = JSON.parse(localStorage.getItem("faq")||"{}");
+ let html="";
+
+ Object.keys(data).forEach(id=>{
+  let f=data[id];
+  html+=`<div class="card"><b>${f.q}</b><br>${f.a}</div>`;
+ });
+
+ faq.innerHTML=html||"لا يوجد";
+}
+
+function addFaq(){
+ let q=prompt("السؤال");
+ let a=prompt("الإجابة");
+
+ let data = JSON.parse(localStorage.getItem("faq")||"{}");
+ data[Date.now()]={q:q,a:a};
+
+ localStorage.setItem("faq",JSON.stringify(data));
+ loadFaq();
+}
+
+// ================= ORG =================
+function loadOrg(){
+ let data = JSON.parse(localStorage.getItem("org")||"{}");
+ let html="";
+
+ Object.keys(data).forEach(id=>{
+  let o=data[id];
+  html+=`<div class="card">${o.name} ➝ ${o.manager}</div>`;
+ });
+
+ org.innerHTML=html||"لا يوجد";
+}
+
+function addOrg(){
+ let n=prompt("اسم الموظف");
+ let m=prompt("المدير");
+
+ let data = JSON.parse(localStorage.getItem("org")||"{}");
+ data[Date.now()]={name:n,manager:m};
+
+ localStorage.setItem("org",JSON.stringify(data));
+ loadOrg();
+}
+
+// ================= DELETE =================
+function del(type,id){
+ let data = JSON.parse(localStorage.getItem(type)||"{}");
  delete data[id];
-
- localStorage.setItem("employees", JSON.stringify(data));
-
- load();
+ localStorage.setItem(type,JSON.stringify(data));
+ render();
 }
 
-// تشغيل أول مرة
-load();
+// ================= START =================
+render();
 
 </script>
 
