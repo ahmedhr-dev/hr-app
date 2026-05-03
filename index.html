@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HR System Pro</title>
+<title>HR Pro</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 
@@ -14,20 +14,24 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#0f172a;color:white}
-.header{display:flex;justify-content:space-between;padding:15px;background:#020617}
+.header{
+ display:flex;justify-content:space-between;
+ padding:15px;background:#020617;font-size:14px
+}
 .page{padding:15px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .card{
  background:#1e293b;
  padding:20px;
  border-radius:15px;
- cursor:pointer;
  text-align:center;
- font-size:18px
+ cursor:pointer;
+ transition:.2s
 }
+.card:hover{transform:scale(1.05)}
 button{
- background:#facc15;border:none;padding:10px;
- border-radius:10px;margin-top:10px;width:100%
+ background:#facc15;border:none;
+ padding:10px;border-radius:10px;margin-top:10px;width:100%
 }
 input{
  width:100%;padding:10px;margin:5px 0;border-radius:10px;border:none
@@ -42,7 +46,7 @@ input{
 
 <script>
 
-// 🔥 Firebase
+// Firebase
 firebase.initializeApp({
  apiKey:"AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
  authDomain:"hr-app-710f3.firebaseapp.com",
@@ -56,28 +60,27 @@ let user=null;
 let role="user";
 let allFAQ={};
 
-// ================= LOGIN =================
+// LOGIN
 function loginPage(){
  app.innerHTML=`
  <div class="page">
- <h2>HR Login</h2>
+ <h2>HR System</h2>
  <input id="email" placeholder="Email">
  <input id="pass" type="password">
- <button onclick="login()">Login</button>
+ <button onclick="login()">دخول</button>
  </div>`;
 }
 
 function login(){
- auth.signInWithEmailAndPassword(
-  email.value, pass.value
- ).catch(e=>alert(e.message));
+ auth.signInWithEmailAndPassword(email.value,pass.value)
+ .catch(e=>alert(e.message));
 }
 
-// ================= MAIN =================
+// DASHBOARD
 function dashboard(){
  app.innerHTML=`
  <div class="header">
- <div>${user.email}</div>
+ <div>👤 ${user.email}</div>
  <div onclick="logout()">🚪</div>
  </div>
 
@@ -87,31 +90,32 @@ function dashboard(){
   <div class="card" onclick="openPage('policies')">📄 سياسات</div>
   <div class="card" onclick="openPage('faq')">❓ FAQ</div>
   <div class="card" onclick="openPage('ai')">🤖 مساعد</div>
+  <div class="card" onclick="openPage('profile')">👤 حسابي</div>
  </div>
  </div>`;
 }
 
-// ================= NAV =================
+// NAV
 function openPage(p){
 
+ if(p==="profile"){
+  app.innerHTML=back("حسابي")+`
+  <div class="card">
+  البريد: ${user.email}<br>
+  الدور: ${role}
+  </div>`;
+ }
+
  if(p==="guide"){
-  app.innerHTML=backBtn("الدليل")+`
-  <div id="guide"></div>
-  ${adminBtn("guide")}
-  `;
-  loadData("guide","guide");
+  renderList("guide","guide");
  }
 
  if(p==="policies"){
-  app.innerHTML=backBtn("السياسات")+`
-  <div id="policies"></div>
-  ${adminBtn("policies")}
-  `;
-  loadData("policies","policies");
+  renderList("policies","policies");
  }
 
  if(p==="faq"){
-  app.innerHTML=backBtn("FAQ")+`
+  app.innerHTML=back("FAQ")+`
   <div id="faq"></div>
   ${role==="admin"?'<button onclick="addFAQ()">➕</button>':""}
   `;
@@ -119,39 +123,41 @@ function openPage(p){
  }
 
  if(p==="ai"){
-  app.innerHTML=backBtn("المساعد")+`
-  <input id="q" placeholder="اسأل HR">
+  app.innerHTML=back("المساعد")+`
+  <input id="q" placeholder="اكتب سؤالك">
   <button onclick="ask()">اسأل</button>
   <div id="answer"></div>`;
  }
 
 }
 
-// ================= UI =================
-function backBtn(title){
+// UI
+function back(title){
  return `<div class="header">
  <button onclick="dashboard()">⬅</button>
  <div>${title}</div>
  </div><div class="page">`;
 }
 
-function adminBtn(type){
- return role==="admin"
- ? `<button onclick="add('${type}')">➕ إضافة</button>`
- : "";
+function renderList(path,id){
+ app.innerHTML=back(path)+`
+ <div id="${id}"></div>
+ ${role==="admin"?`<button onclick="add('${path}')">➕ إضافة</button>`:""}
+ `;
+ load(path,id);
 }
 
-// ================= LOAD =================
-function loadData(path,el){
+// DATA
+function load(path,el){
  db.ref(path).on("value",snap=>{
   let data=snap.val()||{};
   let html="";
 
-  Object.keys(data).forEach(id=>{
+  Object.keys(data).forEach(k=>{
    html+=`
    <div class="card">
-   ${data[id].text}
-   ${role==="admin"?`<button onclick="del('${path}','${id}')">🗑</button>`:""}
+   ${data[k].text}
+   ${role==="admin"?`<button onclick="del('${path}','${k}')">🗑</button>`:""}
    </div>`;
   });
 
@@ -165,18 +171,17 @@ function add(type){
  db.ref(type+"/"+Date.now()).set({text:t});
 }
 
-// ================= FAQ =================
+// FAQ
 function loadFAQ(){
  db.ref("faq").on("value",snap=>{
   allFAQ=snap.val()||{};
   let html="";
 
-  Object.keys(allFAQ).forEach(id=>{
-   let f=allFAQ[id];
+  Object.values(allFAQ).forEach(f=>{
    html+=`
    <div class="card">
    <b>${f.q}</b><br>${f.a}
-   ${role==="admin"?`<button onclick="del('faq','${id}')">🗑</button>`:""}
+   ${role==="admin"?`<button onclick="del('faq','${f.id}')">🗑</button>`:""}
    </div>`;
   });
 
@@ -190,41 +195,36 @@ function addFAQ(){
  db.ref("faq/"+Date.now()).set({q:q,a:a});
 }
 
-// ================= AI =================
+// AI
 function ask(){
  let q=document.getElementById("q").value.toLowerCase();
- let answer="❗ تواصل مع HR";
+ let best="❗ تواصل مع HR";
 
  Object.values(allFAQ).forEach(f=>{
   if(q.includes(f.q.toLowerCase())){
-   answer=f.a;
+   best=f.a;
   }
  });
 
- answer.innerHTML=`<div class="card">${answer}</div>`;
- document.getElementById("answer").innerHTML=
- `<div class="card">${answer}</div>`;
+ answer.innerHTML=`<div class="card">${best}</div>`;
 }
 
-// ================= DELETE =================
+// DELETE
 function del(type,id){
  db.ref(type+"/"+id).remove();
 }
 
-// ================= LOGOUT =================
-function logout(){
- auth.signOut();
-}
+// AUTH
+function logout(){auth.signOut();}
 
-// ================= ROLE =================
 function loadRole(uid){
- db.ref("users/"+uid+"/role").once("value").then(s=>{
-  role = s.val() || "user";
+ db.ref("users/"+uid+"/role").once("value")
+ .then(s=>{
+  role=s.val()||"user";
   dashboard();
  });
 }
 
-// ================= AUTH =================
 auth.onAuthStateChanged(u=>{
  if(u){
   user=u;
