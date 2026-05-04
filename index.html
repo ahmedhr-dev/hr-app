@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>HR System | نظام الموارد البشرية</title>
+    <title>HR System | نظام إدارة الموارد البشرية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -218,6 +218,10 @@
 <div id="app"></div>
 
 <script>
+    // نظام إدارة الموارد البشرية - الإصدار 2.0
+    // Developer: Ahmed HR
+    // GitHub: https://github.com/ahmedhr-dev/hr-app
+    
     // ========== بيانات النظام ==========
     let users = [{ id: 1, email: "admin@hr.com", password: "admin123", name: "أحمد المدير", role: "admin", jobTitle: "مدير الموارد البشرية" }];
     let currentUser = null;
@@ -286,7 +290,7 @@
         ]
     };
     
-    // تقييم الأداء - 5 معايير لكل وظيفة (100 نقطة/20 لكل معيار)
+    // تقييم الأداء - 5 معايير لكل وظيفة
     let performance = {
         "مدير الموارد البشرية": {
             criteria: [
@@ -347,12 +351,11 @@
     
     function logout() { currentUser = null; sessionStorage.removeItem('user'); renderApp(); }
     
-    // شاشة تسجيل الدخول
     function renderLogin() {
         return `
         <div class="login-container">
             <div class="login-card">
-                <div style="text-align:center; margin-bottom:20px;"><div style="width:60px;height:60px;background:linear-gradient(135deg,#d4af37,#b8960c);border-radius:20px;margin:0 auto;display:flex;align-items:center;justify-content:center;"><i class="fas fa-crown"></i></div><h2>HR SYSTEM</h2></div>
+                <div style="text-align:center; margin-bottom:20px;"><div style="width:60px;height:60px;background:linear-gradient(135deg,#d4af37,#b8960c);border-radius:20px;margin:0 auto;display:flex;align-items:center;justify-content:center;"><i class="fas fa-crown"></i></div><h2>HR SYSTEM</h2><p style="font-size:12px; text-align:center;">تسجيل الدخول إلى النظام</p></div>
                 <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" value="admin@hr.com">
                 <input type="password" id="loginPass" placeholder="كلمة المرور" value="admin123">
                 <button class="btn" onclick="doLogin()">دخول</button>
@@ -371,7 +374,7 @@
     window.doLogin = function() {
         let email = document.getElementById('loginEmail').value;
         let pass = document.getElementById('loginPass').value;
-        if(login(email, pass)) alert('تم الدخول ✅');
+        if(login(email, pass)) alert('تم الدخول بنجاح ✅');
         else alert('بيانات غير صحيحة ❌');
     };
     window.doRegister = function() {
@@ -379,14 +382,13 @@
         let email = document.getElementById('regEmail').value;
         let pass = document.getElementById('regPass').value;
         let confirm = document.getElementById('regConfirm').value;
-        if(register(name, email, pass, confirm)) { alert('تم التسجيل ✅'); toggleReg(); }
+        if(register(name, email, pass, confirm)) { alert('تم التسجيل بنجاح ✅'); toggleReg(); }
     };
     window.toggleReg = function() {
         let f = document.getElementById('regForm');
         f.classList.toggle('show');
     };
     
-    // عرض التفاصيل في نافذة منبثقة
     function showDetail(title, content) {
         let modal = document.createElement('div');
         modal.className = 'modal';
@@ -394,7 +396,6 @@
         document.body.appendChild(modal);
     }
     
-    // دليل الموظف - تبويبات
     let guideTab = "policies";
     function renderGuide() {
         let items = [];
@@ -417,7 +418,6 @@
     }
     window.setGuideTab = function(tab) { guideTab = tab; renderApp(); };
     
-    // الصفحات
     let currentPage = "home";
     
     function getGreeting() {
@@ -435,6 +435,7 @@
                 <div style="font-size:24px; font-weight:bold; color:#d4af37;">${getGreeting()}، ${currentUser?.name?.split(' ')[0] || 'موظف'} 👋</div>
                 <div style="margin:8px 0;"><i class="fas fa-briefcase"></i> ${currentUser?.jobTitle || 'موظف'}</div>
                 <div><i class="fas fa-lightbulb"></i> "خير الناس أنفعهم للناس"</div>
+                <div style="font-size:11px; opacity:0.6; margin-top:8px;">الإصدار 2.0</div>
             </div>
             <div class="hero-image">${logoHtml}</div>
         </div>
@@ -536,7 +537,6 @@
         renderApp();
     }
     
-    // ========== لوحة التحكم الكاملة ==========
     function renderAdmin() {
         if(currentUser?.role !== 'admin') return '<div class="card">🔒 هذه الصفحة للمدير فقط</div>';
         return `
@@ -569,7 +569,7 @@
         
         <div class="card"><h4>🔔 الإعلانات</h4>${announcements.map(a => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${a.title}</strong><br><small>${a.content}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('announcement',${a.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('announcement',${a.id})">🗑️</button></div></div>`).join('')}</div>
         
-        <div class="card"><h4>⭐ تقييم الأداء (تعديل المعايير - 5 معايير)</h4>
+        <div class="card"><h4>⭐ تقييم الأداء</h4>
         ${Object.keys(performance).map(jobTitle => `
             <div style="margin-bottom:15px; padding:10px; background:rgba(212,175,55,0.1); border-radius:12px;">
                 <strong>${jobTitle}</strong>
@@ -578,7 +578,6 @@
         `).join('')}</div>`;
     }
     
-    // تعديل بيانات الشركة
     window.editCompanyData = function() {
         let logoPreview = companyData.logo ? `<img src="${companyData.logo}" style="width:80px;height:80px;border-radius:50%;margin-bottom:10px;">` : '<div style="width:80px;height:80px;background:rgba(212,175,55,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;"><i class="fas fa-building" style="font-size:40px;"></i></div>';
         
@@ -616,7 +615,6 @@
         document.getElementById('logoFileInput').click();
     };
     
-    // ========== دوال الإدارة ==========
     function showModal(title, html, onSave) {
         let modal = document.createElement('div');
         modal.className = 'modal';
@@ -678,7 +676,6 @@
         }
     };
     
-    // دوال الهيكل التنظيمي
     window.editOrgDept = function(id) {
         let dept = orgStructure.departments.find(d => d.id === id);
         showModal('تعديل القسم', `
@@ -726,7 +723,6 @@
         }
     };
     
-    // تعديل معايير التقييم (5 معايير)
     window.editPerformance = function(jobTitle) {
         let perf = performance[jobTitle];
         let criteriaHtml = perf.criteria.map((c, idx) => `
@@ -759,7 +755,6 @@
         });
     };
     
-    // ========== التطبيق الرئيسي ==========
     let currentPageVar = "home";
     
     function renderApp() {
@@ -767,7 +762,7 @@
         let isAdmin = currentUser.role === 'admin';
         document.getElementById('app').innerHTML = `
         <div class="sidebar" id="sidebar">
-            <div class="sidebar-header"><div class="logo">🏢 HR SYSTEM</div></div>
+            <div class="sidebar-header"><div class="logo">🏢 HR SYSTEM</div><div style="font-size:10px; opacity:0.6;">الإصدار 2.0</div></div>
             <div class="nav-item ${currentPageVar === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
             <div class="nav-item ${currentPageVar === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i> دليل الموظف</div>
             <div class="nav-item ${currentPageVar === 'org' ? 'active' : ''}" data-page="org"><i class="fas fa-building"></i> الهيكل التنظيمي</div>
