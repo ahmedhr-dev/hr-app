@@ -14,7 +14,6 @@
             color: #fff;
             min-height: 100vh;
         }
-        /* تسجيل الدخول */
         .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .login-card {
             background: rgba(10, 26, 47, 0.95);
@@ -33,7 +32,6 @@
         .register-form { display: none; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(212,175,55,0.2); }
         .register-form.show { display: block; }
         
-        /* القائمة الجانبية */
         .sidebar {
             position: fixed;
             right: 0;
@@ -87,10 +85,10 @@
             border-radius: 25px; padding: 20px; margin-bottom: 20px;
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
         }
-        .hero-image { width: 70px; height: 70px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .hero-image { width: 70px; height: 70px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .hero-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         .hero-image i { font-size: 35px; color: #0a1a2f; }
         
-        /* دليل الموظف */
         .guide-tabs { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .guide-tab { padding: 6px 15px; border-radius: 30px; cursor: pointer; background: rgba(212,175,55,0.1); }
         .guide-tab.active { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
@@ -107,7 +105,6 @@
         }
         .guide-item:hover { border-color: #d4af37; }
         
-        /* نافذة منبثقة */
         .modal {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
@@ -125,7 +122,6 @@
             border: 1px solid rgba(212,175,55,0.3); border-radius: 12px; color: white;
         }
         
-        /* لوحة التحكم */
         .admin-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -143,13 +139,12 @@
         .admin-card:hover { background: rgba(212,175,55,0.15); transform: translateY(-2px); }
         .admin-card i { font-size: 26px; color: #d4af37; margin-bottom: 6px; }
         
-        /* تقييم الأداء - 10 معايير */
         .performance-score { font-size: 48px; font-weight: bold; color: #d4af37; text-align: center; }
         .score-bar { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 15px 0; overflow: hidden; }
         .score-fill { height: 100%; background: linear-gradient(90deg, #d4af37, #b8960c); }
         .criteria-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 12px;
             margin-top: 15px;
         }
@@ -162,7 +157,6 @@
         .criteria-progress { width: 100%; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px; margin: 8px 0; overflow: hidden; }
         .criteria-progress-fill { height: 100%; background: linear-gradient(90deg, #d4af37, #b8960c); }
         
-        /* الهيكل التنظيمي */
         .org-grid {
             display: flex;
             flex-direction: column;
@@ -193,6 +187,19 @@
             cursor: pointer;
         }
         
+        .company-logo-img {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #d4af37, #b8960c);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            overflow: hidden;
+        }
+        .company-logo-img img { width: 100%; height: 100%; object-fit: cover; }
+        
         .menu-toggle { display: none; background: none; border: none; font-size: 24px; color: white; cursor: pointer; }
         
         @media (max-width: 768px) {
@@ -214,6 +221,19 @@
     // ========== بيانات النظام ==========
     let users = [{ id: 1, email: "admin@hr.com", password: "admin123", name: "أحمد المدير", role: "admin", jobTitle: "مدير الموارد البشرية" }];
     let currentUser = null;
+    
+    // بيانات الشركة
+    let companyData = {
+        name: "شركة التميز للاستشارات",
+        logo: null,
+        vision: "الريادة في تقديم حلول الموارد البشرية والتقنية",
+        mission: "تقديم خدمات مبتكرة تخلق قيمة حقيقية لعملائنا وموظفينا",
+        values: [
+            { name: "النزاهة", icon: "fas fa-handshake", desc: "نلتزم بأعلى المعايير الأخلاقية" },
+            { name: "الابتكار", icon: "fas fa-lightbulb", desc: "نتبنى الإبداع" },
+            { name: "التميز", icon: "fas fa-trophy", desc: "نطمح لأعلى جودة" }
+        ]
+    };
     
     // المسميات الوظيفية
     let jobs = [
@@ -266,54 +286,40 @@
         ]
     };
     
-    // تقييم الأداء - 10 معايير لكل وظيفة (100 نقطة)
+    // تقييم الأداء - 5 معايير لكل وظيفة (100 نقطة/20 لكل معيار)
     let performance = {
         "مدير الموارد البشرية": {
             criteria: [
-                { name: "التخطيط الاستراتيجي", value: 88, max: 100, weight: 10 },
-                { name: "إدارة الموارد البشرية", value: 92, max: 100, weight: 10 },
-                { name: "التواصل الفعال", value: 90, max: 100, weight: 10 },
-                { name: "القيادة", value: 85, max: 100, weight: 10 },
-                { name: "حل المشكلات", value: 90, max: 100, weight: 10 },
-                { name: "الالتزام بالسياسات", value: 95, max: 100, weight: 10 },
-                { name: "تطوير الفريق", value: 80, max: 100, weight: 10 },
-                { name: "الإنتاجية", value: 92, max: 100, weight: 10 },
-                { name: "الابتكار", value: 85, max: 100, weight: 10 },
-                { name: "الحضور والانضباط", value: 98, max: 100, weight: 10 }
+                { name: "التخطيط الاستراتيجي", value: 88, max: 100, weight: 20 },
+                { name: "إدارة الموارد البشرية", value: 92, max: 100, weight: 20 },
+                { name: "القيادة والتواصل", value: 85, max: 100, weight: 20 },
+                { name: "الالتزام بالسياسات", value: 95, max: 100, weight: 20 },
+                { name: "الإنتاجية والتطوير", value: 86, max: 100, weight: 20 }
             ]
         },
         "محاسب": {
             criteria: [
-                { name: "دقة التقارير", value: 98, max: 100, weight: 10 },
-                { name: "الالتزام بالمعايير", value: 95, max: 100, weight: 10 },
-                { name: "سرعة الإنجاز", value: 90, max: 100, weight: 10 },
-                { name: "السرية المالية", value: 100, max: 100, weight: 10 },
-                { name: "التسويات البنكية", value: 92, max: 100, weight: 10 },
-                { name: "الميزانية", value: 88, max: 100, weight: 10 },
-                { name: "التقارير الضريبية", value: 95, max: 100, weight: 10 },
-                { name: "التعاون", value: 90, max: 100, weight: 10 },
-                { name: "التطوير الذاتي", value: 85, max: 100, weight: 10 },
-                { name: "الانضباط", value: 98, max: 100, weight: 10 }
+                { name: "دقة التقارير", value: 98, max: 100, weight: 20 },
+                { name: "الالتزام بالمعايير", value: 95, max: 100, weight: 20 },
+                { name: "سرعة الإنجاز", value: 90, max: 100, weight: 20 },
+                { name: "السرية المالية", value: 100, max: 100, weight: 20 },
+                { name: "التسويات والميزانية", value: 90, max: 100, weight: 20 }
             ]
         },
         "مبرمج": {
             criteria: [
-                { name: "جودة الكود", value: 88, max: 100, weight: 10 },
-                { name: "الالتزام بالمهل", value: 90, max: 100, weight: 10 },
-                { name: "حل المشكلات", value: 85, max: 100, weight: 10 },
-                { name: "التوثيق", value: 80, max: 100, weight: 10 },
-                { name: "التعاون", value: 88, max: 100, weight: 10 },
-                { name: "الإبداع التقني", value: 85, max: 100, weight: 10 },
-                { name: "الاختبارات", value: 90, max: 100, weight: 10 },
-                { name: "الأمان", value: 92, max: 100, weight: 10 },
-                { name: "التحديث المستمر", value: 85, max: 100, weight: 10 },
-                { name: "الحضور", value: 95, max: 100, weight: 10 }
+                { name: "جودة الكود", value: 88, max: 100, weight: 20 },
+                { name: "الالتزام بالمهل", value: 90, max: 100, weight: 20 },
+                { name: "حل المشكلات", value: 85, max: 100, weight: 20 },
+                { name: "التوثيق والأمان", value: 86, max: 100, weight: 20 },
+                { name: "التعاون والإبداع", value: 87, max: 100, weight: 20 }
             ]
         }
     };
     
     function saveAll() {
         localStorage.setItem('hr_users', JSON.stringify(users));
+        localStorage.setItem('hr_company', JSON.stringify(companyData));
         localStorage.setItem('hr_jobs', JSON.stringify(jobs));
         localStorage.setItem('hr_policies', JSON.stringify(policies));
         localStorage.setItem('hr_behaviors', JSON.stringify(behaviors));
@@ -422,6 +428,7 @@
     }
     
     function renderHome() {
+        let logoHtml = companyData.logo ? `<img src="${companyData.logo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '<i class="fas fa-users"></i>';
         return `
         <div class="hero-section">
             <div class="hero-text">
@@ -429,7 +436,7 @@
                 <div style="margin:8px 0;"><i class="fas fa-briefcase"></i> ${currentUser?.jobTitle || 'موظف'}</div>
                 <div><i class="fas fa-lightbulb"></i> "خير الناس أنفعهم للناس"</div>
             </div>
-            <div class="hero-image"><i class="fas fa-users"></i></div>
+            <div class="hero-image">${logoHtml}</div>
         </div>
         <div class="stats-grid">
             <div class="stat-card"><div class="stat-number">${jobs.length}</div><div>المسميات</div></div>
@@ -439,12 +446,24 @@
         </div>`;
     }
     
+    function renderCompany() {
+        let logoHtml = companyData.logo ? `<img src="${companyData.logo}" style="width:100px;height:100px;object-fit:cover;border-radius:50%;">` : '<i class="fas fa-building" style="font-size:50px;"></i>';
+        return `
+        <div class="card">
+            <div class="company-logo-img">${logoHtml}</div>
+            <h2 style="color:#d4af37; text-align:center;">${companyData.name}</h2>
+        </div>
+        <div class="card"><h3><i class="fas fa-eye"></i> رؤيتنا</h3><p>${companyData.vision}</p></div>
+        <div class="card"><h3><i class="fas fa-bullseye"></i> رسالتنا</h3><p>${companyData.mission}</p></div>
+        <div class="card"><h3><i class="fas fa-gem"></i> قيمنا</h3>${companyData.values.map(v => `<div style="padding:8px; border-bottom:1px solid rgba(212,175,55,0.1);"><i class="${v.icon}"></i> <strong>${v.name}</strong><br>${v.desc}</div>`).join('')}</div>`;
+    }
+    
     function renderOrg() {
         return `
         <div class="card">
             <h3>🏢 الهيكل التنظيمي</h3>
             <div class="org-grid">
-                <div class="org-ceo" onclick="editOrgItem('ceo')">
+                <div class="org-ceo" onclick="if(${currentUser?.role === 'admin'}) editOrgItem('ceo')">
                     <i class="fas fa-crown" style="font-size:28px;"></i>
                     <h3>${orgStructure.ceo.name}</h3>
                     <p>${orgStructure.ceo.head}</p>
@@ -452,7 +471,7 @@
                 </div>
                 <div class="org-departments">
                     ${orgStructure.departments.map(d => `
-                        <div class="org-dept" onclick="editOrgItem('dept', ${d.id})">
+                        <div class="org-dept" onclick="if(${currentUser?.role === 'admin'}) editOrgDept(${d.id})">
                             <i class="fas fa-building"></i>
                             <h4>${d.name}</h4>
                             <p>${d.head}</p>
@@ -531,6 +550,7 @@
                 <div class="admin-card" onclick="showAddModal('faq')"><i class="fas fa-question-circle"></i><div>إضافة سؤال</div></div>
                 <div class="admin-card" onclick="showAddModal('dept')"><i class="fas fa-building"></i><div>إضافة قسم</div></div>
                 <div class="admin-card" onclick="showAddModal('announcement')"><i class="fas fa-bell"></i><div>إضافة إعلان</div></div>
+                <div class="admin-card" onclick="editCompanyData()"><i class="fas fa-building"></i><div>تعديل بيانات الشركة</div></div>
             </div>
         </div>
         
@@ -549,7 +569,7 @@
         
         <div class="card"><h4>🔔 الإعلانات</h4>${announcements.map(a => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${a.title}</strong><br><small>${a.content}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('announcement',${a.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('announcement',${a.id})">🗑️</button></div></div>`).join('')}</div>
         
-        <div class="card"><h4>⭐ تقييم الأداء (تعديل المعايير)</h4>
+        <div class="card"><h4>⭐ تقييم الأداء (تعديل المعايير - 5 معايير)</h4>
         ${Object.keys(performance).map(jobTitle => `
             <div style="margin-bottom:15px; padding:10px; background:rgba(212,175,55,0.1); border-radius:12px;">
                 <strong>${jobTitle}</strong>
@@ -557,6 +577,44 @@
             </div>
         `).join('')}</div>`;
     }
+    
+    // تعديل بيانات الشركة
+    window.editCompanyData = function() {
+        let logoPreview = companyData.logo ? `<img src="${companyData.logo}" style="width:80px;height:80px;border-radius:50%;margin-bottom:10px;">` : '<div style="width:80px;height:80px;background:rgba(212,175,55,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;"><i class="fas fa-building" style="font-size:40px;"></i></div>';
+        
+        showModal('تعديل بيانات الشركة', `
+            <div style="text-align:center; margin-bottom:15px;">
+                ${logoPreview}
+                <div class="form-group"><label>شعار الشركة (رابط الصورة)</label><input id="compLogo" placeholder="أدخل رابط الصورة" value="${companyData.logo || ''}"></div>
+                <button class="btn" style="margin-top:5px; width:auto; padding:5px 15px;" onclick="uploadCompanyLogo()">اختيار صورة</button>
+                <input type="file" id="logoFileInput" accept="image/*" style="display:none" onchange="handleCompanyLogoUpload(this)">
+            </div>
+            <div class="form-group"><label>اسم الشركة</label><input id="compName" value="${companyData.name}"></div>
+            <div class="form-group"><label>الرؤية</label><textarea id="compVision" rows="2">${companyData.vision}</textarea></div>
+            <div class="form-group"><label>الرسالة</label><textarea id="compMission" rows="2">${companyData.mission}</textarea></div>
+        `, () => {
+            companyData.name = document.getElementById('compName').value;
+            companyData.vision = document.getElementById('compVision').value;
+            companyData.mission = document.getElementById('compMission').value;
+            if(document.getElementById('compLogo').value) companyData.logo = document.getElementById('compLogo').value;
+            saveAll(); renderApp(); alert('تم تحديث بيانات الشركة ✅');
+        });
+    };
+    
+    window.handleCompanyLogoUpload = function(input) {
+        if(input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('compLogo').value = e.target.result;
+                companyData.logo = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    };
+    
+    window.uploadCompanyLogo = function() {
+        document.getElementById('logoFileInput').click();
+    };
     
     // ========== دوال الإدارة ==========
     function showModal(title, html, onSave) {
@@ -653,7 +711,7 @@
         });
     };
     
-    window.editOrgItem = function(type, id) {
+    window.editOrgItem = function(type) {
         if(type === 'ceo') {
             showModal('تعديل الإدارة العليا', `
                 <div class="form-group"><label>الاسم</label><input id="name" value="${orgStructure.ceo.name}"></div>
@@ -668,7 +726,7 @@
         }
     };
     
-    // تعديل معايير التقييم
+    // تعديل معايير التقييم (5 معايير)
     window.editPerformance = function(jobTitle) {
         let perf = performance[jobTitle];
         let criteriaHtml = perf.criteria.map((c, idx) => `
@@ -682,9 +740,8 @@
             </div>
         `).join('');
         
-        showModal(`تعديل معايير التقييم - ${jobTitle}`, `
+        showModal(`تعديل معايير التقييم - ${jobTitle} (5 معايير)`, `
             ${criteriaHtml}
-            <button class="btn" style="margin-top:5px;" onclick="addPerformanceCriteria()">+ إضافة معيار</button>
         `, () => {
             let newCriteria = [];
             for(let i = 0; i < perf.criteria.length; i++) {
@@ -702,36 +759,23 @@
         });
     };
     
-    window.addPerformanceCriteria = function() {
-        let container = document.querySelector('.modal-content');
-        let idx = Date.now();
-        let div = document.createElement('div');
-        div.style.cssText = 'margin-bottom:10px; padding:10px; background:rgba(255,255,255,0.05); border-radius:10px;';
-        div.innerHTML = `
-            <div class="form-group"><label>اسم المعيار</label><input id="cName${idx}" placeholder="اسم المعيار"></div>
-            <div style="display:flex; gap:10px;">
-                <div class="form-group" style="flex:1"><label>الدرجة الحالية</label><input id="cValue${idx}" type="number" value="80"></div>
-                <div class="form-group" style="flex:1"><label>الدرجة القصوى</label><input id="cMax${idx}" type="number" value="100"></div>
-                <div class="form-group" style="flex:1"><label>الوزن %</label><input id="cWeight${idx}" type="number" value="10"></div>
-            </div>
-        `;
-        container.insertBefore(div, container.querySelector('.btn-primary'));
-    };
+    // ========== التطبيق الرئيسي ==========
+    let currentPageVar = "home";
     
-    // التطبيق الرئيسي
     function renderApp() {
         if(!currentUser) { document.getElementById('app').innerHTML = renderLogin(); return; }
         let isAdmin = currentUser.role === 'admin';
         document.getElementById('app').innerHTML = `
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header"><div class="logo">🏢 HR SYSTEM</div></div>
-            <div class="nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
-            <div class="nav-item ${currentPage === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i> دليل الموظف</div>
-            <div class="nav-item ${currentPage === 'org' ? 'active' : ''}" data-page="org"><i class="fas fa-building"></i> الهيكل التنظيمي</div>
-            <div class="nav-item ${currentPage === 'performance' ? 'active' : ''}" data-page="performance"><i class="fas fa-chart-line"></i> تقييم الأداء</div>
-            <div class="nav-item ${currentPage === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i> الإشعارات</div>
-            <div class="nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i> حسابي</div>
-            ${isAdmin ? `<div class="nav-item ${currentPage === 'admin' ? 'active' : ''}" data-page="admin"><i class="fas fa-cog"></i> لوحة التحكم</div>` : ''}
+            <div class="nav-item ${currentPageVar === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
+            <div class="nav-item ${currentPageVar === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i> دليل الموظف</div>
+            <div class="nav-item ${currentPageVar === 'org' ? 'active' : ''}" data-page="org"><i class="fas fa-building"></i> الهيكل التنظيمي</div>
+            <div class="nav-item ${currentPageVar === 'company' ? 'active' : ''}" data-page="company"><i class="fas fa-flag-checkered"></i> عن الشركة</div>
+            <div class="nav-item ${currentPageVar === 'performance' ? 'active' : ''}" data-page="performance"><i class="fas fa-chart-line"></i> تقييم الأداء</div>
+            <div class="nav-item ${currentPageVar === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i> الإشعارات</div>
+            <div class="nav-item ${currentPageVar === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i> حسابي</div>
+            ${isAdmin ? `<div class="nav-item ${currentPageVar === 'admin' ? 'active' : ''}" data-page="admin"><i class="fas fa-cog"></i> لوحة التحكم</div>` : ''}
             <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</div>
         </div>
         <div class="main-content">
@@ -739,29 +783,29 @@
             <div id="pageContent"></div>
         </div>
         <div class="bottom-nav">
-            <div class="bottom-nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i><span>الرئيسية</span></div>
-            <div class="bottom-nav-item ${currentPage === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i><span>الدليل</span></div>
-            <div class="bottom-nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i><span>حسابي</span></div>
-            <div class="bottom-nav-item ${currentPage === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i><span>إشعارات</span></div>
+            <div class="bottom-nav-item ${currentPageVar === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i><span>الرئيسية</span></div>
+            <div class="bottom-nav-item ${currentPageVar === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i><span>الدليل</span></div>
+            <div class="bottom-nav-item ${currentPageVar === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i><span>حسابي</span></div>
+            <div class="bottom-nav-item ${currentPageVar === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i><span>إشعارات</span></div>
         </div>`;
         renderPage();
         attachEvents();
     }
     
     function getTitle() {
-        let titles = { home:"الرئيسية", guide:"دليل الموظف", org:"الهيكل التنظيمي", performance:"تقييم الأداء", notifications:"الإشعارات", profile:"حسابي", admin:"لوحة التحكم" };
-        return titles[currentPage] || "الرئيسية";
+        let titles = { home:"الرئيسية", guide:"دليل الموظف", org:"الهيكل التنظيمي", company:"عن الشركة", performance:"تقييم الأداء", notifications:"الإشعارات", profile:"حسابي", admin:"لوحة التحكم" };
+        return titles[currentPageVar] || "الرئيسية";
     }
     
     function renderPage() {
-        let pages = { home: renderHome, guide: renderGuide, org: renderOrg, performance: renderPerformance, notifications: renderNotifications, profile: renderProfile, admin: renderAdmin };
-        document.getElementById('pageContent').innerHTML = (pages[currentPage] || renderHome)();
+        let pages = { home: renderHome, guide: renderGuide, org: renderOrg, company: renderCompany, performance: renderPerformance, notifications: renderNotifications, profile: renderProfile, admin: renderAdmin };
+        document.getElementById('pageContent').innerHTML = (pages[currentPageVar] || renderHome)();
     }
     
     function attachEvents() {
         document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(el => {
             let page = el.dataset.page;
-            if(page) el.onclick = () => { currentPage = page; renderApp(); };
+            if(page) el.onclick = () => { currentPageVar = page; renderApp(); };
         });
     }
     
