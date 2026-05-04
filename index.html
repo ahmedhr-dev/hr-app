@@ -2,917 +2,563 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>HR System | نظام الموارد البشرية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            font-family: 'Cairo', 'Poppins', 'Segoe UI', sans-serif;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
             background: linear-gradient(145deg, #0a1a2f, #061220);
             direction: rtl;
-            color: #ffffff;
+            color: #fff;
             min-height: 100vh;
         }
-
-        /* Login Page */
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            background: linear-gradient(145deg, #0a1a2f, #061220);
-        }
+        /* تسجيل الدخول */
+        .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .login-card {
             background: rgba(10, 26, 47, 0.95);
             backdrop-filter: blur(15px);
             border-radius: 40px;
             padding: 35px;
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
-        .quran-quote { text-align: center; margin-bottom: 20px; padding: 15px; background: rgba(212,175,55,0.1); border-radius: 20px; }
-        .quote-arabic { font-size: 18px; font-family: 'Amiri', serif; }
-        .logo-icon { width: 70px; height: 70px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 25px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; }
-        .login-card h2 { text-align: center; font-size: 22px; color: #d4af37; }
-        .login-card input { width: 100%; padding: 14px; margin-bottom: 15px; background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.3); border-radius: 30px; color: white; }
-        .btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; }
+        .login-card h2 { text-align: center; color: #d4af37; margin-bottom: 20px; }
+        .login-card input { width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.3); border-radius: 30px; color: white; }
+        .btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; }
         .register-link { text-align: center; margin-top: 15px; font-size: 13px; }
         .register-link span { color: #d4af37; cursor: pointer; }
         .register-form { display: none; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(212,175,55,0.2); }
         .register-form.show { display: block; }
-        .avatar-preview { width: 80px; height: 80px; background: rgba(212,175,55,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; cursor: pointer; overflow: hidden; }
-
-        /* Sidebar */
+        
+        /* القائمة الجانبية */
         .sidebar {
             position: fixed;
             right: 0;
             top: 0;
-            width: 280px;
+            width: 270px;
             height: 100vh;
             background: #0a1a2f;
             border-left: 1px solid rgba(212,175,55,0.2);
             z-index: 200;
-            transition: all 0.4s;
+            transition: all 0.3s;
             overflow-y: auto;
         }
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(212,175,55,0.2); }
-        .logo-area { display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .company-logo { width: 45px; height: 45px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 15px; display: flex; align-items: center; justify-content: center; }
-        .logo { font-size: 20px; font-weight: 800; color: #d4af37; }
+        .logo { font-size: 24px; color: #d4af37; font-weight: bold; }
         .nav-item {
-            display: flex; align-items: center; gap: 12px; padding: 12px 20px; margin: 6px 12px;
-            border-radius: 14px; cursor: pointer; transition: all 0.3s; color: #a0aec0;
+            display: flex; align-items: center; gap: 12px; padding: 12px 20px; margin: 5px 15px;
+            border-radius: 12px; cursor: pointer; color: #a0aec0; transition: all 0.2s;
         }
         .nav-item:hover { background: rgba(212,175,55,0.15); color: #d4af37; }
         .nav-item.active { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
-        .nav-item i { width: 24px; }
-
-        .main-content { margin-right: 280px; min-height: 100vh; padding: 0 25px 25px 25px; }
+        .nav-item i { width: 25px; }
+        
+        .main-content { margin-right: 270px; padding: 20px; }
         .top-bar {
-            background: rgba(10, 26, 47, 0.95); padding: 12px 20px; display: flex;
-            justify-content: space-between; align-items: center; position: sticky; top: 0;
-            z-index: 99; margin-bottom: 15px; border-radius: 0 0 20px 20px;
-            border-bottom: 1px solid rgba(212,175,55,0.2);
+            background: rgba(10, 26, 47, 0.9); padding: 12px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-radius: 20px; margin-bottom: 20px;
         }
-        .page-title { font-size: 22px; font-weight: 800; color: #d4af37; }
-        .avatar { width: 45px; height: 45px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; }
-
+        .page-title { font-size: 22px; color: #d4af37; font-weight: bold; }
+        .avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
         .bottom-nav {
             display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #0a1a2f;
-            padding: 8px 12px 20px; justify-content: space-around; z-index: 150;
+            padding: 10px 12px 25px; justify-content: space-around; z-index: 150;
             border-top: 1px solid rgba(212,175,55,0.2);
         }
         .bottom-nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            font-size: 11px; color: #94a3b8; cursor: pointer; padding: 6px 10px; border-radius: 25px;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            font-size: 11px; color: #94a3b8; cursor: pointer; padding: 5px 10px; border-radius: 25px;
         }
-        .bottom-nav-item i { font-size: 20px; }
         .bottom-nav-item.active { color: #d4af37; background: rgba(212,175,55,0.15); }
-
-        /* الرئيسية */
-        .hero-section {
-            background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(10,26,47,0.95));
-            border-radius: 28px;
-            padding: 25px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-            border: 1px solid rgba(212,175,55,0.3);
-        }
-        .hero-text { flex: 2; }
-        .hero-text .greeting { font-size: 28px; font-weight: 800; color: #d4af37; margin-bottom: 12px; }
-        .hero-text .job-info { font-size: 16px; margin: 12px 0; background: rgba(212,175,55,0.1); display: inline-block; padding: 6px 15px; border-radius: 30px; }
-        .hero-text .quote { font-size: 15px; opacity: 0.9; font-style: italic; margin: 12px 0; }
-        .hero-text .hadith { font-size: 14px; opacity: 0.8; margin-top: 8px; color: #c4b5fd; }
-        .hero-image { width: 85px; height: 85px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .hero-image i { font-size: 45px; color: #0a1a2f; }
-
-        .card { background: rgba(10, 26, 47, 0.9); border-radius: 22px; padding: 18px; margin-bottom: 18px; border: 1px solid rgba(212,175,55,0.2); transition: all 0.3s; }
+        .bottom-nav-item i { font-size: 22px; }
+        
+        .card { background: rgba(10, 26, 47, 0.9); border-radius: 20px; padding: 18px; margin-bottom: 18px; border: 1px solid rgba(212,175,55,0.2); }
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
-        .stat-card { background: rgba(10, 26, 47, 0.9); border-radius: 18px; padding: 15px; text-align: center; }
-        .stat-number { font-size: 32px; font-weight: 800; color: #d4af37; }
-
-        /* الإشعارات المنبثقة */
-        .notification-toast {
-            position: fixed; top: 20px; left: 20px;
-            background: linear-gradient(135deg, #d4af37, #b8960c);
-            color: #0a1a2f; padding: 12px 20px; border-radius: 30px;
-            display: flex; align-items: center; gap: 12px; z-index: 1100;
-            animation: slideInRight 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .stat-card { background: rgba(10, 26, 47, 0.9); border-radius: 16px; padding: 15px; text-align: center; }
+        .stat-number { font-size: 28px; font-weight: bold; color: #d4af37; }
+        
+        .hero-section {
+            background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(10,26,47,0.9));
+            border-radius: 25px; padding: 20px; margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
         }
-        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
+        .hero-image { width: 70px; height: 70px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .hero-image i { font-size: 35px; color: #0a1a2f; }
+        
         /* دليل الموظف */
-        .guide-tabs {
-            display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid rgba(212,175,55,0.2); padding-bottom: 5px;
-        }
-        .guide-tab { padding: 8px 18px; border-radius: 30px; cursor: pointer; transition: all 0.2s; }
-        .guide-tab:hover { background: rgba(212,175,55,0.1); }
+        .guide-tabs { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .guide-tab { padding: 6px 15px; border-radius: 30px; cursor: pointer; background: rgba(212,175,55,0.1); }
         .guide-tab.active { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
-        
-        .guide-content-list { display: flex; flex-direction: column; gap: 12px; }
         .guide-item {
-            background: rgba(10, 26, 47, 0.7); border: 1px solid rgba(212,175,55,0.2);
-            border-radius: 18px; padding: 15px; cursor: pointer; transition: all 0.2s;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .guide-item:hover { transform: translateX(-5px); border-color: #d4af37; background: rgba(212,175,55,0.1); }
-        .guide-item-info { flex: 1; }
-        .guide-item-title { font-size: 16px; font-weight: bold; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-        .guide-item-desc { font-size: 13px; opacity: 0.7; line-height: 1.5; }
-        .guide-item-arrow { color: #d4af37; font-size: 18px; }
-
-        /* نافذة عرض التفاصيل */
-        .detail-modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
-            display: flex; align-items: center; justify-content: center; z-index: 1000;
-        }
-        .detail-modal {
-            background: linear-gradient(145deg, #0f1a2e, #0a1220);
-            border-radius: 28px; width: 90%; max-width: 500px; max-height: 80vh;
-            overflow-y: auto; border: 1px solid rgba(212,175,55,0.3);
-        }
-        .detail-modal-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; border-bottom: 1px solid rgba(212,175,55,0.2);
-        }
-        .detail-modal-header h3 { color: #d4af37; font-size: 18px; }
-        .close-modal { width: 32px; height: 32px; background: rgba(212,175,55,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .detail-modal-body { padding: 20px; line-height: 1.7; font-size: 15px; }
-
-        /* المساعد الذكي */
-        .assistant-wrapper {
-            background: rgba(10, 26, 47, 0.95);
-            border-radius: 28px;
-            overflow: hidden;
+            background: rgba(10, 26, 47, 0.7);
             border: 1px solid rgba(212,175,55,0.2);
-        }
-        .assistant-header {
-            background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(10,26,47,0.9));
-            padding: 18px;
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
         }
-        .assistant-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .assistant-icon i { font-size: 24px; color: #0a1a2f; }
-        .assistant-header-text h3 { color: #d4af37; font-size: 18px; }
-        .assistant-header-text p { font-size: 12px; opacity: 0.7; }
+        .guide-item:hover { border-color: #d4af37; }
         
-        .questions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px; padding: 15px; background: rgba(0,0,0,0.2); }
-        .question-btn { background: rgba(212,175,55,0.1); padding: 8px 12px; border-radius: 40px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .question-btn:hover { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
-        
-        .chat-area { padding: 15px; min-height: 280px; display: flex; flex-direction: column; gap: 12px; }
-        .user-bubble { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; padding: 10px 15px; border-radius: 20px 20px 8px 20px; align-self: flex-end; max-width: 85%; font-size: 13px; }
-        .typing-indicator { background: rgba(212,175,55,0.1); padding: 10px 15px; border-radius: 20px; align-self: flex-start; display: flex; gap: 5px; }
-        .typing-dot { width: 7px; height: 7px; background: #d4af37; border-radius: 50%; animation: typingAnim 1.4s infinite; }
-        @keyframes typingAnim { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
-        
-        .response-card { background: rgba(212,175,55,0.08); border-radius: 18px; padding: 15px; align-self: flex-start; max-width: 90%; border-right: 3px solid #d4af37; }
-        .response-title { font-size: 14px; font-weight: bold; color: #d4af37; margin-bottom: 8px; }
-        .response-content { line-height: 1.6; font-size: 13px; white-space: pre-line; }
-        .chat-input-area { display: flex; padding: 12px; gap: 8px; border-top: 1px solid rgba(212,175,55,0.2); }
-        .chat-input-area input { flex: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(212,175,55,0.3); border-radius: 30px; color: white; }
-        .send-btn { padding: 10px 20px; width: auto; }
-
-        /* الهيكل التنظيمي */
-        .org-builder { background: rgba(0,0,0,0.2); border-radius: 25px; padding: 20px; overflow-x: auto; }
-        .org-tree { display: flex; flex-direction: column; align-items: center; min-width: 650px; }
-        .org-ceo-card { background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 18px; padding: 12px 25px; text-align: center; margin-bottom: 30px; color: #0a1a2f; cursor: pointer; }
-        .org-level { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .org-dept-card { background: rgba(10, 26, 47, 0.9); border-radius: 15px; padding: 12px; min-width: 140px; text-align: center; border: 1px solid rgba(212,175,55,0.3); }
-
-        /* تقييم الأداء */
-        .performance-card { background: rgba(10, 26, 47, 0.7); border-radius: 22px; padding: 18px; margin-bottom: 18px; }
-        .overall-score { font-size: 48px; font-weight: 800; color: #d4af37; text-align: center; }
-        .score-bar { width: 100%; height: 12px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 12px 0; overflow: hidden; }
-        .score-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #d4af37, #b8960c); }
-        .criteria-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-top: 15px; }
-        .criteria-card { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 14px; }
-        .criteria-name { font-size: 14px; font-weight: bold; color: #d4af37; margin-bottom: 8px; }
-        .criteria-progress { width: 100%; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px; margin: 8px 0; overflow: hidden; }
-        .criteria-progress-fill { height: 100%; background: linear-gradient(90deg, #d4af37, #b8960c); }
-
-        /* لوحة التحكم */
-        .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .admin-card { background: rgba(10, 26, 47, 0.7); border-radius: 16px; padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
-        .admin-card:hover { transform: translateY(-3px); background: rgba(212,175,55,0.15); }
-        .admin-card i { font-size: 28px; color: #d4af37; margin-bottom: 6px; }
-        
-        .admin-table { width: 100%; border-collapse: collapse; }
-        .admin-table th, .admin-table td { padding: 10px 6px; text-align: right; border-bottom: 1px solid rgba(212,175,55,0.15); }
-        .admin-table th { color: #d4af37; }
-        .admin-actions { display: flex; gap: 6px; justify-content: center; }
-        .admin-btn { background: rgba(212,175,55,0.15); border: none; border-radius: 6px; padding: 4px 10px; cursor: pointer; color: #d4af37; font-size: 11px; }
-        .admin-btn.danger { color: #ef4444; }
-
+        /* نافذة منبثقة */
         .modal {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
             display: flex; align-items: center; justify-content: center; z-index: 1000;
         }
         .modal-content {
             background: linear-gradient(145deg, #0a1a2f, #061220);
-            border-radius: 28px; padding: 22px; width: 90%; max-width: 500px;
+            border-radius: 24px; padding: 22px; width: 90%; max-width: 500px;
             border: 1px solid rgba(212,175,55,0.3);
         }
         .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; margin-bottom: 5px; color: #d4af37; }
+        .form-group label { color: #d4af37; display: block; margin-bottom: 5px; }
         .form-group input, .form-group select, .form-group textarea {
             width: 100%; padding: 10px; background: rgba(255,255,255,0.05);
             border: 1px solid rgba(212,175,55,0.3); border-radius: 12px; color: white;
         }
-
-        .menu-toggle { display: none; background: none; border: none; font-size: 22px; color: white; cursor: pointer; }
-        @media (max-width: 992px) {
+        
+        /* لوحة التحكم */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .admin-card {
+            background: rgba(10, 26, 47, 0.7);
+            border-radius: 14px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .admin-card:hover { background: rgba(212,175,55,0.15); transform: translateY(-2px); }
+        .admin-card i { font-size: 26px; color: #d4af37; margin-bottom: 6px; }
+        
+        /* تقييم الأداء - 10 معايير */
+        .performance-score { font-size: 48px; font-weight: bold; color: #d4af37; text-align: center; }
+        .score-bar { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 15px 0; overflow: hidden; }
+        .score-fill { height: 100%; background: linear-gradient(90deg, #d4af37, #b8960c); }
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .criteria-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 14px;
+        }
+        .criteria-name { font-size: 14px; font-weight: bold; color: #d4af37; margin-bottom: 8px; }
+        .criteria-progress { width: 100%; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px; margin: 8px 0; overflow: hidden; }
+        .criteria-progress-fill { height: 100%; background: linear-gradient(90deg, #d4af37, #b8960c); }
+        
+        /* الهيكل التنظيمي */
+        .org-grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .org-ceo {
+            background: linear-gradient(135deg, #d4af37, #b8960c);
+            border-radius: 18px;
+            padding: 15px 30px;
+            text-align: center;
+            color: #0a1a2f;
+            cursor: pointer;
+        }
+        .org-departments {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .org-dept {
+            background: rgba(10, 26, 47, 0.8);
+            border-radius: 14px;
+            padding: 12px;
+            min-width: 140px;
+            text-align: center;
+            border: 1px solid rgba(212,175,55,0.3);
+            cursor: pointer;
+        }
+        
+        .menu-toggle { display: none; background: none; border: none; font-size: 24px; color: white; cursor: pointer; }
+        
+        @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.open { transform: translateX(0); }
-            .main-content { margin-right: 0; }
+            .main-content { margin-right: 0; padding-bottom: 70px; }
             .bottom-nav { display: flex; }
             .menu-toggle { display: block; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .hero-section { padding: 18px; }
-            .hero-image { width: 60px; height: 60px; }
-            .hero-image i { font-size: 30px; }
-            .hero-text .greeting { font-size: 22px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .admin-grid { grid-template-columns: repeat(2, 1fr); }
+            .criteria-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-<div id="appRoot"></div>
+<div id="app"></div>
 
 <script>
-    // ==================== نصوص متغيرة للرئيسية ====================
-    const workQuotes = [
-        { text: "خير الناس أنفعهم للناس", author: "الحديث الشريف" },
-        { text: "من جد وجد ومن زرع حصد", author: "حكمة عربية" },
-        { text: "اتقن عملك يُتقن لك", author: "حكمة" }
+    // ========== بيانات النظام ==========
+    let users = [{ id: 1, email: "admin@hr.com", password: "admin123", name: "أحمد المدير", role: "admin", jobTitle: "مدير الموارد البشرية" }];
+    let currentUser = null;
+    
+    // المسميات الوظيفية
+    let jobs = [
+        { id: 1, title: "مدير الموارد البشرية", department: "الموارد البشرية" },
+        { id: 2, title: "محاسب", department: "المالية" },
+        { id: 3, title: "مبرمج", department: "التقنية" },
+        { id: 4, title: "مسوق رقمي", department: "التسويق" }
     ];
-    const quranVerses = [
-        { text: "وَقُل رَّبِّ زِدْنِي عِلْمًا", author: "سورة طه (114)" },
-        { text: "إِنَّ اللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّى يُغَيِّرُوا مَا بِأَنفُسِهِمْ", author: "سورة الرعد (11)" },
-        { text: "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا", author: "سورة الشرح (5)" }
+    
+    // السياسات
+    let policies = [
+        { id: 1, title: "سياسة الإجازة السنوية", description: "21 يوم إجازة سنوية مدفوعة", content: "جميع الموظفين يحق لهم 21 يوم إجازة سنوية مدفوعة الأجر بعد إتمام 6 أشهر." },
+        { id: 2, title: "سياسة سلفة الراتب", description: "سلفة تصل 50% من الراتب", content: "بعد 6 أشهر عمل، يحق للموظف طلب سلفة تصل 50% من الراتب، تسدد على 6 دفعات." }
     ];
-    const hadiths = [
-        { text: "إنما الأعمال بالنيات", author: "رواه البخاري" },
-        { text: "لا ضرر ولا ضرار", author: "رواه ابن ماجه" },
-        { text: "المؤمن للمؤمن كالبنيان", author: "رواه البخاري" }
-    ];
-
-    function getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-    function getRandomWorkQuote() { return getRandomItem(workQuotes); }
-    function getRandomQuranVerse() { return getRandomItem(quranVerses); }
-    function getRandomHadith() { return getRandomItem(hadiths); }
-
-    function showNotification(title, message) {
-        let toast = document.createElement('div');
-        toast.className = 'notification-toast';
-        toast.innerHTML = `<i class="fas fa-bell"></i><div><strong>${title}</strong><br><small>${message}</small></div>`;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 4000);
-    }
-
-    // ==================== المستخدمين ====================
-    let usersDatabase = JSON.parse(localStorage.getItem('hr_users')) || [
-        { id: 1, email: "admin@hr.com", password: "admin123", name: "أحمد المدير", role: "admin", avatar: null, jobTitle: "مدير الموارد البشرية", department: "الموارد البشرية" }
-    ];
-    let currentSession = JSON.parse(sessionStorage.getItem('hr_session')) || null;
-    let showRegister = false;
-
-    // ==================== الهيكل التنظيمي ====================
-    let orgStructure = JSON.parse(localStorage.getItem('hr_org_structure')) || {
-        ceo: { name: "مجلس الإدارة", head: "أحمد الراشد", members: 5 },
-        departments: [
-            { id: "dept1", name: "الموارد البشرية", head: "سارة العتيبي", members: 12 },
-            { id: "dept2", name: "المالية", head: "ليلى الحربي", members: 15 },
-            { id: "dept3", name: "التقنية", head: "عمر القحطاني", members: 45 },
-            { id: "dept4", name: "التسويق", head: "نور الشمري", members: 20 }
-        ]
-    };
-
-    // ==================== المسميات الوظيفية ====================
-    let globalJobsList = JSON.parse(localStorage.getItem('hr_global_jobs')) || [
-        { id: 1, title: "مدير الموارد البشرية", department: "الموارد البشرية", level: "إداري" },
-        { id: 2, title: "محاسب", department: "المالية", level: "تنفيذي" },
-        { id: 3, title: "مبرمج", department: "التقنية", level: "متخصص" },
-        { id: 4, title: "مسوق رقمي", department: "التسويق", level: "متخصص" }
-    ];
-
-    // ==================== السياسات (عنوان ووصف مثل السلوكيات) ====================
-    let policiesList = JSON.parse(localStorage.getItem('hr_policies')) || [
-        { id: 1, title: "سياسة الإجازة السنوية", category: "إجازات", description: "21 يوم عمل إجازة سنوية مدفوعة الأجر", content: "جميع الموظفين بدوام كامل يحق لهم 21 يوم عمل إجازة سنوية مدفوعة الأجر بعد إتمام 6 أشهر. يجب تقديم الطلب قبل أسبوعين من تاريخ الإجازة." },
-        { id: 2, title: "سياسة سلفة الراتب", category: "مالية", description: "بعد 6 أشهر عمل، بحد أقصى 50% من الراتب", content: "بعد إتمام 6 أشهر عمل، يحق للموظف طلب سلفة راتب تصل إلى 50% من الراتب الشهري، تسدد على 6 دفعات شهرية متساوية." },
-        { id: 3, title: "سياسة العمل عن بعد", category: "عام", description: "يومان عمل عن بعد أسبوعياً", content: "يحق للموظف العمل عن بعد يومين في الأسبوع (الإثنين والأربعاء) بعد موافقة المدير المباشر. يشترط توفر بيئة عمل مناسبة." }
-    ];
-
-    // ==================== السلوكيات ====================
-    let behaviorsList = JSON.parse(localStorage.getItem('hr_behaviors')) || [
+    
+    // السلوكيات
+    let behaviors = [
         { id: 1, title: "الاحترافية", desc: "الحفاظ على سلوك محترم مع جميع الزملاء والعملاء" },
         { id: 2, title: "الالتزام بالمواعيد", desc: "الحضور في الوقت المحدد وإخطار المدير عند التأخر" },
         { id: 3, title: "السرية", desc: "الحفاظ على سرية معلومات الشركة والموظفين" },
         { id: 4, title: "الابتكار", desc: "اقتراح التحسينات وتطوير أساليب العمل" }
     ];
-
-    // ==================== الإجراءات ====================
-    let proceduresList = JSON.parse(localStorage.getItem('hr_procedures')) || [
+    
+    // الإجراءات
+    let procedures = [
         { id: 1, step: 1, title: "تقديم طلب إجازة", desc: "سجل الدخول → اختار الإجازات → حدد التواريخ → أرسل للمدير" },
         { id: 2, step: 2, title: "تقديم طلب سلفة", desc: "الراتب والسلف → طلب سلفة → حدد المبلغ → انتظر الموافقة" },
         { id: 3, step: 3, title: "تقديم شكوى", desc: "قسم الشكاوى → اكتب الشكوى → اختر التصنيف → إرسال" }
     ];
-
-    // ==================== الأسئلة ====================
-    let faqList = JSON.parse(localStorage.getItem('hr_faq')) || [
-        { id: 1, question: "ما هي سياسة الإجازة السنوية?", answer: "21 يوم عمل إجازة سنوية مدفوعة الأجر بعد إتمام 6 أشهر." },
-        { id: 2, question: "كيف أطلب سلفة راتب?", answer: "بعد 6 أشهر عمل، بحد أقصى 50% من الراتب الشهري، تسدد على 6 دفعات." },
-        { id: 3, question: "ما هي ساعات العمل?", answer: "من الأحد إلى الخميس 8 صباحاً حتى 5 مساءً، استراحة ظهر ساعة." }
+    
+    // الأسئلة الشائعة
+    let faq = [
+        { id: 1, question: "ما هي سياسة الإجازة السنوية?", answer: "21 يوم إجازة سنوية مدفوعة الأجر." },
+        { id: 2, question: "كيف أطلب سلفة راتب?", answer: "بعد 6 أشهر عمل، بحد أقصى 50% من الراتب." }
     ];
-
-    let announcementsList = JSON.parse(localStorage.getItem('hr_announcements')) || [
-        { id: 1, title: "تحديث سياسة الإجازات", content: "تم تحديث سياسة الإجازة السنوية", date: new Date().toLocaleDateString('ar') }
+    
+    // الإعلانات
+    let announcements = [
+        { id: 1, title: "تحديث السياسات", content: "تم تحديث سياسة الإجازات", date: new Date().toLocaleDateString() }
     ];
-
-    let companyData = JSON.parse(localStorage.getItem('hr_company')) || {
-        name: "شركة التميز للاستشارات",
-        vision: "الريادة في تقديم حلول الموارد البشرية",
-        mission: "تمكين المؤسسات من خلال خدمات مبتكرة",
-        values: [{ name: "النزاهة", icon: "fas fa-handshake", desc: "نلتزم بأعلى المعايير الأخلاقية" }]
+    
+    // الهيكل التنظيمي
+    let orgStructure = {
+        ceo: { name: "مجلس الإدارة", head: "أحمد الراشد", members: 5 },
+        departments: [
+            { id: 1, name: "الموارد البشرية", head: "سارة العتيبي", members: 12 },
+            { id: 2, name: "المالية", head: "ليلى الحربي", members: 15 },
+            { id: 3, name: "التقنية", head: "عمر القحطاني", members: 45 },
+            { id: 4, name: "التسويق", head: "نور الشمري", members: 20 }
+        ]
     };
-
-    // ==================== تقييم الأداء ====================
-    let performanceCriteria = JSON.parse(localStorage.getItem('hr_performance_criteria')) || {
-        "مدير الموارد البشرية": { criteria: [
-            { name: "الإنتاجية", weight: 25, value: 90, max: 100 },
-            { name: "الحضور", weight: 15, value: 95, max: 100 },
-            { name: "السلوك", weight: 20, value: 88, max: 100 },
-            { name: "التطوير", weight: 20, value: 80, max: 100 },
-            { name: "الالتزام", weight: 20, value: 92, max: 100 }
-        ] },
-        "محاسب": { criteria: [
-            { name: "دقة التقارير", weight: 35, value: 98, max: 100 },
-            { name: "الالتزام", weight: 25, value: 95, max: 100 },
-            { name: "السلوك", weight: 15, value: 85, max: 100 },
-            { name: "التطوير", weight: 15, value: 75, max: 100 },
-            { name: "السرعة", weight: 10, value: 90, max: 100 }
-        ] },
-        "مبرمج": { criteria: [
-            { name: "جودة الكود", weight: 30, value: 88, max: 100 },
-            { name: "الالتزام", weight: 25, value: 90, max: 100 },
-            { name: "حل المشكلات", weight: 20, value: 85, max: 100 },
-            { name: "السلوك", weight: 15, value: 82, max: 100 },
-            { name: "التوثيق", weight: 10, value: 80, max: 100 }
-        ] }
-    };
-
-    function saveAll() {
-        localStorage.setItem('hr_users', JSON.stringify(usersDatabase));
-        localStorage.setItem('hr_company', JSON.stringify(companyData));
-        localStorage.setItem('hr_policies', JSON.stringify(policiesList));
-        localStorage.setItem('hr_behaviors', JSON.stringify(behaviorsList));
-        localStorage.setItem('hr_procedures', JSON.stringify(proceduresList));
-        localStorage.setItem('hr_faq', JSON.stringify(faqList));
-        localStorage.setItem('hr_announcements', JSON.stringify(announcementsList));
-        localStorage.setItem('hr_org_structure', JSON.stringify(orgStructure));
-        localStorage.setItem('hr_global_jobs', JSON.stringify(globalJobsList));
-        localStorage.setItem('hr_performance_criteria', JSON.stringify(performanceCriteria));
-    }
-
-    function getCurrentUser() { return currentSession ? usersDatabase.find(u => u.id === currentSession.userId) : null; }
-    function getAllJobs() { return globalJobsList; }
-
-    function calculateOverallScore(criteria) {
-        if(!criteria) return 0;
-        let total = criteria.reduce((sum, c) => sum + c.value, 0);
-        let max = criteria.reduce((sum, c) => sum + c.max, 0);
-        return Math.round((total / max) * 100);
-    }
-
-    // دوال تسجيل الدخول
-    function login(email, password, remember) {
-        let user = usersDatabase.find(u => u.email === email && u.password === password);
-        if(user) {
-            currentSession = { userId: user.id, email: user.email, role: user.role };
-            sessionStorage.setItem('hr_session', JSON.stringify(currentSession));
-            if(remember) localStorage.setItem('hr_remember', JSON.stringify({ email, password }));
-            else localStorage.removeItem('hr_remember');
-            renderApp();
-            return true;
+    
+    // تقييم الأداء - 10 معايير لكل وظيفة (100 نقطة)
+    let performance = {
+        "مدير الموارد البشرية": {
+            criteria: [
+                { name: "التخطيط الاستراتيجي", value: 88, max: 100, weight: 10 },
+                { name: "إدارة الموارد البشرية", value: 92, max: 100, weight: 10 },
+                { name: "التواصل الفعال", value: 90, max: 100, weight: 10 },
+                { name: "القيادة", value: 85, max: 100, weight: 10 },
+                { name: "حل المشكلات", value: 90, max: 100, weight: 10 },
+                { name: "الالتزام بالسياسات", value: 95, max: 100, weight: 10 },
+                { name: "تطوير الفريق", value: 80, max: 100, weight: 10 },
+                { name: "الإنتاجية", value: 92, max: 100, weight: 10 },
+                { name: "الابتكار", value: 85, max: 100, weight: 10 },
+                { name: "الحضور والانضباط", value: 98, max: 100, weight: 10 }
+            ]
+        },
+        "محاسب": {
+            criteria: [
+                { name: "دقة التقارير", value: 98, max: 100, weight: 10 },
+                { name: "الالتزام بالمعايير", value: 95, max: 100, weight: 10 },
+                { name: "سرعة الإنجاز", value: 90, max: 100, weight: 10 },
+                { name: "السرية المالية", value: 100, max: 100, weight: 10 },
+                { name: "التسويات البنكية", value: 92, max: 100, weight: 10 },
+                { name: "الميزانية", value: 88, max: 100, weight: 10 },
+                { name: "التقارير الضريبية", value: 95, max: 100, weight: 10 },
+                { name: "التعاون", value: 90, max: 100, weight: 10 },
+                { name: "التطوير الذاتي", value: 85, max: 100, weight: 10 },
+                { name: "الانضباط", value: 98, max: 100, weight: 10 }
+            ]
+        },
+        "مبرمج": {
+            criteria: [
+                { name: "جودة الكود", value: 88, max: 100, weight: 10 },
+                { name: "الالتزام بالمهل", value: 90, max: 100, weight: 10 },
+                { name: "حل المشكلات", value: 85, max: 100, weight: 10 },
+                { name: "التوثيق", value: 80, max: 100, weight: 10 },
+                { name: "التعاون", value: 88, max: 100, weight: 10 },
+                { name: "الإبداع التقني", value: 85, max: 100, weight: 10 },
+                { name: "الاختبارات", value: 90, max: 100, weight: 10 },
+                { name: "الأمان", value: 92, max: 100, weight: 10 },
+                { name: "التحديث المستمر", value: 85, max: 100, weight: 10 },
+                { name: "الحضور", value: 95, max: 100, weight: 10 }
+            ]
         }
+    };
+    
+    function saveAll() {
+        localStorage.setItem('hr_users', JSON.stringify(users));
+        localStorage.setItem('hr_jobs', JSON.stringify(jobs));
+        localStorage.setItem('hr_policies', JSON.stringify(policies));
+        localStorage.setItem('hr_behaviors', JSON.stringify(behaviors));
+        localStorage.setItem('hr_procedures', JSON.stringify(procedures));
+        localStorage.setItem('hr_faq', JSON.stringify(faq));
+        localStorage.setItem('hr_announcements', JSON.stringify(announcements));
+        localStorage.setItem('hr_org_structure', JSON.stringify(orgStructure));
+        localStorage.setItem('hr_performance', JSON.stringify(performance));
+    }
+    
+    // تسجيل الدخول
+    function login(email, pass) {
+        let u = users.find(u => u.email === email && u.password === pass);
+        if(u) { currentUser = u; sessionStorage.setItem('user', JSON.stringify(u)); renderApp(); return true; }
         return false;
     }
-
-    function register(name, email, password, confirm, avatar, jobTitle, dept) {
-        if(password !== confirm) { alert("كلمة المرور غير متطابقة"); return false; }
-        if(usersDatabase.find(u => u.email === email)) { alert("البريد موجود بالفعل"); return false; }
-        usersDatabase.push({ id: Date.now(), name, email, password, role: "employee", avatar, jobTitle: jobTitle || "موظف", department: dept || "غير محدد" });
+    
+    function register(name, email, pass, confirm) {
+        if(pass !== confirm) { alert("كلمة المرور غير متطابقة"); return false; }
+        if(users.find(u => u.email === email)) { alert("البريد موجود"); return false; }
+        users.push({ id: Date.now(), name, email, password: pass, role: "employee", jobTitle: "موظف" });
         saveAll();
         return true;
     }
-
-    function logout() {
-        sessionStorage.removeItem('hr_session');
-        currentSession = null;
-        renderApp();
-    }
-
-    function renderLoginRegister() {
-        let saved = JSON.parse(localStorage.getItem('hr_remember')) || {};
-        let verse = getRandomQuranVerse();
+    
+    function logout() { currentUser = null; sessionStorage.removeItem('user'); renderApp(); }
+    
+    // شاشة تسجيل الدخول
+    function renderLogin() {
         return `
         <div class="login-container">
             <div class="login-card">
-                <div class="quran-quote"><div class="quote-arabic">"${verse.text}"</div><div style="font-size:12px;">${verse.author}</div></div>
-                <div class="logo-icon"><i class="fas fa-users"></i></div>
-                <h2>نظام إدارة الموارد البشرية</h2>
-                <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" value="${saved.email || ''}">
-                <input type="password" id="loginPassword" placeholder="كلمة المرور" value="${saved.password || ''}">
-                <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                    <label><input type="checkbox" id="rememberCheckbox" ${saved.email ? 'checked' : ''}> تذكرني</label>
-                    <span style="color:#d4af37; cursor:pointer;" onclick="forgotPassword()">نسيت كلمة المرور؟</span>
-                </div>
-                <button class="btn" onclick="doLogin()">تسجيل الدخول</button>
-                <div class="register-link">ليس لديك حساب؟ <span onclick="toggleRegister()">إنشاء حساب جديد</span></div>
-                <div id="registerForm" class="register-form">
-                    <div class="avatar-preview" id="avatarPreview" onclick="document.getElementById('avatarInput').click()"><i class="fas fa-camera"></i></div>
-                    <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(this)">
+                <div style="text-align:center; margin-bottom:20px;"><div style="width:60px;height:60px;background:linear-gradient(135deg,#d4af37,#b8960c);border-radius:20px;margin:0 auto;display:flex;align-items:center;justify-content:center;"><i class="fas fa-crown"></i></div><h2>HR SYSTEM</h2></div>
+                <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" value="admin@hr.com">
+                <input type="password" id="loginPass" placeholder="كلمة المرور" value="admin123">
+                <button class="btn" onclick="doLogin()">دخول</button>
+                <div class="register-link">ليس لديك حساب؟ <span onclick="toggleReg()">إنشاء حساب</span></div>
+                <div id="regForm" class="register-form">
                     <input type="text" id="regName" placeholder="الاسم الكامل">
-                    <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
-                    <input type="text" id="regJob" placeholder="المسمى الوظيفي">
-                    <input type="text" id="regDept" placeholder="القسم">
-                    <input type="password" id="regPassword" placeholder="كلمة المرور">
+                    <input type="email" id="regEmail" placeholder="البريد">
+                    <input type="password" id="regPass" placeholder="كلمة المرور">
                     <input type="password" id="regConfirm" placeholder="تأكيد كلمة المرور">
-                    <button class="btn" onclick="doRegister()">إنشاء حساب</button>
+                    <button class="btn" onclick="doRegister()">تسجيل</button>
                 </div>
             </div>
         </div>`;
     }
-
+    
     window.doLogin = function() {
         let email = document.getElementById('loginEmail').value;
-        let pass = document.getElementById('loginPassword').value;
-        let remember = document.getElementById('rememberCheckbox').checked;
-        if(login(email, pass, remember)) alert('تم تسجيل الدخول بنجاح ✅');
-        else alert('البريد أو كلمة المرور غير صحيحة ❌');
+        let pass = document.getElementById('loginPass').value;
+        if(login(email, pass)) alert('تم الدخول ✅');
+        else alert('بيانات غير صحيحة ❌');
     };
     window.doRegister = function() {
         let name = document.getElementById('regName').value;
         let email = document.getElementById('regEmail').value;
-        let job = document.getElementById('regJob').value;
-        let dept = document.getElementById('regDept').value;
-        let pass = document.getElementById('regPassword').value;
+        let pass = document.getElementById('regPass').value;
         let confirm = document.getElementById('regConfirm').value;
-        if(!name || !email || !pass) { alert("الرجاء ملء الحقول الأساسية"); return; }
-        if(register(name, email, pass, confirm, tempAvatar, job, dept)) {
-            alert('تم إنشاء الحساب بنجاح ✅');
-            toggleRegister();
+        if(register(name, email, pass, confirm)) { alert('تم التسجيل ✅'); toggleReg(); }
+    };
+    window.toggleReg = function() {
+        let f = document.getElementById('regForm');
+        f.classList.toggle('show');
+    };
+    
+    // عرض التفاصيل في نافذة منبثقة
+    function showDetail(title, content) {
+        let modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `<div class="modal-content"><h3 style="color:#d4af37;">${title}</h3><div style="margin:15px 0;">${content}</div><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div>`;
+        document.body.appendChild(modal);
+    }
+    
+    // دليل الموظف - تبويبات
+    let guideTab = "policies";
+    function renderGuide() {
+        let items = [];
+        if(guideTab === 'policies') {
+            items = policies.map(p => `<div class="guide-item" onclick="showDetail('${p.title}', '<strong>الوصف:</strong><br>${p.description}<br><br><strong>المحتوى:</strong><br>${p.content}')"><div><strong>${p.title}</strong><br><small>${p.description.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
+        } else if(guideTab === 'procedures') {
+            items = procedures.map(p => `<div class="guide-item" onclick="showDetail('${p.title}', '<strong>الوصف:</strong><br>${p.desc}')"><div><strong>${p.title}</strong><br><small>${p.desc.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
+        } else {
+            items = behaviors.map(b => `<div class="guide-item" onclick="showDetail('${b.title}', '<strong>الوصف:</strong><br>${b.desc}')"><div><strong>${b.title}</strong><br><small>${b.desc.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
         }
-    };
-    window.toggleRegister = function() {
-        let form = document.getElementById('registerForm');
-        form.classList.toggle('show');
-        tempAvatar = null;
-        document.getElementById('avatarPreview').innerHTML = '<i class="fas fa-camera"></i>';
-    };
-    window.forgotPassword = function() {
-        let email = prompt("أدخل بريدك الإلكتروني:");
-        if(email) {
-            let user = usersDatabase.find(u => u.email === email);
-            if(user) {
-                let newPass = prompt("أدخل كلمة المرور الجديدة:");
-                if(newPass) { user.password = newPass; saveAll(); alert("تم تغيير كلمة المرور ✅"); }
-            } else alert("لم يتم العثور على الحساب ❌");
-        }
-    };
-    let tempAvatar = null;
-    window.handleAvatarUpload = function(input) {
-        if(input.files && input.files[0]) {
-            let reader = new FileReader();
-            reader.onload = e => {
-                document.getElementById('avatarPreview').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
-                tempAvatar = e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    };
-
-    // المساعد الذكي
-    let assistantChatHistory = [];
-    let typingInterval = null;
-
-    function stopTyping() { if(typingInterval) { clearInterval(typingInterval); typingInterval = null; } }
-
-    function typeTextToElement(element, text, speed = 20) {
-        return new Promise((resolve) => {
-            let i = 0;
-            element.innerHTML = '';
-            function type() {
-                if(i < text.length) {
-                    element.innerHTML += text[i];
-                    i++;
-                    typingInterval = setTimeout(type, speed);
-                } else {
-                    clearTimeout(typingInterval);
-                    typingInterval = null;
-                    resolve();
-                }
-            }
-            type();
-        });
-    }
-
-    async function formatAndDisplayResponse(question, answer) {
-        let chatArea = document.getElementById('assistantChatArea');
-        if(!chatArea) return;
-        
-        let userBubble = document.createElement('div');
-        userBubble.className = 'user-bubble';
-        userBubble.innerText = question;
-        chatArea.appendChild(userBubble);
-        chatArea.scrollTop = chatArea.scrollHeight;
-        
-        let typingDiv = document.createElement('div');
-        typingDiv.className = 'typing-indicator';
-        typingDiv.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
-        chatArea.appendChild(typingDiv);
-        chatArea.scrollTop = chatArea.scrollHeight;
-        
-        await new Promise(resolve => setTimeout(resolve, 1200));
-        typingDiv.remove();
-        
-        let responseCard = document.createElement('div');
-        responseCard.className = 'response-card';
-        let title = question.replace("ما هي ", "").replace("كيف ", "").replace("؟", "");
-        responseCard.innerHTML = `<div class="response-title">📌 ${title}</div><div class="response-content" id="responseContent-${Date.now()}"></div>`;
-        chatArea.appendChild(responseCard);
-        chatArea.scrollTop = chatArea.scrollHeight;
-        
-        let contentDiv = responseCard.querySelector('.response-content');
-        await typeTextToElement(contentDiv, answer, 15);
-    }
-
-    async function quickAssistantQuestion(q) {
-        let found = faqList.find(f => f.question === q);
-        let answer = found ? found.answer : "❌ لم يتم العثور على إجابة. تواصل مع HR.";
-        await formatAndDisplayResponse(q, answer);
-    }
-
-    async function sendManualAssistantMessage() {
-        let input = document.getElementById('assistantInput');
-        if(!input) return;
-        let q = input.value.trim();
-        if(!q) return;
-        let found = faqList.find(f => f.question.includes(q.substring(0, 15)));
-        let answer = found ? found.answer : getAssistantAnswer(q);
-        await formatAndDisplayResponse(q, answer);
-        input.value = '';
-    }
-
-    function getAssistantAnswer(q) {
-        if(q.includes("إجازة")) return "21 يوم عمل إجازة سنوية مدفوعة الأجر بعد إتمام 6 أشهر.";
-        if(q.includes("سلفة")) return "بعد 6 أشهر عمل، بحد أقصى 50% من الراتب، تسدد على 6 دفعات.";
-        if(q.includes("ساعات")) return "من الأحد إلى الخميس 8ص-5م، استراحة ظهر ساعة.";
-        return "❌ لم يتم العثور على إجابة.";
-    }
-
-    function renderAssistantPage() {
-        setTimeout(() => {
-            let grid = document.getElementById('assistantQuestionsGrid');
-            if(grid) grid.innerHTML = faqList.map(f => `<div class="question-btn" onclick="quickAssistantQuestion('${f.question.replace(/'/g, "\\'")}')"><i class="fas fa-question-circle"></i> ${f.question}</div>`).join('');
-            document.getElementById('assistantChatArea').innerHTML = '';
-        }, 50);
-        return `
-        <div class="assistant-wrapper">
-            <div class="assistant-header">
-                <div class="assistant-icon"><i class="fas fa-robot"></i></div>
-                <div class="assistant-header-text">
-                    <h3>مساعد الموارد البشرية</h3>
-                    <p>يعمل على بيانات الشركة فقط</p>
-                </div>
-            </div>
-            <div class="questions-grid" id="assistantQuestionsGrid"></div>
-            <div class="chat-area" id="assistantChatArea"></div>
-            <div class="chat-input-area">
-                <input type="text" id="assistantInput" placeholder="اكتب سؤالك..." onkeypress="if(event.key==='Enter') sendManualAssistantMessage()">
-                <button class="btn send-btn" onclick="sendManualAssistantMessage()">إرسال</button>
-            </div>
-        </div>`;
-    }
-
-    // دليل الموظف - عرض التفاصيل
-    let currentGuideTab = "policies";
-
-    function showDetailModal(title, content) {
-        let modalHtml = `
-            <div class="detail-modal-overlay" id="detailModalOverlay">
-                <div class="detail-modal">
-                    <div class="detail-modal-header">
-                        <h3><i class="fas fa-info-circle"></i> ${title}</h3>
-                        <div class="close-modal" onclick="closeDetailModal()"><i class="fas fa-times"></i></div>
-                    </div>
-                    <div class="detail-modal-body">${content}</div>
-                </div>
-            </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
-        let modal = document.getElementById('detailModalOverlay');
-        modal.addEventListener('click', (e) => { if(e.target === modal) modal.remove(); });
-    }
-
-    window.closeDetailModal = function() { document.getElementById('detailModalOverlay')?.remove(); };
-
-    // دالة عرض تفاصيل السياسة
-    window.showPolicyDetail = function(policyId) {
-        let policy = policiesList.find(p => p.id === policyId);
-        if(policy) {
-            showDetailModal(policy.title, `<div class="detail-section"><strong>📋 الوصف:</strong><br>${policy.description}</div><div class="detail-section" style="margin-top:15px;"><strong>📄 المحتوى التفصيلي:</strong><br>${policy.content}</div>`);
-        }
-    };
-
-    function renderEmployeeGuide() {
-        // السياسات (عنوان ووصف - عند الضغط يظهر المحتوى)
-        let policiesHtml = policiesList.map(p => `
-            <div class="guide-item" onclick="showPolicyDetail(${p.id})">
-                <div class="guide-item-info">
-                    <div class="guide-item-title"><i class="fas fa-file-alt"></i> ${p.title}</div>
-                    <div class="guide-item-desc">${p.description}</div>
-                </div>
-                <div class="guide-item-arrow"><i class="fas fa-chevron-left"></i></div>
-            </div>
-        `).join('');
-        
-        // الإجراءات
-        let proceduresHtml = proceduresList.map(p => `
-            <div class="guide-item" onclick="showDetailModal('${p.title.replace(/'/g, "\\'")}', '<div><strong>الوصف:</strong><br>${p.desc}</div>')">
-                <div class="guide-item-info">
-                    <div class="guide-item-title"><i class="fas fa-list-ol"></i> ${p.step}. ${p.title}</div>
-                    <div class="guide-item-desc">${p.desc.substring(0, 40)}...</div>
-                </div>
-                <div class="guide-item-arrow"><i class="fas fa-chevron-left"></i></div>
-            </div>
-        `).join('');
-        
-        // السلوكيات
-        let behaviorsHtml = behaviorsList.map(b => `
-            <div class="guide-item" onclick="showDetailModal('${b.title.replace(/'/g, "\\'")}', '<div><strong>الوصف:</strong><br>${b.desc}</div>')">
-                <div class="guide-item-info">
-                    <div class="guide-item-title"><i class="fas fa-handshake"></i> ${b.title}</div>
-                    <div class="guide-item-desc">${b.desc.substring(0, 40)}...</div>
-                </div>
-                <div class="guide-item-arrow"><i class="fas fa-chevron-left"></i></div>
-            </div>
-        `).join('');
-        
-        let content = '';
-        if(currentGuideTab === 'policies') content = policiesHtml;
-        else if(currentGuideTab === 'procedures') content = proceduresHtml;
-        else content = behaviorsHtml;
-        
         return `
         <div class="card">
-            <h3 style="margin-bottom:15px;"><i class="fas fa-book-open"></i> دليل الموظف</h3>
             <div class="guide-tabs">
-                <div class="guide-tab ${currentGuideTab === 'policies' ? 'active' : ''}" onclick="switchGuideTab('policies')">📜 السياسات</div>
-                <div class="guide-tab ${currentGuideTab === 'procedures' ? 'active' : ''}" onclick="switchGuideTab('procedures')">📋 الإجراءات</div>
-                <div class="guide-tab ${currentGuideTab === 'behaviors' ? 'active' : ''}" onclick="switchGuideTab('behaviors')">🤝 السلوكيات</div>
+                <div class="guide-tab ${guideTab === 'policies' ? 'active' : ''}" onclick="setGuideTab('policies')">📜 السياسات</div>
+                <div class="guide-tab ${guideTab === 'procedures' ? 'active' : ''}" onclick="setGuideTab('procedures')">📋 الإجراءات</div>
+                <div class="guide-tab ${guideTab === 'behaviors' ? 'active' : ''}" onclick="setGuideTab('behaviors')">🤝 السلوكيات</div>
             </div>
-            <div class="guide-content-list">${content}</div>
+            ${items.join('')}
         </div>`;
     }
-
-    window.switchGuideTab = function(tab) {
-        currentGuideTab = tab;
-        renderEmployeeGuidePage();
-    };
-
-    function renderEmployeeGuidePage() {
-        document.getElementById('employeeGuideContent').innerHTML = renderEmployeeGuide();
-    }
-
+    window.setGuideTab = function(tab) { guideTab = tab; renderApp(); };
+    
     // الصفحات
+    let currentPage = "home";
+    
     function getGreeting() {
         let h = new Date().getHours();
-        if(h < 12) return "🌅 صباح الخير";
-        if(h < 17) return "🌤️ مساء الخير";
-        return "🌙 مساء النور";
+        if(h < 12) return "صباح الخير";
+        if(h < 17) return "مساء الخير";
+        return "مساء النور";
     }
-
+    
     function renderHome() {
-        let user = getCurrentUser();
-        let workQuote = getRandomWorkQuote();
-        let quranVerse = getRandomQuranVerse();
-        let hadith = getRandomHadith();
         return `
         <div class="hero-section">
             <div class="hero-text">
-                <div class="greeting">${getGreeting()}، ${user?.name?.split(' ')[0] || 'موظف'} 👋</div>
-                <div class="job-info"><i class="fas fa-briefcase"></i> ${user?.jobTitle || 'موظف'} • ${user?.department || 'قسم'}</div>
-                <div class="quote"><i class="fas fa-lightbulb"></i> "${workQuote.text}" — ${workQuote.author}</div>
-                <div class="hadith"><i class="fas fa-quran"></i> " ${quranVerse.text} " — ${quranVerse.author}</div>
-                <div class="hadith" style="margin-top:5px;"><i class="fas fa-mosque"></i> " ${hadith.text} " — ${hadith.author}</div>
+                <div style="font-size:24px; font-weight:bold; color:#d4af37;">${getGreeting()}، ${currentUser?.name?.split(' ')[0] || 'موظف'} 👋</div>
+                <div style="margin:8px 0;"><i class="fas fa-briefcase"></i> ${currentUser?.jobTitle || 'موظف'}</div>
+                <div><i class="fas fa-lightbulb"></i> "خير الناس أنفعهم للناس"</div>
             </div>
             <div class="hero-image"><i class="fas fa-users"></i></div>
         </div>
         <div class="stats-grid">
-            <div class="stat-card"><div class="stat-number">${globalJobsList.length}</div><div>المسميات</div></div>
-            <div class="stat-card"><div class="stat-number">${policiesList.length}</div><div>سياسات</div></div>
-            <div class="stat-card"><div class="stat-number">${faqList.length}</div><div>أسئلة</div></div>
-            <div class="stat-card"><div class="stat-number">${getCurrentUser()?.role === 'admin' ? 'مدير' : 'موظف'}</div><div>صلاحية</div></div>
+            <div class="stat-card"><div class="stat-number">${jobs.length}</div><div>المسميات</div></div>
+            <div class="stat-card"><div class="stat-number">${policies.length}</div><div>سياسات</div></div>
+            <div class="stat-card"><div class="stat-number">${faq.length}</div><div>أسئلة</div></div>
+            <div class="stat-card"><div class="stat-number">${currentUser?.role === 'admin' ? 'مدير' : 'موظف'}</div><div>صلاحية</div></div>
         </div>`;
     }
-
+    
     function renderOrg() {
         return `
         <div class="card">
-            <h3><i class="fas fa-project-diagram"></i> الهيكل التنظيمي</h3>
-            <div class="org-builder">
-                <div class="org-tree">
-                    <div class="org-ceo-card">
-                        <i class="fas fa-crown" style="font-size:24px;"></i>
-                        <h3>${orgStructure.ceo.name}</h3>
-                        <p>${orgStructure.ceo.head}</p>
-                        <div>${orgStructure.ceo.members} أعضاء</div>
-                    </div>
-                    <div class="org-level">
-                        ${orgStructure.departments.map(dept => `
-                            <div class="org-dept-card">
-                                <i class="fas fa-building"></i>
-                                <h4>${dept.name}</h4>
-                                <p>${dept.head}</p>
-                                <div>${dept.members} عضو</div>
-                            </div>
-                        `).join('')}
-                    </div>
+            <h3>🏢 الهيكل التنظيمي</h3>
+            <div class="org-grid">
+                <div class="org-ceo" onclick="editOrgItem('ceo')">
+                    <i class="fas fa-crown" style="font-size:28px;"></i>
+                    <h3>${orgStructure.ceo.name}</h3>
+                    <p>${orgStructure.ceo.head}</p>
+                    <small>${orgStructure.ceo.members} أعضاء</small>
+                </div>
+                <div class="org-departments">
+                    ${orgStructure.departments.map(d => `
+                        <div class="org-dept" onclick="editOrgItem('dept', ${d.id})">
+                            <i class="fas fa-building"></i>
+                            <h4>${d.name}</h4>
+                            <p>${d.head}</p>
+                            <small>${d.members} عضو</small>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
         </div>`;
     }
-
-    function renderCompany() {
-        return `<div class="card"><h2 style="color:#d4af37; text-align:center;">${companyData.name}</h2></div>
-        <div class="card"><h3><i class="fas fa-eye"></i> رؤيتنا</h3><p>${companyData.vision}</p></div>
-        <div class="card"><h3><i class="fas fa-bullseye"></i> رسالتنا</h3><p>${companyData.mission}</p></div>
-        <div class="card"><h3><i class="fas fa-gem"></i> قيمنا</h3>${companyData.values.map(v => `<div style="padding:8px;"><i class="${v.icon}"></i> <strong>${v.name}</strong><br>${v.desc}</div>`).join('')}</div>`;
-    }
-
+    
     function renderPerformance() {
-        let user = getCurrentUser();
-        let perf = performanceCriteria[user?.jobTitle];
-        if(!perf) return `<div class="card"><h3>تقييم الأداء</h3><p>لا توجد بيانات تقييم للمسمى الوظيفي "${user?.jobTitle}"</p></div>`;
-        let overall = calculateOverallScore(perf.criteria);
+        let perf = performance[currentUser?.jobTitle];
+        if(!perf) return `<div class="card"><h3>⭐ تقييم الأداء</h3><p>الرجاء تحديث المسمى الوظيفي من حسابي</p></div>`;
+        let total = perf.criteria.reduce((s,c)=>s + c.value,0);
+        let maxTotal = perf.criteria.reduce((s,c)=>s + c.max,0);
+        let percent = Math.round((total/maxTotal)*100);
         return `
-        <div class="performance-card">
-            <div class="overall-score">${overall}%</div>
-            <div class="score-bar"><div class="score-fill" style="width:${overall}%"></div></div>
-            <div style="text-align:center; margin-bottom:15px; font-size:15px;">تقييم الأداء - ${user?.jobTitle}</div>
+        <div class="card">
+            <h3>⭐ تقييم الأداء - ${currentUser?.jobTitle}</h3>
+            <div class="performance-score">${percent}%</div>
+            <div class="score-bar"><div class="score-fill" style="width:${percent}%"></div></div>
             <div class="criteria-grid">
                 ${perf.criteria.map(c => `
                     <div class="criteria-card">
                         <div class="criteria-name">${c.name}</div>
-                        <div style="margin:5px 0;">${c.value} / ${c.max}</div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <span>${c.value}/${c.max}</span>
+                            <span>الوزن: ${c.weight}%</span>
+                        </div>
                         <div class="criteria-progress"><div class="criteria-progress-fill" style="width:${(c.value/c.max)*100}%"></div></div>
-                        <div style="font-size:11px; opacity:0.6;">الوزن: ${c.weight}%</div>
                     </div>
                 `).join('')}
             </div>
         </div>`;
     }
-
+    
     function renderNotifications() {
-        return `<div class="card"><h3><i class="fas fa-bell"></i> الإشعارات</h3>${announcementsList.map(a => `<div style="padding:10px; border-bottom:1px solid rgba(212,175,55,0.1);"><strong>${a.title}</strong><br>${a.content}<br><small>📅 ${a.date}</small></div>`).join('')}</div>`;
+        return `<div class="card"><h3>🔔 الإشعارات</h3>${announcements.map(a => `<div style="padding:10px; border-bottom:1px solid rgba(212,175,55,0.1);"><strong>${a.title}</strong><br>${a.content}<br><small>📅 ${a.date}</small></div>`).join('')}</div>`;
     }
-
+    
     function renderProfile() {
-        let user = getCurrentUser();
-        let allJobs = getAllJobs();
         return `
         <div class="card">
-            <h3><i class="fas fa-user-circle"></i> حسابي</h3>
-            <div class="avatar" style="width:90px;height:90px;margin:0 auto 15px;" onclick="document.getElementById('profileAvatar').click()">
-                ${user?.avatar ? `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">` : '<i class="fas fa-user" style="font-size:45px;"></i>'}
-            </div>
-            <input type="file" id="profileAvatar" style="display:none" onchange="uploadProfileAvatar(this)">
-            <div class="form-group"><label>الاسم</label><input id="profileName" value="${user?.name || ''}"></div>
-            <div class="form-group"><label>البريد</label><input id="profileEmail" value="${user?.email || ''}"></div>
-            <div class="form-group"><label>المسمى</label><select id="profileJob">${allJobs.map(j => `<option ${user?.jobTitle === j.title ? 'selected' : ''}>${j.title}</option>`).join('')}</select></div>
-            <div class="form-group"><label>القسم</label><input id="profileDept" value="${user?.department || ''}"></div>
-            <button class="btn" onclick="saveUserProfile()">حفظ التغييرات</button>
+            <h3>👤 حسابي</h3>
+            <div class="form-group"><label>الاسم</label><input id="pName" value="${currentUser?.name || ''}"></div>
+            <div class="form-group"><label>البريد</label><input id="pEmail" value="${currentUser?.email || ''}"></div>
+            <div class="form-group"><label>المسمى</label><select id="pJob">${jobs.map(j => `<option ${currentUser?.jobTitle === j.title ? 'selected' : ''}>${j.title}</option>`).join('')}</select></div>
+            <button class="btn" onclick="updateProfile()">💾 حفظ</button>
+            <button class="btn" style="margin-top:10px;background:#ef4444;" onclick="logout()">🚪 تسجيل الخروج</button>
         </div>`;
     }
-
-    function saveUserProfile() {
-        let user = getCurrentUser();
-        user.name = document.getElementById('profileName').value;
-        user.email = document.getElementById('profileEmail').value;
-        user.jobTitle = document.getElementById('profileJob').value;
-        user.department = document.getElementById('profileDept').value;
-        let idx = usersDatabase.findIndex(u => u.id === user.id);
-        if(idx !== -1) usersDatabase[idx] = user;
+    
+    function updateProfile() {
+        currentUser.name = document.getElementById('pName').value;
+        currentUser.email = document.getElementById('pEmail').value;
+        currentUser.jobTitle = document.getElementById('pJob').value;
+        let idx = users.findIndex(u => u.id === currentUser.id);
+        if(idx !== -1) users[idx] = currentUser;
         saveAll();
         alert('تم حفظ البيانات ✅');
         renderApp();
     }
-
-    function uploadProfileAvatar(input) {
-        if(input.files && input.files[0]) {
-            let reader = new FileReader();
-            reader.onload = e => {
-                let user = getCurrentUser();
-                user.avatar = e.target.result;
-                let idx = usersDatabase.findIndex(u => u.id === user.id);
-                if(idx !== -1) usersDatabase[idx] = user;
-                saveAll();
-                renderApp();
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    // ==================== لوحة التحكم (مع تفعيل تعديل الأقسام) ====================
-    function renderAdminPanel() {
-        let user = getCurrentUser();
-        if(user?.role !== 'admin') return '<div class="card">🔒 هذه الصفحة للمدير فقط</div>';
+    
+    // ========== لوحة التحكم الكاملة ==========
+    function renderAdmin() {
+        if(currentUser?.role !== 'admin') return '<div class="card">🔒 هذه الصفحة للمدير فقط</div>';
         return `
         <div class="card">
-            <h3><i class="fas fa-crown"></i> لوحة تحكم المدير</h3>
+            <h3>⚙️ لوحة تحكم المدير</h3>
             <div class="admin-grid">
-                <div class="admin-card" onclick="showAddJobModal()"><i class="fas fa-briefcase"></i><div>إضافة مسمى</div></div>
-                <div class="admin-card" onclick="showAddPolicyModal()"><i class="fas fa-file-alt"></i><div>إضافة سياسة</div></div>
-                <div class="admin-card" onclick="showAddBehaviorModal()"><i class="fas fa-handshake"></i><div>إضافة سلوك</div></div>
-                <div class="admin-card" onclick="showAddProcedureModal()"><i class="fas fa-list-ol"></i><div>إضافة إجراء</div></div>
-                <div class="admin-card" onclick="showAddFaqModal()"><i class="fas fa-question-circle"></i><div>إضافة سؤال</div></div>
-                <div class="admin-card" onclick="showAddAnnouncementModal()"><i class="fas fa-bell"></i><div>إضافة إعلان</div></div>
-                <div class="admin-card" onclick="showAddOrgDeptModal()"><i class="fas fa-building"></i><div>إضافة قسم</div></div>
-                <div class="admin-card" onclick="exportAllData()"><i class="fas fa-download"></i><div>تصدير البيانات</div></div>
-                <div class="admin-card" onclick="resetAllData()"><i class="fas fa-trash"></i><div>إعادة تعيين</div></div>
+                <div class="admin-card" onclick="showAddModal('job')"><i class="fas fa-briefcase"></i><div>إضافة مسمى</div></div>
+                <div class="admin-card" onclick="showAddModal('policy')"><i class="fas fa-file-alt"></i><div>إضافة سياسة</div></div>
+                <div class="admin-card" onclick="showAddModal('behavior')"><i class="fas fa-handshake"></i><div>إضافة سلوك</div></div>
+                <div class="admin-card" onclick="showAddModal('procedure')"><i class="fas fa-list-ol"></i><div>إضافة إجراء</div></div>
+                <div class="admin-card" onclick="showAddModal('faq')"><i class="fas fa-question-circle"></i><div>إضافة سؤال</div></div>
+                <div class="admin-card" onclick="showAddModal('dept')"><i class="fas fa-building"></i><div>إضافة قسم</div></div>
+                <div class="admin-card" onclick="showAddModal('announcement')"><i class="fas fa-bell"></i><div>إضافة إعلان</div></div>
             </div>
         </div>
         
-        <div class="admin-section"><h4>📋 المسميات الوظيفية (${globalJobsList.length})</h4>
-        <table class="admin-table"><thead><tr><th>المسمى</th><th>القسم</th><th></th></tr></thead><tbody>
-        ${globalJobsList.map(j => `<tr><td style="padding:8px;">${j.title}</td><td style="padding:8px;">${j.department}</td><td class="admin-actions"><button class="admin-btn" onclick="editJob(${j.id})">تعديل</button><button class="admin-btn danger" onclick="deleteJob(${j.id})">حذف</button></td></tr>`).join('')}
-        </tbody></table></div>
+        <div class="card"><h4>📋 المسميات الوظيفية</h4>${jobs.map(j => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${j.title}</strong> (${j.department})</span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('job',${j.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('job',${j.id})">🗑️</button></div></div>`).join('')}</div>
         
-        <div class="admin-section"><h4>📜 السياسات (${policiesList.length})</h4>
-        <table class="admin-table"><thead><tr><th>العنوان</th><th>الوصف</th><th></th><tr></thead><tbody>
-        ${policiesList.map(p => `<tr><td style="padding:8px;">${p.title}</td><td style="padding:8px;">${p.description.substring(0,30)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editPolicy(${p.id})">تعديل</button><button class="admin-btn danger" onclick="deletePolicy(${p.id})">حذف</button></td></tr>`).join('')}
-        </tbody></table></div>
+        <div class="card"><h4>📜 السياسات</h4>${policies.map(p => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${p.title}</strong><br><small>${p.description}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('policy',${p.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('policy',${p.id})">🗑️</button></div></div>`).join('')}</div>
         
-        <div class="admin-section"><h4>🤝 السلوكيات (${behaviorsList.length})</h4>
-        <table class="admin-table"><thead><tr><th>العنوان</th><th>الوصف</th><th></th></tr></thead><tbody>
-        ${behaviorsList.map(b => `<tr><td style="padding:8px;">${b.title}</td><td style="padding:8px;">${b.desc.substring(0,30)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editBehavior(${b.id})">تعديل</button><button class="admin-btn danger" onclick="deleteBehavior(${b.id})">حذف</button></td></tr>`).join('')}
-        </tbody></table></div>
+        <div class="card"><h4>🤝 السلوكيات</h4>${behaviors.map(b => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${b.title}</strong><br><small>${b.desc.substring(0,50)}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('behavior',${b.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('behavior',${b.id})">🗑️</button></div></div>`).join('')}</div>
         
-        <div class="admin-section"><h4>📋 الإجراءات (${proceduresList.length})</h4>
-        <table class="admin-table"><thead><tr><th>العنوان</th><th>الوصف</th><th></th></tr></thead><tbody>
-        ${proceduresList.map(p => `<table><td style="padding:8px;">${p.title}</td><td style="padding:8px;">${p.desc.substring(0,30)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editProcedure(${p.id})">تعديل</button><button class="admin-btn danger" onclick="deleteProcedure(${p.id})">حذف</button></td></tr>`).join('')}
-        </tbody></table></div>
+        <div class="card"><h4>📋 الإجراءات</h4>${procedures.map(p => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${p.title}</strong><br><small>${p.desc.substring(0,50)}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('procedure',${p.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('procedure',${p.id})">🗑️</button></div></div>`).join('')}</div>
         
-        <div class="admin-section"><h4>❓ الأسئلة (${faqList.length})</h4>
-        <table class="admin-table"><thead><tr><th>السؤال</th><th>الإجابة</th><th></th></tr></thead><tbody>
-        ${faqList.map(f => `<tr><td style="padding:8px;">${f.question.substring(0,25)}...</td><td style="padding:8px;">${f.answer.substring(0,25)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editFaq(${f.id})">تعديل</button><button class="admin-btn danger" onclick="deleteFaq(${f.id})">حذف</button></td></tr>`).join('')}
-        </tbody></tr></div>
+        <div class="card"><h4>❓ الأسئلة الشائعة</h4>${faq.map(f => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${f.question}</strong><br><small>${f.answer.substring(0,40)}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('faq',${f.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('faq',${f.id})">🗑️</button></div></div>`).join('')}</div>
         
-        <div class="admin-section"><h4>🏢 الأقسام (${orgStructure.departments.length})</h4>
-        <table class="admin-table"><thead><tr><th>القسم</th><th>المدير</th><th>الأعضاء</th><th></th></tr></thead><tbody>
-        ${orgStructure.departments.map(d => `<tr><td style="padding:8px;">${d.name}</td><td style="padding:8px;">${d.head}</td><td style="padding:8px;">${d.members}</td><td class="admin-actions"><button class="admin-btn" onclick="editDepartment('${d.id}')">تعديل</button><button class="admin-btn danger" onclick="deleteDepartment('${d.id}')">حذف</button></td></tr>`).join('')}
-        </tbody></tr></div>
+        <div class="card"><h4>🏢 الأقسام</h4><div class="org-departments" style="display:flex;flex-direction:column;">${orgStructure.departments.map(d => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${d.name}</strong> - المدير: ${d.head} (${d.members} عضو)</span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editOrgDept(${d.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteOrgDept(${d.id})">🗑️</button></div></div>`).join('')}</div>
+        <button class="btn" style="margin-top:10px;" onclick="showAddDeptModal()">+ إضافة قسم جديد</button></div>
         
-        <div class="admin-section"><h4>🔔 الإعلانات (${announcementsList.length})</h4>
-        <table class="admin-table"><thead><tr><th>العنوان</th><th>المحتوى</th><th></th></tr></thead><tbody>
-        ${announcementsList.map(a => `<tr><td style="padding:8px;">${a.title}</td><td style="padding:8px;">${a.content.substring(0,30)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editAnnouncement(${a.id})">تعديل</button><button class="admin-btn danger" onclick="deleteAnnouncement(${a.id})">حذف</button></td></tr>`).join('')}
-        </tbody></table></div>`;
+        <div class="card"><h4>🔔 الإعلانات</h4>${announcements.map(a => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${a.title}</strong><br><small>${a.content}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('announcement',${a.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('announcement',${a.id})">🗑️</button></div></div>`).join('')}</div>
+        
+        <div class="card"><h4>⭐ تقييم الأداء (تعديل المعايير)</h4>
+        ${Object.keys(performance).map(jobTitle => `
+            <div style="margin-bottom:15px; padding:10px; background:rgba(212,175,55,0.1); border-radius:12px;">
+                <strong>${jobTitle}</strong>
+                <button class="btn" style="width:auto;padding:3px 10px;margin-right:10px;" onclick="editPerformance('${jobTitle}')">تعديل المعايير</button>
+            </div>
+        `).join('')}</div>`;
     }
-
-    // دوال الإدارة
+    
+    // ========== دوال الإدارة ==========
     function showModal(title, html, onSave) {
         let modal = document.createElement('div');
         modal.className = 'modal';
@@ -920,156 +566,207 @@
         document.body.appendChild(modal);
         window.saveModal = (btn) => { onSave(); btn.closest('.modal').remove(); };
     }
-
-    window.showAddJobModal = () => showModal('إضافة مسمى', `<div class="form-group"><label>المسمى</label><input id="title"></div><div class="form-group"><label>القسم</label><input id="dept"></div>`, () => {
-        globalJobsList.push({ id: Date.now(), title: document.getElementById('title').value, department: document.getElementById('dept').value });
-        saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة مسمى وظيفي جديد');
-    });
-    window.editJob = (id) => { let j = globalJobsList.find(j => j.id === id); showModal('تعديل', `<div class="form-group"><label>المسمى</label><input id="title" value="${j.title}"></div><div class="form-group"><label>القسم</label><input id="dept" value="${j.department}"></div>`, () => { j.title = document.getElementById('title').value; j.department = document.getElementById('dept').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل المسمى الوظيفي'); }); };
-    window.deleteJob = (id) => { if(confirm('حذف؟')) { globalJobsList = globalJobsList.filter(j => j.id !== id); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف المسمى الوظيفي'); } };
     
-    window.showAddPolicyModal = () => showModal('إضافة سياسة', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>التصنيف</label><select id="cat"><option>إجازات</option><option>مالية</option><option>عام</option></select></div><div class="form-group"><label>الوصف المختصر</label><input id="desc"></div><div class="form-group"><label>المحتوى التفصيلي</label><textarea id="content" rows="4"></textarea></div>`, () => {
-        policiesList.push({ id: Date.now(), title: document.getElementById('title').value, category: document.getElementById('cat').value, description: document.getElementById('desc').value, content: document.getElementById('content').value });
-        saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة سياسة جديدة');
-    });
-    window.editPolicy = (id) => { let p = policiesList.find(p => p.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${p.title}"></div><div class="form-group"><label>التصنيف</label><select id="cat"><option ${p.category==='إجازات'?'selected':''}>إجازات</option><option ${p.category==='مالية'?'selected':''}>مالية</option><option ${p.category==='عام'?'selected':''}>عام</option></select></div><div class="form-group"><label>الوصف</label><input id="desc" value="${p.description}"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="4">${p.content}</textarea></div>`, () => { p.title = document.getElementById('title').value; p.category = document.getElementById('cat').value; p.description = document.getElementById('desc').value; p.content = document.getElementById('content').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل السياسة'); }); };
-    window.deletePolicy = (id) => { if(confirm('حذف؟')) { policiesList = policiesList.filter(p => p.id !== id); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف السياسة'); } };
-    
-    window.showAddBehaviorModal = () => showModal('إضافة سلوك', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><textarea id="desc" rows="2"></textarea></div>`, () => {
-        behaviorsList.push({ id: Date.now(), title: document.getElementById('title').value, desc: document.getElementById('desc').value });
-        saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة سلوك جديد');
-    });
-    window.editBehavior = (id) => { let b = behaviorsList.find(b => b.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${b.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${b.desc}</textarea></div>`, () => { b.title = document.getElementById('title').value; b.desc = document.getElementById('desc').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل السلوك'); }); };
-    window.deleteBehavior = (id) => { if(confirm('حذف؟')) { behaviorsList = behaviorsList.filter(b => b.id !== id); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف السلوك'); } };
-    
-    window.showAddProcedureModal = () => showModal('إضافة إجراء', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><textarea id="desc" rows="2"></textarea></div>`, () => {
-        proceduresList.push({ id: Date.now(), step: proceduresList.length+1, title: document.getElementById('title').value, desc: document.getElementById('desc').value });
-        saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة إجراء جديد');
-    });
-    window.editProcedure = (id) => { let p = proceduresList.find(p => p.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${p.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${p.desc}</textarea></div>`, () => { p.title = document.getElementById('title').value; p.desc = document.getElementById('desc').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل الإجراء'); }); };
-    window.deleteProcedure = (id) => { if(confirm('حذف؟')) { proceduresList = proceduresList.filter(p => p.id !== id); proceduresList.forEach((p,i)=>p.step=i+1); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف الإجراء'); } };
-    
-    window.showAddFaqModal = () => showModal('إضافة سؤال', `<div class="form-group"><label>السؤال</label><input id="q"></div><div class="form-group"><label>الإجابة</label><textarea id="a" rows="3"></textarea></div>`, () => {
-        faqList.push({ id: Date.now(), question: document.getElementById('q').value, answer: document.getElementById('a').value });
-        saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة سؤال جديد للمساعد');
-    });
-    window.editFaq = (id) => { let f = faqList.find(f => f.id === id); showModal('تعديل', `<div class="form-group"><label>السؤال</label><input id="q" value="${f.question}"></div><div class="form-group"><label>الإجابة</label><textarea id="a">${f.answer}</textarea></div>`, () => { f.question = document.getElementById('q').value; f.answer = document.getElementById('a').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل السؤال'); }); };
-    window.deleteFaq = (id) => { if(confirm('حذف؟')) { faqList = faqList.filter(f => f.id !== id); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف السؤال'); } };
-    
-    window.showAddAnnouncementModal = () => showModal('إضافة إعلان', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="2"></textarea></div>`, () => {
-        announcementsList.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, date: new Date().toLocaleDateString('ar') });
-        saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة إعلان جديد');
-    });
-    window.editAnnouncement = (id) => { let a = announcementsList.find(a => a.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${a.title}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${a.content}</textarea></div>`, () => { a.title = document.getElementById('title').value; a.content = document.getElementById('content').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل الإعلان'); }); };
-    window.deleteAnnouncement = (id) => { if(confirm('حذف؟')) { announcementsList = announcementsList.filter(a => a.id !== id); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف الإعلان'); } };
-    
-    window.showAddOrgDeptModal = () => showModal('إضافة قسم', `<div class="form-group"><label>اسم القسم</label><input id="name"></div><div class="form-group"><label>رئيس القسم</label><input id="head"></div><div class="form-group"><label>عدد الأعضاء</label><input id="members" type="number" value="1"></div>`, () => {
-        let newId = "dept_" + Date.now();
-        orgStructure.departments.push({ id: newId, name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) });
-        saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة قسم جديد');
-    });
-    
-    window.editDepartment = (id) => {
-        let dept = orgStructure.departments.find(d => d.id === id);
-        if(!dept) return;
-        showModal('تعديل القسم', `<div class="form-group"><label>اسم القسم</label><input id="name" value="${dept.name}"></div><div class="form-group"><label>رئيس القسم</label><input id="head" value="${dept.head}"></div><div class="form-group"><label>عدد الأعضاء</label><input id="members" value="${dept.members}" type="number"></div>`, () => {
-            dept.name = document.getElementById('name').value;
-            dept.head = document.getElementById('head').value;
-            dept.members = parseInt(document.getElementById('members').value);
-            saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل القسم');
+    window.showAddModal = function(type) {
+        let fields = {
+            job: '<div class="form-group"><label>المسمى</label><input id="title"></div><div class="form-group"><label>القسم</label><input id="dept"></div>',
+            policy: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><input id="desc"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="3"></textarea></div>',
+            behavior: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><textarea id="desc" rows="2"></textarea></div>',
+            procedure: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><textarea id="desc" rows="2"></textarea></div>',
+            faq: '<div class="form-group"><label>السؤال</label><input id="q"></div><div class="form-group"><label>الإجابة</label><textarea id="a" rows="3"></textarea></div>',
+            announcement: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="2"></textarea></div>',
+            dept: '<div class="form-group"><label>اسم القسم</label><input id="name"></div><div class="form-group"><label>رئيس القسم</label><input id="head"></div><div class="form-group"><label>عدد الأعضاء</label><input id="members" type="number"></div>'
+        };
+        showModal('إضافة', fields[type], () => {
+            if(type === 'job') jobs.push({ id: Date.now(), title: document.getElementById('title').value, department: document.getElementById('dept').value });
+            else if(type === 'policy') policies.push({ id: Date.now(), title: document.getElementById('title').value, description: document.getElementById('desc').value, content: document.getElementById('content').value });
+            else if(type === 'behavior') behaviors.push({ id: Date.now(), title: document.getElementById('title').value, desc: document.getElementById('desc').value });
+            else if(type === 'procedure') procedures.push({ id: Date.now(), step: procedures.length+1, title: document.getElementById('title').value, desc: document.getElementById('desc').value });
+            else if(type === 'faq') faq.push({ id: Date.now(), question: document.getElementById('q').value, answer: document.getElementById('a').value });
+            else if(type === 'announcement') announcements.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, date: new Date().toLocaleDateString() });
+            else if(type === 'dept') orgStructure.departments.push({ id: Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) });
+            saveAll(); renderApp(); alert('تم الإضافة ✅');
         });
     };
     
-    window.deleteDepartment = (id) => {
-        if(confirm('حذف القسم؟')) {
-            orgStructure.departments = orgStructure.departments.filter(d => d.id !== id);
-            saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف القسم');
+    window.editItem = function(type, id) {
+        let item, fields;
+        if(type === 'job') { item = jobs.find(i => i.id === id); fields = `<div class="form-group"><label>المسمى</label><input id="title" value="${item.title}"></div><div class="form-group"><label>القسم</label><input id="dept" value="${item.department}"></div>`; }
+        else if(type === 'policy') { item = policies.find(i => i.id === id); fields = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><input id="desc" value="${item.description}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${item.content}</textarea></div>`; }
+        else if(type === 'behavior') { item = behaviors.find(i => i.id === id); fields = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${item.desc}</textarea></div>`; }
+        else if(type === 'procedure') { item = procedures.find(i => i.id === id); fields = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${item.desc}</textarea></div>`; }
+        else if(type === 'faq') { item = faq.find(i => i.id === id); fields = `<div class="form-group"><label>السؤال</label><input id="q" value="${item.question}"></div><div class="form-group"><label>الإجابة</label><textarea id="a">${item.answer}</textarea></div>`; }
+        else if(type === 'announcement') { item = announcements.find(i => i.id === id); fields = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${item.content}</textarea></div>`; }
+        showModal('تعديل', fields, () => {
+            if(type === 'job') { item.title = document.getElementById('title').value; item.department = document.getElementById('dept').value; }
+            else if(type === 'policy') { item.title = document.getElementById('title').value; item.description = document.getElementById('desc').value; item.content = document.getElementById('content').value; }
+            else if(type === 'behavior') { item.title = document.getElementById('title').value; item.desc = document.getElementById('desc').value; }
+            else if(type === 'procedure') { item.title = document.getElementById('title').value; item.desc = document.getElementById('desc').value; }
+            else if(type === 'faq') { item.question = document.getElementById('q').value; item.answer = document.getElementById('a').value; }
+            else if(type === 'announcement') { item.title = document.getElementById('title').value; item.content = document.getElementById('content').value; item.date = new Date().toLocaleDateString(); }
+            saveAll(); renderApp(); alert('تم التعديل ✅');
+        });
+    };
+    
+    window.deleteItem = function(type, id) {
+        if(confirm('حذف؟')) {
+            if(type === 'job') jobs = jobs.filter(i => i.id !== id);
+            else if(type === 'policy') policies = policies.filter(i => i.id !== id);
+            else if(type === 'behavior') behaviors = behaviors.filter(i => i.id !== id);
+            else if(type === 'procedure') procedures = procedures.filter(i => i.id !== id);
+            else if(type === 'faq') faq = faq.filter(i => i.id !== id);
+            else if(type === 'announcement') announcements = announcements.filter(i => i.id !== id);
+            saveAll(); renderApp(); alert('تم الحذف ✅');
         }
     };
     
-    window.exportAllData = () => { 
-        let data = { policiesList, behaviorsList, proceduresList, faqList, announcementsList, orgStructure, globalJobsList, performanceCriteria };
-        let blob = new Blob([JSON.stringify(data)], {type:"application/json"});
-        let url = URL.createObjectURL(blob);
-        let a = document.createElement('a');
-        a.href = url;
-        a.download = `hr_backup_${Date.now()}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-        alert('تم تصدير البيانات');
+    // دوال الهيكل التنظيمي
+    window.editOrgDept = function(id) {
+        let dept = orgStructure.departments.find(d => d.id === id);
+        showModal('تعديل القسم', `
+            <div class="form-group"><label>اسم القسم</label><input id="name" value="${dept.name}"></div>
+            <div class="form-group"><label>رئيس القسم</label><input id="head" value="${dept.head}"></div>
+            <div class="form-group"><label>عدد الأعضاء</label><input id="members" value="${dept.members}" type="number"></div>
+        `, () => {
+            dept.name = document.getElementById('name').value;
+            dept.head = document.getElementById('head').value;
+            dept.members = parseInt(document.getElementById('members').value);
+            saveAll(); renderApp(); alert('تم تعديل القسم ✅');
+        });
     };
-    window.resetAllData = () => { if(confirm('إعادة تعيين جميع البيانات؟')) { localStorage.clear(); sessionStorage.clear(); location.reload(); } };
-
+    
+    window.deleteOrgDept = function(id) {
+        if(confirm('حذف القسم؟')) {
+            orgStructure.departments = orgStructure.departments.filter(d => d.id !== id);
+            saveAll(); renderApp(); alert('تم الحذف ✅');
+        }
+    };
+    
+    window.showAddDeptModal = function() {
+        showModal('إضافة قسم جديد', `
+            <div class="form-group"><label>اسم القسم</label><input id="name"></div>
+            <div class="form-group"><label>رئيس القسم</label><input id="head"></div>
+            <div class="form-group"><label>عدد الأعضاء</label><input id="members" type="number" value="1"></div>
+        `, () => {
+            orgStructure.departments.push({ id: Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) });
+            saveAll(); renderApp(); alert('تم إضافة القسم ✅');
+        });
+    };
+    
+    window.editOrgItem = function(type, id) {
+        if(type === 'ceo') {
+            showModal('تعديل الإدارة العليا', `
+                <div class="form-group"><label>الاسم</label><input id="name" value="${orgStructure.ceo.name}"></div>
+                <div class="form-group"><label>رئيس الإدارة</label><input id="head" value="${orgStructure.ceo.head}"></div>
+                <div class="form-group"><label>عدد الأعضاء</label><input id="members" value="${orgStructure.ceo.members}" type="number"></div>
+            `, () => {
+                orgStructure.ceo.name = document.getElementById('name').value;
+                orgStructure.ceo.head = document.getElementById('head').value;
+                orgStructure.ceo.members = parseInt(document.getElementById('members').value);
+                saveAll(); renderApp(); alert('تم التعديل ✅');
+            });
+        }
+    };
+    
+    // تعديل معايير التقييم
+    window.editPerformance = function(jobTitle) {
+        let perf = performance[jobTitle];
+        let criteriaHtml = perf.criteria.map((c, idx) => `
+            <div style="margin-bottom:10px; padding:10px; background:rgba(255,255,255,0.05); border-radius:10px;">
+                <div class="form-group"><label>اسم المعيار</label><input id="cName${idx}" value="${c.name}"></div>
+                <div style="display:flex; gap:10px;">
+                    <div class="form-group" style="flex:1"><label>الدرجة الحالية</label><input id="cValue${idx}" type="number" value="${c.value}"></div>
+                    <div class="form-group" style="flex:1"><label>الدرجة القصوى</label><input id="cMax${idx}" type="number" value="${c.max}"></div>
+                    <div class="form-group" style="flex:1"><label>الوزن %</label><input id="cWeight${idx}" type="number" value="${c.weight}"></div>
+                </div>
+            </div>
+        `).join('');
+        
+        showModal(`تعديل معايير التقييم - ${jobTitle}`, `
+            ${criteriaHtml}
+            <button class="btn" style="margin-top:5px;" onclick="addPerformanceCriteria()">+ إضافة معيار</button>
+        `, () => {
+            let newCriteria = [];
+            for(let i = 0; i < perf.criteria.length; i++) {
+                if(document.getElementById(`cName${i}`)) {
+                    newCriteria.push({
+                        name: document.getElementById(`cName${i}`).value,
+                        value: parseInt(document.getElementById(`cValue${i}`).value),
+                        max: parseInt(document.getElementById(`cMax${i}`).value),
+                        weight: parseInt(document.getElementById(`cWeight${i}`).value)
+                    });
+                }
+            }
+            performance[jobTitle].criteria = newCriteria;
+            saveAll(); renderApp(); alert('تم تعديل معايير التقييم ✅');
+        });
+    };
+    
+    window.addPerformanceCriteria = function() {
+        let container = document.querySelector('.modal-content');
+        let idx = Date.now();
+        let div = document.createElement('div');
+        div.style.cssText = 'margin-bottom:10px; padding:10px; background:rgba(255,255,255,0.05); border-radius:10px;';
+        div.innerHTML = `
+            <div class="form-group"><label>اسم المعيار</label><input id="cName${idx}" placeholder="اسم المعيار"></div>
+            <div style="display:flex; gap:10px;">
+                <div class="form-group" style="flex:1"><label>الدرجة الحالية</label><input id="cValue${idx}" type="number" value="80"></div>
+                <div class="form-group" style="flex:1"><label>الدرجة القصوى</label><input id="cMax${idx}" type="number" value="100"></div>
+                <div class="form-group" style="flex:1"><label>الوزن %</label><input id="cWeight${idx}" type="number" value="10"></div>
+            </div>
+        `;
+        container.insertBefore(div, container.querySelector('.btn-primary'));
+    };
+    
     // التطبيق الرئيسي
-    let currentPage = "home";
-
     function renderApp() {
-        let user = getCurrentUser();
-        let root = document.getElementById('appRoot');
-        if(!user) { root.innerHTML = renderLoginRegister(); return; }
-        let isAdmin = user.role === 'admin';
-        root.innerHTML = `
-        <div class="app-container">
-            <div class="sidebar" id="sidebar">
-                <div class="sidebar-header"><div class="logo-area"><div class="company-logo"><i class="fas fa-crown"></i></div><div class="logo">HR<span>SYSTEM</span></div></div></div>
-                <div class="nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
-                <div class="nav-item ${currentPage === 'employeeguide' ? 'active' : ''}" data-page="employeeguide"><i class="fas fa-book-open"></i> دليل الموظف</div>
-                <div class="nav-item ${currentPage === 'assistant' ? 'active' : ''}" data-page="assistant"><i class="fas fa-robot"></i> المساعد الذكي</div>
-                <div class="nav-item ${currentPage === 'org' ? 'active' : ''}" data-page="org"><i class="fas fa-project-diagram"></i> الهيكل التنظيمي</div>
-                <div class="nav-item ${currentPage === 'company' ? 'active' : ''}" data-page="company"><i class="fas fa-flag-checkered"></i> عن الشركة</div>
-                <div class="nav-item ${currentPage === 'performance' ? 'active' : ''}" data-page="performance"><i class="fas fa-chart-line"></i> تقييم الأداء</div>
-                <div class="nav-item ${currentPage === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i> الإشعارات</div>
-                <div class="nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user-circle"></i> حسابي</div>
-                ${isAdmin ? `<div class="nav-item ${currentPage === 'admin' ? 'active' : ''}" data-page="admin"><i class="fas fa-crown"></i> لوحة التحكم</div>` : ''}
-                <div style="margin-top:30px;"><div class="nav-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</div></div>
-            </div>
-            <div class="bottom-nav">
-                <div class="bottom-nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i></div>
-                <div class="bottom-nav-item ${currentPage === 'employeeguide' ? 'active' : ''}" data-page="employeeguide"><i class="fas fa-book"></i></div>
-                <div class="bottom-nav-item ${currentPage === 'assistant' ? 'active' : ''}" data-page="assistant"><i class="fas fa-robot"></i></div>
-                <div class="bottom-nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i></div>
-                ${isAdmin ? `<div class="bottom-nav-item ${currentPage === 'admin' ? 'active' : ''}" data-page="admin"><i class="fas fa-cog"></i></div>` : ''}
-            </div>
-            <div class="main-content">
-                <div class="top-bar"><button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div class="page-title">${getPageTitle()}</div><div class="avatar">${user?.avatar ? `<img src="${user.avatar}">` : '<i class="fas fa-user"></i>'}</div></div>
-                <div id="pageContent"></div>
-            </div>
+        if(!currentUser) { document.getElementById('app').innerHTML = renderLogin(); return; }
+        let isAdmin = currentUser.role === 'admin';
+        document.getElementById('app').innerHTML = `
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header"><div class="logo">🏢 HR SYSTEM</div></div>
+            <div class="nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
+            <div class="nav-item ${currentPage === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i> دليل الموظف</div>
+            <div class="nav-item ${currentPage === 'org' ? 'active' : ''}" data-page="org"><i class="fas fa-building"></i> الهيكل التنظيمي</div>
+            <div class="nav-item ${currentPage === 'performance' ? 'active' : ''}" data-page="performance"><i class="fas fa-chart-line"></i> تقييم الأداء</div>
+            <div class="nav-item ${currentPage === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i> الإشعارات</div>
+            <div class="nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i> حسابي</div>
+            ${isAdmin ? `<div class="nav-item ${currentPage === 'admin' ? 'active' : ''}" data-page="admin"><i class="fas fa-cog"></i> لوحة التحكم</div>` : ''}
+            <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</div>
+        </div>
+        <div class="main-content">
+            <div class="top-bar"><button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div class="page-title">${getTitle()}</div><div class="avatar"><i class="fas fa-user"></i></div></div>
+            <div id="pageContent"></div>
+        </div>
+        <div class="bottom-nav">
+            <div class="bottom-nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i><span>الرئيسية</span></div>
+            <div class="bottom-nav-item ${currentPage === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i><span>الدليل</span></div>
+            <div class="bottom-nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i><span>حسابي</span></div>
+            <div class="bottom-nav-item ${currentPage === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i><span>إشعارات</span></div>
         </div>`;
-        renderPageContent();
+        renderPage();
         attachEvents();
     }
-
-    function getPageTitle() {
-        let titles = { home:"الرئيسية", employeeguide:"دليل الموظف", assistant:"المساعد الذكي", org:"الهيكل التنظيمي", company:"عن الشركة", performance:"تقييم الأداء", notifications:"الإشعارات", profile:"حسابي", admin:"لوحة التحكم" };
+    
+    function getTitle() {
+        let titles = { home:"الرئيسية", guide:"دليل الموظف", org:"الهيكل التنظيمي", performance:"تقييم الأداء", notifications:"الإشعارات", profile:"حسابي", admin:"لوحة التحكم" };
         return titles[currentPage] || "الرئيسية";
     }
-
-    function renderPageContent() {
-        if(currentPage === 'employeeguide') { document.getElementById('pageContent').innerHTML = `<div id="employeeGuideContent"></div>`; renderEmployeeGuidePage(); }
-        else if(currentPage === 'assistant') document.getElementById('pageContent').innerHTML = renderAssistantPage();
-        else if(currentPage === 'home') document.getElementById('pageContent').innerHTML = renderHome();
-        else if(currentPage === 'org') document.getElementById('pageContent').innerHTML = renderOrg();
-        else if(currentPage === 'company') document.getElementById('pageContent').innerHTML = renderCompany();
-        else if(currentPage === 'performance') document.getElementById('pageContent').innerHTML = renderPerformance();
-        else if(currentPage === 'notifications') document.getElementById('pageContent').innerHTML = renderNotifications();
-        else if(currentPage === 'profile') document.getElementById('pageContent').innerHTML = renderProfile();
-        else if(currentPage === 'admin') document.getElementById('pageContent').innerHTML = renderAdminPanel();
-        else document.getElementById('pageContent').innerHTML = renderHome();
+    
+    function renderPage() {
+        let pages = { home: renderHome, guide: renderGuide, org: renderOrg, performance: renderPerformance, notifications: renderNotifications, profile: renderProfile, admin: renderAdmin };
+        document.getElementById('pageContent').innerHTML = (pages[currentPage] || renderHome)();
     }
-
+    
     function attachEvents() {
         document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(el => {
-            if(el.id === 'logoutBtn') return;
             let page = el.dataset.page;
             if(page) el.onclick = () => { currentPage = page; renderApp(); };
         });
-        document.getElementById('logoutBtn')?.addEventListener('click', () => { logout(); });
     }
-
-    window.sendManualAssistantMessage = sendManualAssistantMessage;
-    window.quickAssistantQuestion = quickAssistantQuestion;
-    window.showPolicyDetail = showPolicyDetail;
-
+    
+    let savedUser = sessionStorage.getItem('user');
+    if(savedUser) currentUser = JSON.parse(savedUser);
     renderApp();
     saveAll();
 </script>
