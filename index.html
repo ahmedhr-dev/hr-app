@@ -93,196 +93,63 @@
         .bottom-nav-item i { font-size: 20px; }
         .bottom-nav-item.active { color: #d4af37; background: rgba(212,175,55,0.15); }
 
+        /* الرئيسية */
         .hero-section {
-            background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(10,26,47,0.9));
-            border-radius: 25px; padding: 20px; margin-bottom: 20px; display: flex;
-            align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;
+            background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(10,26,47,0.95));
+            border-radius: 28px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            border: 1px solid rgba(212,175,55,0.3);
         }
         .hero-text { flex: 2; }
-        .hero-text .greeting { font-size: 24px; font-weight: bold; color: #d4af37; margin-bottom: 8px; }
-        .hero-text .job-info { font-size: 14px; margin: 8px 0; }
-        .hero-text .quote { font-size: 13px; opacity: 0.8; font-style: italic; }
-        .hero-image { width: 80px; height: 80px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .hero-image i { font-size: 40px; color: #0a1a2f; }
+        .hero-text .greeting { font-size: 28px; font-weight: 800; color: #d4af37; margin-bottom: 12px; }
+        .hero-text .job-info { font-size: 16px; margin: 12px 0; background: rgba(212,175,55,0.1); display: inline-block; padding: 6px 15px; border-radius: 30px; }
+        .hero-text .quote { font-size: 15px; opacity: 0.9; font-style: italic; margin: 12px 0; }
+        .hero-text .hadith { font-size: 14px; opacity: 0.8; margin-top: 8px; color: #c4b5fd; }
+        .hero-image { width: 85px; height: 85px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .hero-image i { font-size: 45px; color: #0a1a2f; }
 
         .card { background: rgba(10, 26, 47, 0.9); border-radius: 22px; padding: 18px; margin-bottom: 18px; border: 1px solid rgba(212,175,55,0.2); transition: all 0.3s; }
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
         .stat-card { background: rgba(10, 26, 47, 0.9); border-radius: 18px; padding: 15px; text-align: center; }
-        .stat-number { font-size: 28px; font-weight: 800; color: #d4af37; }
+        .stat-number { font-size: 32px; font-weight: 800; color: #d4af37; }
 
         /* الإشعارات المنبثقة */
         .notification-toast {
-            position: fixed;
-            top: 20px;
-            left: 20px;
+            position: fixed; top: 20px; left: 20px;
             background: linear-gradient(135deg, #d4af37, #b8960c);
-            color: #0a1a2f;
-            padding: 12px 20px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 1100;
-            animation: slideInRight 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: #0a1a2f; padding: 12px 20px; border-radius: 30px;
+            display: flex; align-items: center; gap: 12px; z-index: 1100;
+            animation: slideInRight 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         /* دليل الموظف */
         .guide-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(212,175,55,0.2);
-            padding-bottom: 5px;
+            display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid rgba(212,175,55,0.2); padding-bottom: 5px;
         }
-        .guide-tab {
-            padding: 8px 18px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+        .guide-tab { padding: 8px 18px; border-radius: 30px; cursor: pointer; transition: all 0.2s; }
         .guide-tab:hover { background: rgba(212,175,55,0.1); }
         .guide-tab.active { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
         
-        .guide-content-list { display: flex; flex-direction: column; gap: 10px; }
+        .guide-content-list { display: flex; flex-direction: column; gap: 12px; }
         .guide-item {
-            background: rgba(10, 26, 47, 0.7);
-            border: 1px solid rgba(212,175,55,0.2);
-            border-radius: 18px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            background: rgba(10, 26, 47, 0.7); border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 18px; padding: 15px; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: space-between;
         }
-        .guide-item:hover { transform: translateX(-5px); border-color: #d4af37; }
+        .guide-item:hover { transform: translateX(-5px); border-color: #d4af37; background: rgba(212,175,55,0.1); }
         .guide-item-info { flex: 1; }
-        .guide-item-title { font-size: 15px; font-weight: bold; margin-bottom: 5px; }
-        .guide-item-desc { font-size: 12px; opacity: 0.7; }
-        .guide-item-arrow { color: #d4af37; }
+        .guide-item-title { font-size: 16px; font-weight: bold; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .guide-item-desc { font-size: 13px; opacity: 0.7; line-height: 1.5; }
+        .guide-item-arrow { color: #d4af37; font-size: 18px; }
 
-        /* المساعد */
-        .assistant-wrapper {
-            background: rgba(10, 26, 47, 0.95);
-            border-radius: 28px;
-            overflow: hidden;
-            border: 1px solid rgba(212,175,55,0.2);
-        }
-        .assistant-header {
-            background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(10,26,47,0.9));
-            padding: 18px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .assistant-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #d4af37, #b8960c);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .assistant-icon i { font-size: 24px; color: #0a1a2f; }
-        .assistant-header-text h3 { color: #d4af37; font-size: 18px; }
-        .assistant-header-text p { font-size: 12px; opacity: 0.7; }
-        
-        .questions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-            gap: 8px;
-            padding: 15px;
-            background: rgba(0,0,0,0.2);
-        }
-        .question-btn {
-            background: rgba(212,175,55,0.1);
-            padding: 8px 12px;
-            border-radius: 40px;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .question-btn:hover { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
-        
-        .chat-area {
-            padding: 15px;
-            min-height: 280px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .user-bubble {
-            background: linear-gradient(135deg, #d4af37, #b8960c);
-            color: #0a1a2f;
-            padding: 10px 15px;
-            border-radius: 20px 20px 8px 20px;
-            align-self: flex-end;
-            max-width: 85%;
-            font-size: 13px;
-        }
-        .typing-indicator {
-            background: rgba(212,175,55,0.1);
-            padding: 10px 15px;
-            border-radius: 20px;
-            align-self: flex-start;
-            display: flex;
-            gap: 5px;
-        }
-        .typing-dot {
-            width: 7px;
-            height: 7px;
-            background: #d4af37;
-            border-radius: 50%;
-            animation: typingAnim 1.4s infinite;
-        }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typingAnim { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
-        
-        .response-card {
-            background: rgba(212,175,55,0.08);
-            border-radius: 18px;
-            padding: 15px;
-            align-self: flex-start;
-            max-width: 90%;
-            border-right: 3px solid #d4af37;
-        }
-        .response-title {
-            font-size: 14px;
-            font-weight: bold;
-            color: #d4af37;
-            margin-bottom: 8px;
-        }
-        .response-content {
-            line-height: 1.6;
-            font-size: 13px;
-            white-space: pre-line;
-        }
-        .chat-input-area {
-            display: flex;
-            padding: 12px;
-            gap: 8px;
-            border-top: 1px solid rgba(212,175,55,0.2);
-        }
-        .chat-input-area input {
-            flex: 1;
-            padding: 10px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(212,175,55,0.3);
-            border-radius: 30px;
-            color: white;
-        }
-        .send-btn { padding: 10px 20px; width: auto; }
-
-        /* تفاصيل السياسة */
+        /* نافذة عرض التفاصيل */
         .detail-modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
@@ -297,72 +164,76 @@
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px 20px; border-bottom: 1px solid rgba(212,175,55,0.2);
         }
-        .detail-modal-header h3 { color: #d4af37; }
-        .close-modal {
-            width: 32px; height: 32px; background: rgba(212,175,55,0.15);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
+        .detail-modal-header h3 { color: #d4af37; font-size: 18px; }
+        .close-modal { width: 32px; height: 32px; background: rgba(212,175,55,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .detail-modal-body { padding: 20px; line-height: 1.7; font-size: 15px; }
+
+        /* المساعد الذكي */
+        .assistant-wrapper {
+            background: rgba(10, 26, 47, 0.95);
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(212,175,55,0.2);
         }
-        .detail-modal-body { padding: 20px; }
+        .assistant-header {
+            background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(10,26,47,0.9));
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .assistant-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .assistant-icon i { font-size: 24px; color: #0a1a2f; }
+        .assistant-header-text h3 { color: #d4af37; font-size: 18px; }
+        .assistant-header-text p { font-size: 12px; opacity: 0.7; }
+        
+        .questions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px; padding: 15px; background: rgba(0,0,0,0.2); }
+        .question-btn { background: rgba(212,175,55,0.1); padding: 8px 12px; border-radius: 40px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .question-btn:hover { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
+        
+        .chat-area { padding: 15px; min-height: 280px; display: flex; flex-direction: column; gap: 12px; }
+        .user-bubble { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; padding: 10px 15px; border-radius: 20px 20px 8px 20px; align-self: flex-end; max-width: 85%; font-size: 13px; }
+        .typing-indicator { background: rgba(212,175,55,0.1); padding: 10px 15px; border-radius: 20px; align-self: flex-start; display: flex; gap: 5px; }
+        .typing-dot { width: 7px; height: 7px; background: #d4af37; border-radius: 50%; animation: typingAnim 1.4s infinite; }
+        @keyframes typingAnim { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+        
+        .response-card { background: rgba(212,175,55,0.08); border-radius: 18px; padding: 15px; align-self: flex-start; max-width: 90%; border-right: 3px solid #d4af37; }
+        .response-title { font-size: 14px; font-weight: bold; color: #d4af37; margin-bottom: 8px; }
+        .response-content { line-height: 1.6; font-size: 13px; white-space: pre-line; }
+        .chat-input-area { display: flex; padding: 12px; gap: 8px; border-top: 1px solid rgba(212,175,55,0.2); }
+        .chat-input-area input { flex: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(212,175,55,0.3); border-radius: 30px; color: white; }
+        .send-btn { padding: 10px 20px; width: auto; }
 
         /* الهيكل التنظيمي */
         .org-builder { background: rgba(0,0,0,0.2); border-radius: 25px; padding: 20px; overflow-x: auto; }
         .org-tree { display: flex; flex-direction: column; align-items: center; min-width: 650px; }
         .org-ceo-card { background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 18px; padding: 12px 25px; text-align: center; margin-bottom: 30px; color: #0a1a2f; cursor: pointer; }
         .org-level { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .org-dept-card { background: rgba(10, 26, 47, 0.9); border-radius: 15px; padding: 12px; min-width: 140px; text-align: center; border: 1px solid rgba(212,175,55,0.3); cursor: pointer; }
+        .org-dept-card { background: rgba(10, 26, 47, 0.9); border-radius: 15px; padding: 12px; min-width: 140px; text-align: center; border: 1px solid rgba(212,175,55,0.3); }
 
         /* تقييم الأداء */
         .performance-card { background: rgba(10, 26, 47, 0.7); border-radius: 22px; padding: 18px; margin-bottom: 18px; }
-        .overall-score { font-size: 42px; font-weight: 800; color: #d4af37; text-align: center; }
-        .score-bar { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 12px 0; overflow: hidden; }
+        .overall-score { font-size: 48px; font-weight: 800; color: #d4af37; text-align: center; }
+        .score-bar { width: 100%; height: 12px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 12px 0; overflow: hidden; }
         .score-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #d4af37, #b8960c); }
         .criteria-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-top: 15px; }
         .criteria-card { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 14px; }
         .criteria-name { font-size: 14px; font-weight: bold; color: #d4af37; margin-bottom: 8px; }
         .criteria-progress { width: 100%; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px; margin: 8px 0; overflow: hidden; }
-        .criteria-progress-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, #d4af37, #b8960c); }
+        .criteria-progress-fill { height: 100%; background: linear-gradient(90deg, #d4af37, #b8960c); }
 
         /* لوحة التحكم */
-        .admin-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .admin-card {
-            background: rgba(10, 26, 47, 0.7);
-            border-radius: 16px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .admin-card { background: rgba(10, 26, 47, 0.7); border-radius: 16px; padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
         .admin-card:hover { transform: translateY(-3px); background: rgba(212,175,55,0.15); }
         .admin-card i { font-size: 28px; color: #d4af37; margin-bottom: 6px; }
         
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .admin-table th, .admin-table td {
-            padding: 10px 6px;
-            text-align: right;
-            border-bottom: 1px solid rgba(212,175,55,0.15);
-        }
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th, .admin-table td { padding: 10px 6px; text-align: right; border-bottom: 1px solid rgba(212,175,55,0.15); }
         .admin-table th { color: #d4af37; }
         .admin-actions { display: flex; gap: 6px; justify-content: center; }
-        .admin-btn {
-            background: rgba(212,175,55,0.15);
-            border: none;
-            border-radius: 6px;
-            padding: 4px 10px;
-            cursor: pointer;
-            color: #d4af37;
-            font-size: 11px;
-        }
+        .admin-btn { background: rgba(212,175,55,0.15); border: none; border-radius: 6px; padding: 4px 10px; cursor: pointer; color: #d4af37; font-size: 11px; }
         .admin-btn.danger { color: #ef4444; }
-        .admin-btn:hover { background: rgba(212,175,55,0.3); }
 
         .modal {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -375,7 +246,7 @@
             border: 1px solid rgba(212,175,55,0.3);
         }
         .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; margin-bottom: 5px; color: #d4af37; font-size: 13px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #d4af37; }
         .form-group input, .form-group select, .form-group textarea {
             width: 100%; padding: 10px; background: rgba(255,255,255,0.05);
             border: 1px solid rgba(212,175,55,0.3); border-radius: 12px; color: white;
@@ -389,8 +260,10 @@
             .bottom-nav { display: flex; }
             .menu-toggle { display: block; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .hero-section { padding: 15px; }
+            .hero-section { padding: 18px; }
             .hero-image { width: 60px; height: 60px; }
+            .hero-image i { font-size: 30px; }
+            .hero-text .greeting { font-size: 22px; }
             .admin-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
@@ -399,17 +272,27 @@
 <div id="appRoot"></div>
 
 <script>
-    // بيانات النظام
+    // ==================== نصوص متغيرة للرئيسية ====================
     const workQuotes = [
         { text: "خير الناس أنفعهم للناس", author: "الحديث الشريف" },
-        { text: "من جد وجد ومن زرع حصد", author: "حكمة عربية" }
+        { text: "من جد وجد ومن زرع حصد", author: "حكمة عربية" },
+        { text: "اتقن عملك يُتقن لك", author: "حكمة" }
     ];
-    const dailyQuotes = [
-        { text: "وَقُل رَّبِّ زِدْنِي عِلْمًا", author: "سورة طه" },
-        { text: "إِنَّ اللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّى يُغَيِّرُوا مَا بِأَنفُسِهِمْ", author: "سورة الرعد" }
+    const quranVerses = [
+        { text: "وَقُل رَّبِّ زِدْنِي عِلْمًا", author: "سورة طه (114)" },
+        { text: "إِنَّ اللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّى يُغَيِّرُوا مَا بِأَنفُسِهِمْ", author: "سورة الرعد (11)" },
+        { text: "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا", author: "سورة الشرح (5)" }
     ];
-    function getRandomWorkQuote() { return workQuotes[Math.floor(Math.random() * workQuotes.length)]; }
-    function getDailyIslamicQuote() { return dailyQuotes[Math.floor(Math.random() * dailyQuotes.length)]; }
+    const hadiths = [
+        { text: "إنما الأعمال بالنيات", author: "رواه البخاري" },
+        { text: "لا ضرر ولا ضرار", author: "رواه ابن ماجه" },
+        { text: "المؤمن للمؤمن كالبنيان", author: "رواه البخاري" }
+    ];
+
+    function getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function getRandomWorkQuote() { return getRandomItem(workQuotes); }
+    function getRandomQuranVerse() { return getRandomItem(quranVerses); }
+    function getRandomHadith() { return getRandomItem(hadiths); }
 
     function showNotification(title, message) {
         let toast = document.createElement('div');
@@ -419,14 +302,14 @@
         setTimeout(() => toast.remove(), 4000);
     }
 
-    // المستخدمين
+    // ==================== المستخدمين ====================
     let usersDatabase = JSON.parse(localStorage.getItem('hr_users')) || [
         { id: 1, email: "admin@hr.com", password: "admin123", name: "أحمد المدير", role: "admin", avatar: null, jobTitle: "مدير الموارد البشرية", department: "الموارد البشرية" }
     ];
     let currentSession = JSON.parse(sessionStorage.getItem('hr_session')) || null;
     let showRegister = false;
 
-    // الهيكل التنظيمي
+    // ==================== الهيكل التنظيمي ====================
     let orgStructure = JSON.parse(localStorage.getItem('hr_org_structure')) || {
         ceo: { name: "مجلس الإدارة", head: "أحمد الراشد", members: 5 },
         departments: [
@@ -437,7 +320,7 @@
         ]
     };
 
-    // المسميات الوظيفية
+    // ==================== المسميات الوظيفية ====================
     let globalJobsList = JSON.parse(localStorage.getItem('hr_global_jobs')) || [
         { id: 1, title: "مدير الموارد البشرية", department: "الموارد البشرية", level: "إداري" },
         { id: 2, title: "محاسب", department: "المالية", level: "تنفيذي" },
@@ -445,14 +328,14 @@
         { id: 4, title: "مسوق رقمي", department: "التسويق", level: "متخصص" }
     ];
 
-    // السياسات
+    // ==================== السياسات (عنوان ووصف مثل السلوكيات) ====================
     let policiesList = JSON.parse(localStorage.getItem('hr_policies')) || [
-        { id: 1, title: "سياسة الإجازة السنوية", category: "إجازات", description: "21 يوم عمل إجازة سنوية مدفوعة الأجر", content: "جميع الموظفين بدوام كامل يحق لهم 21 يوم عمل إجازة سنوية مدفوعة الأجر بعد إتمام 6 أشهر. يجب تقديم الطلب قبل أسبوعين." },
-        { id: 2, title: "سياسة سلفة الراتب", category: "مالية", description: "بعد 6 أشهر عمل، بحد أقصى 50% من الراتب", content: "بعد إتمام 6 أشهر عمل، يحق للموظف طلب سلفة راتب تصل إلى 50% من الراتب الشهري، تسدد على 6 دفعات." },
-        { id: 3, title: "سياسة العمل عن بعد", category: "عام", description: "يومان عمل عن بعد أسبوعياً", content: "يحق للموظف العمل عن بعد يومين في الأسبوع (الإثنين والأربعاء) بعد موافقة المدير المباشر." }
+        { id: 1, title: "سياسة الإجازة السنوية", category: "إجازات", description: "21 يوم عمل إجازة سنوية مدفوعة الأجر", content: "جميع الموظفين بدوام كامل يحق لهم 21 يوم عمل إجازة سنوية مدفوعة الأجر بعد إتمام 6 أشهر. يجب تقديم الطلب قبل أسبوعين من تاريخ الإجازة." },
+        { id: 2, title: "سياسة سلفة الراتب", category: "مالية", description: "بعد 6 أشهر عمل، بحد أقصى 50% من الراتب", content: "بعد إتمام 6 أشهر عمل، يحق للموظف طلب سلفة راتب تصل إلى 50% من الراتب الشهري، تسدد على 6 دفعات شهرية متساوية." },
+        { id: 3, title: "سياسة العمل عن بعد", category: "عام", description: "يومان عمل عن بعد أسبوعياً", content: "يحق للموظف العمل عن بعد يومين في الأسبوع (الإثنين والأربعاء) بعد موافقة المدير المباشر. يشترط توفر بيئة عمل مناسبة." }
     ];
 
-    // السلوكيات
+    // ==================== السلوكيات ====================
     let behaviorsList = JSON.parse(localStorage.getItem('hr_behaviors')) || [
         { id: 1, title: "الاحترافية", desc: "الحفاظ على سلوك محترم مع جميع الزملاء والعملاء" },
         { id: 2, title: "الالتزام بالمواعيد", desc: "الحضور في الوقت المحدد وإخطار المدير عند التأخر" },
@@ -460,14 +343,14 @@
         { id: 4, title: "الابتكار", desc: "اقتراح التحسينات وتطوير أساليب العمل" }
     ];
 
-    // الإجراءات
+    // ==================== الإجراءات ====================
     let proceduresList = JSON.parse(localStorage.getItem('hr_procedures')) || [
         { id: 1, step: 1, title: "تقديم طلب إجازة", desc: "سجل الدخول → اختار الإجازات → حدد التواريخ → أرسل للمدير" },
         { id: 2, step: 2, title: "تقديم طلب سلفة", desc: "الراتب والسلف → طلب سلفة → حدد المبلغ → انتظر الموافقة" },
         { id: 3, step: 3, title: "تقديم شكوى", desc: "قسم الشكاوى → اكتب الشكوى → اختر التصنيف → إرسال" }
     ];
 
-    // الأسئلة
+    // ==================== الأسئلة ====================
     let faqList = JSON.parse(localStorage.getItem('hr_faq')) || [
         { id: 1, question: "ما هي سياسة الإجازة السنوية?", answer: "21 يوم عمل إجازة سنوية مدفوعة الأجر بعد إتمام 6 أشهر." },
         { id: 2, question: "كيف أطلب سلفة راتب?", answer: "بعد 6 أشهر عمل، بحد أقصى 50% من الراتب الشهري، تسدد على 6 دفعات." },
@@ -485,6 +368,7 @@
         values: [{ name: "النزاهة", icon: "fas fa-handshake", desc: "نلتزم بأعلى المعايير الأخلاقية" }]
     };
 
+    // ==================== تقييم الأداء ====================
     let performanceCriteria = JSON.parse(localStorage.getItem('hr_performance_criteria')) || {
         "مدير الموارد البشرية": { criteria: [
             { name: "الإنتاجية", weight: 25, value: 90, max: 100 },
@@ -492,6 +376,20 @@
             { name: "السلوك", weight: 20, value: 88, max: 100 },
             { name: "التطوير", weight: 20, value: 80, max: 100 },
             { name: "الالتزام", weight: 20, value: 92, max: 100 }
+        ] },
+        "محاسب": { criteria: [
+            { name: "دقة التقارير", weight: 35, value: 98, max: 100 },
+            { name: "الالتزام", weight: 25, value: 95, max: 100 },
+            { name: "السلوك", weight: 15, value: 85, max: 100 },
+            { name: "التطوير", weight: 15, value: 75, max: 100 },
+            { name: "السرعة", weight: 10, value: 90, max: 100 }
+        ] },
+        "مبرمج": { criteria: [
+            { name: "جودة الكود", weight: 30, value: 88, max: 100 },
+            { name: "الالتزام", weight: 25, value: 90, max: 100 },
+            { name: "حل المشكلات", weight: 20, value: 85, max: 100 },
+            { name: "السلوك", weight: 15, value: 82, max: 100 },
+            { name: "التوثيق", weight: 10, value: 80, max: 100 }
         ] }
     };
 
@@ -548,7 +446,7 @@
 
     function renderLoginRegister() {
         let saved = JSON.parse(localStorage.getItem('hr_remember')) || {};
-        let verse = getDailyIslamicQuote();
+        let verse = getRandomQuranVerse();
         return `
         <div class="login-container">
             <div class="login-card">
@@ -729,7 +627,7 @@
         </div>`;
     }
 
-    // دليل الموظف
+    // دليل الموظف - عرض التفاصيل
     let currentGuideTab = "policies";
 
     function showDetailModal(title, content) {
@@ -751,9 +649,18 @@
 
     window.closeDetailModal = function() { document.getElementById('detailModalOverlay')?.remove(); };
 
+    // دالة عرض تفاصيل السياسة
+    window.showPolicyDetail = function(policyId) {
+        let policy = policiesList.find(p => p.id === policyId);
+        if(policy) {
+            showDetailModal(policy.title, `<div class="detail-section"><strong>📋 الوصف:</strong><br>${policy.description}</div><div class="detail-section" style="margin-top:15px;"><strong>📄 المحتوى التفصيلي:</strong><br>${policy.content}</div>`);
+        }
+    };
+
     function renderEmployeeGuide() {
+        // السياسات (عنوان ووصف - عند الضغط يظهر المحتوى)
         let policiesHtml = policiesList.map(p => `
-            <div class="guide-item" onclick="showDetailModal('${p.title}', '<div style=\"line-height:1.7;\">${p.content}</div>')">
+            <div class="guide-item" onclick="showPolicyDetail(${p.id})">
                 <div class="guide-item-info">
                     <div class="guide-item-title"><i class="fas fa-file-alt"></i> ${p.title}</div>
                     <div class="guide-item-desc">${p.description}</div>
@@ -762,8 +669,9 @@
             </div>
         `).join('');
         
+        // الإجراءات
         let proceduresHtml = proceduresList.map(p => `
-            <div class="guide-item" onclick="showDetailModal('${p.title}', '<div><strong>الوصف:</strong><br>${p.desc}</div>')">
+            <div class="guide-item" onclick="showDetailModal('${p.title.replace(/'/g, "\\'")}', '<div><strong>الوصف:</strong><br>${p.desc}</div>')">
                 <div class="guide-item-info">
                     <div class="guide-item-title"><i class="fas fa-list-ol"></i> ${p.step}. ${p.title}</div>
                     <div class="guide-item-desc">${p.desc.substring(0, 40)}...</div>
@@ -772,8 +680,9 @@
             </div>
         `).join('');
         
+        // السلوكيات
         let behaviorsHtml = behaviorsList.map(b => `
-            <div class="guide-item" onclick="showDetailModal('${b.title}', '<div><strong>الوصف:</strong><br>${b.desc}</div>')">
+            <div class="guide-item" onclick="showDetailModal('${b.title.replace(/'/g, "\\'")}', '<div><strong>الوصف:</strong><br>${b.desc}</div>')">
                 <div class="guide-item-info">
                     <div class="guide-item-title"><i class="fas fa-handshake"></i> ${b.title}</div>
                     <div class="guide-item-desc">${b.desc.substring(0, 40)}...</div>
@@ -819,14 +728,16 @@
     function renderHome() {
         let user = getCurrentUser();
         let workQuote = getRandomWorkQuote();
-        let islamicQuote = getDailyIslamicQuote();
+        let quranVerse = getRandomQuranVerse();
+        let hadith = getRandomHadith();
         return `
         <div class="hero-section">
             <div class="hero-text">
                 <div class="greeting">${getGreeting()}، ${user?.name?.split(' ')[0] || 'موظف'} 👋</div>
                 <div class="job-info"><i class="fas fa-briefcase"></i> ${user?.jobTitle || 'موظف'} • ${user?.department || 'قسم'}</div>
                 <div class="quote"><i class="fas fa-lightbulb"></i> "${workQuote.text}" — ${workQuote.author}</div>
-                <div style="font-size:12px; margin-top:5px;"><i class="fas fa-quran"></i> ${islamicQuote.text}</div>
+                <div class="hadith"><i class="fas fa-quran"></i> " ${quranVerse.text} " — ${quranVerse.author}</div>
+                <div class="hadith" style="margin-top:5px;"><i class="fas fa-mosque"></i> " ${hadith.text} " — ${hadith.author}</div>
             </div>
             <div class="hero-image"><i class="fas fa-users"></i></div>
         </div>
@@ -875,19 +786,20 @@
     function renderPerformance() {
         let user = getCurrentUser();
         let perf = performanceCriteria[user?.jobTitle];
-        if(!perf) return `<div class="card"><h3>تقييم الأداء</h3><p>لا توجد بيانات</p></div>`;
+        if(!perf) return `<div class="card"><h3>تقييم الأداء</h3><p>لا توجد بيانات تقييم للمسمى الوظيفي "${user?.jobTitle}"</p></div>`;
         let overall = calculateOverallScore(perf.criteria);
         return `
         <div class="performance-card">
             <div class="overall-score">${overall}%</div>
             <div class="score-bar"><div class="score-fill" style="width:${overall}%"></div></div>
-            <div style="text-align:center;">تقييم الأداء - ${user?.jobTitle}</div>
+            <div style="text-align:center; margin-bottom:15px; font-size:15px;">تقييم الأداء - ${user?.jobTitle}</div>
             <div class="criteria-grid">
                 ${perf.criteria.map(c => `
                     <div class="criteria-card">
                         <div class="criteria-name">${c.name}</div>
-                        <div>${c.value} / ${c.max}</div>
+                        <div style="margin:5px 0;">${c.value} / ${c.max}</div>
                         <div class="criteria-progress"><div class="criteria-progress-fill" style="width:${(c.value/c.max)*100}%"></div></div>
+                        <div style="font-size:11px; opacity:0.6;">الوزن: ${c.weight}%</div>
                     </div>
                 `).join('')}
             </div>
@@ -895,7 +807,7 @@
     }
 
     function renderNotifications() {
-        return `<div class="card"><h3><i class="fas fa-bell"></i> الإشعارات</h3>${announcementsList.map(a => `<div style="padding:10px;"><strong>${a.title}</strong><br>${a.content}<br><small>📅 ${a.date}</small></div>`).join('')}</div>`;
+        return `<div class="card"><h3><i class="fas fa-bell"></i> الإشعارات</h3>${announcementsList.map(a => `<div style="padding:10px; border-bottom:1px solid rgba(212,175,55,0.1);"><strong>${a.title}</strong><br>${a.content}<br><small>📅 ${a.date}</small></div>`).join('')}</div>`;
     }
 
     function renderProfile() {
@@ -944,7 +856,7 @@
         }
     }
 
-    // لوحة التحكم
+    // ==================== لوحة التحكم (مع تفعيل تعديل الأقسام) ====================
     function renderAdminPanel() {
         let user = getCurrentUser();
         if(user?.role !== 'admin') return '<div class="card">🔒 هذه الصفحة للمدير فقط</div>';
@@ -966,37 +878,37 @@
         
         <div class="admin-section"><h4>📋 المسميات الوظيفية (${globalJobsList.length})</h4>
         <table class="admin-table"><thead><tr><th>المسمى</th><th>القسم</th><th></th></tr></thead><tbody>
-        ${globalJobsList.map(j => `<tr><td>${j.title}</td><td>${j.department}</td><td class="admin-actions"><button class="admin-btn" onclick="editJob(${j.id})">تعديل</button><button class="admin-btn danger" onclick="deleteJob(${j.id})">حذف</button></td></tr>`).join('')}
+        ${globalJobsList.map(j => `<tr><td style="padding:8px;">${j.title}</td><td style="padding:8px;">${j.department}</td><td class="admin-actions"><button class="admin-btn" onclick="editJob(${j.id})">تعديل</button><button class="admin-btn danger" onclick="deleteJob(${j.id})">حذف</button></td></tr>`).join('')}
         </tbody></table></div>
         
         <div class="admin-section"><h4>📜 السياسات (${policiesList.length})</h4>
-        <table class="admin-table"><thead><tr><th>العنوان</th><th>التصنيف</th><th></th></tr></thead><tbody>
-        ${policiesList.map(p => `<tr><td>${p.title}</td><td>${p.category}</td><td class="admin-actions"><button class="admin-btn" onclick="editPolicy(${p.id})">تعديل</button><button class="admin-btn danger" onclick="deletePolicy(${p.id})">حذف</button></td></tr>`).join('')}
+        <table class="admin-table"><thead><tr><th>العنوان</th><th>الوصف</th><th></th><tr></thead><tbody>
+        ${policiesList.map(p => `<tr><td style="padding:8px;">${p.title}</td><td style="padding:8px;">${p.description.substring(0,30)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editPolicy(${p.id})">تعديل</button><button class="admin-btn danger" onclick="deletePolicy(${p.id})">حذف</button></td></tr>`).join('')}
         </tbody></table></div>
         
         <div class="admin-section"><h4>🤝 السلوكيات (${behaviorsList.length})</h4>
         <table class="admin-table"><thead><tr><th>العنوان</th><th>الوصف</th><th></th></tr></thead><tbody>
-        ${behaviorsList.map(b => `<tr><td>${b.title}</td><td>${b.desc.substring(0,30)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editBehavior(${b.id})">تعديل</button><button class="admin-btn danger" onclick="deleteBehavior(${b.id})">حذف</button></td></tr>`).join('')}
+        ${behaviorsList.map(b => `<tr><td style="padding:8px;">${b.title}</td><td style="padding:8px;">${b.desc.substring(0,30)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editBehavior(${b.id})">تعديل</button><button class="admin-btn danger" onclick="deleteBehavior(${b.id})">حذف</button></td></tr>`).join('')}
         </tbody></table></div>
         
         <div class="admin-section"><h4>📋 الإجراءات (${proceduresList.length})</h4>
         <table class="admin-table"><thead><tr><th>العنوان</th><th>الوصف</th><th></th></tr></thead><tbody>
-        ${proceduresList.map(p => `<tr><td>${p.title}</td><td>${p.desc.substring(0,30)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editProcedure(${p.id})">تعديل</button><button class="admin-btn danger" onclick="deleteProcedure(${p.id})">حذف</button></td></tr>`).join('')}
+        ${proceduresList.map(p => `<table><td style="padding:8px;">${p.title}</td><td style="padding:8px;">${p.desc.substring(0,30)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editProcedure(${p.id})">تعديل</button><button class="admin-btn danger" onclick="deleteProcedure(${p.id})">حذف</button></td></tr>`).join('')}
         </tbody></table></div>
         
         <div class="admin-section"><h4>❓ الأسئلة (${faqList.length})</h4>
         <table class="admin-table"><thead><tr><th>السؤال</th><th>الإجابة</th><th></th></tr></thead><tbody>
-        ${faqList.map(f => `<tr><td>${f.question.substring(0,30)}...</td><td>${f.answer.substring(0,30)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editFaq(${f.id})">تعديل</button><button class="admin-btn danger" onclick="deleteFaq(${f.id})">حذف</button></td></tr>`).join('')}
-        </tbody></table></div>
+        ${faqList.map(f => `<tr><td style="padding:8px;">${f.question.substring(0,25)}...</td><td style="padding:8px;">${f.answer.substring(0,25)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editFaq(${f.id})">تعديل</button><button class="admin-btn danger" onclick="deleteFaq(${f.id})">حذف</button></td></tr>`).join('')}
+        </tbody></tr></div>
         
         <div class="admin-section"><h4>🏢 الأقسام (${orgStructure.departments.length})</h4>
-        <table class="admin-table"><thead><tr><th>القسم</th><th>المدير</th><th></th></tr></thead><tbody>
-        ${orgStructure.departments.map(d => `<tr><td>${d.name}</td><td>${d.head}</td><td class="admin-actions"><button class="admin-btn" onclick="editDepartment(${d.id})">تعديل</button><button class="admin-btn danger" onclick="deleteDepartment(${d.id})">حذف</button></td></tr>`).join('')}
-        </tbody></table></div>
+        <table class="admin-table"><thead><tr><th>القسم</th><th>المدير</th><th>الأعضاء</th><th></th></tr></thead><tbody>
+        ${orgStructure.departments.map(d => `<tr><td style="padding:8px;">${d.name}</td><td style="padding:8px;">${d.head}</td><td style="padding:8px;">${d.members}</td><td class="admin-actions"><button class="admin-btn" onclick="editDepartment('${d.id}')">تعديل</button><button class="admin-btn danger" onclick="deleteDepartment('${d.id}')">حذف</button></td></tr>`).join('')}
+        </tbody></tr></div>
         
         <div class="admin-section"><h4>🔔 الإعلانات (${announcementsList.length})</h4>
         <table class="admin-table"><thead><tr><th>العنوان</th><th>المحتوى</th><th></th></tr></thead><tbody>
-        ${announcementsList.map(a => `<tr><td>${a.title}</td><td>${a.content.substring(0,30)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editAnnouncement(${a.id})">تعديل</button><button class="admin-btn danger" onclick="deleteAnnouncement(${a.id})">حذف</button></td></tr>`).join('')}
+        ${announcementsList.map(a => `<tr><td style="padding:8px;">${a.title}</td><td style="padding:8px;">${a.content.substring(0,30)}...</td><td class="admin-actions"><button class="admin-btn" onclick="editAnnouncement(${a.id})">تعديل</button><button class="admin-btn danger" onclick="deleteAnnouncement(${a.id})">حذف</button></td></tr>`).join('')}
         </tbody></table></div>`;
     }
 
@@ -1010,49 +922,73 @@
     }
 
     window.showAddJobModal = () => showModal('إضافة مسمى', `<div class="form-group"><label>المسمى</label><input id="title"></div><div class="form-group"><label>القسم</label><input id="dept"></div>`, () => {
-        globalJobsList.push({ id: Date.now(), title: document.getElementById('title').value, department: document.getElementById('dept').value, level: "موظف" });
+        globalJobsList.push({ id: Date.now(), title: document.getElementById('title').value, department: document.getElementById('dept').value });
         saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة مسمى وظيفي جديد');
     });
     window.editJob = (id) => { let j = globalJobsList.find(j => j.id === id); showModal('تعديل', `<div class="form-group"><label>المسمى</label><input id="title" value="${j.title}"></div><div class="form-group"><label>القسم</label><input id="dept" value="${j.department}"></div>`, () => { j.title = document.getElementById('title').value; j.department = document.getElementById('dept').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل المسمى الوظيفي'); }); };
     window.deleteJob = (id) => { if(confirm('حذف؟')) { globalJobsList = globalJobsList.filter(j => j.id !== id); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف المسمى الوظيفي'); } };
-    window.showAddPolicyModal = () => showModal('إضافة سياسة', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>التصنيف</label><select id="cat"><option>إجازات</option><option>مالية</option><option>عام</option></select></div><div class="form-group"><label>الوصف</label><input id="desc"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="3"></textarea></div>`, () => {
+    
+    window.showAddPolicyModal = () => showModal('إضافة سياسة', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>التصنيف</label><select id="cat"><option>إجازات</option><option>مالية</option><option>عام</option></select></div><div class="form-group"><label>الوصف المختصر</label><input id="desc"></div><div class="form-group"><label>المحتوى التفصيلي</label><textarea id="content" rows="4"></textarea></div>`, () => {
         policiesList.push({ id: Date.now(), title: document.getElementById('title').value, category: document.getElementById('cat').value, description: document.getElementById('desc').value, content: document.getElementById('content').value });
         saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة سياسة جديدة');
     });
-    window.editPolicy = (id) => { let p = policiesList.find(p => p.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${p.title}"></div><div class="form-group"><label>التصنيف</label><select id="cat"><option ${p.category==='إجازات'?'selected':''}>إجازات</option><option ${p.category==='مالية'?'selected':''}>مالية</option><option ${p.category==='عام'?'selected':''}>عام</option></select></div><div class="form-group"><label>الوصف</label><input id="desc" value="${p.description}"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="3">${p.content}</textarea></div>`, () => { p.title = document.getElementById('title').value; p.category = document.getElementById('cat').value; p.description = document.getElementById('desc').value; p.content = document.getElementById('content').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل السياسة'); }); };
+    window.editPolicy = (id) => { let p = policiesList.find(p => p.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${p.title}"></div><div class="form-group"><label>التصنيف</label><select id="cat"><option ${p.category==='إجازات'?'selected':''}>إجازات</option><option ${p.category==='مالية'?'selected':''}>مالية</option><option ${p.category==='عام'?'selected':''}>عام</option></select></div><div class="form-group"><label>الوصف</label><input id="desc" value="${p.description}"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="4">${p.content}</textarea></div>`, () => { p.title = document.getElementById('title').value; p.category = document.getElementById('cat').value; p.description = document.getElementById('desc').value; p.content = document.getElementById('content').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل السياسة'); }); };
     window.deletePolicy = (id) => { if(confirm('حذف؟')) { policiesList = policiesList.filter(p => p.id !== id); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف السياسة'); } };
+    
     window.showAddBehaviorModal = () => showModal('إضافة سلوك', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><textarea id="desc" rows="2"></textarea></div>`, () => {
         behaviorsList.push({ id: Date.now(), title: document.getElementById('title').value, desc: document.getElementById('desc').value });
         saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة سلوك جديد');
     });
     window.editBehavior = (id) => { let b = behaviorsList.find(b => b.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${b.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${b.desc}</textarea></div>`, () => { b.title = document.getElementById('title').value; b.desc = document.getElementById('desc').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل السلوك'); }); };
     window.deleteBehavior = (id) => { if(confirm('حذف؟')) { behaviorsList = behaviorsList.filter(b => b.id !== id); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف السلوك'); } };
+    
     window.showAddProcedureModal = () => showModal('إضافة إجراء', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><textarea id="desc" rows="2"></textarea></div>`, () => {
         proceduresList.push({ id: Date.now(), step: proceduresList.length+1, title: document.getElementById('title').value, desc: document.getElementById('desc').value });
         saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة إجراء جديد');
     });
     window.editProcedure = (id) => { let p = proceduresList.find(p => p.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${p.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${p.desc}</textarea></div>`, () => { p.title = document.getElementById('title').value; p.desc = document.getElementById('desc').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل الإجراء'); }); };
     window.deleteProcedure = (id) => { if(confirm('حذف؟')) { proceduresList = proceduresList.filter(p => p.id !== id); proceduresList.forEach((p,i)=>p.step=i+1); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف الإجراء'); } };
+    
     window.showAddFaqModal = () => showModal('إضافة سؤال', `<div class="form-group"><label>السؤال</label><input id="q"></div><div class="form-group"><label>الإجابة</label><textarea id="a" rows="3"></textarea></div>`, () => {
         faqList.push({ id: Date.now(), question: document.getElementById('q').value, answer: document.getElementById('a').value });
         saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة سؤال جديد للمساعد');
     });
     window.editFaq = (id) => { let f = faqList.find(f => f.id === id); showModal('تعديل', `<div class="form-group"><label>السؤال</label><input id="q" value="${f.question}"></div><div class="form-group"><label>الإجابة</label><textarea id="a">${f.answer}</textarea></div>`, () => { f.question = document.getElementById('q').value; f.answer = document.getElementById('a').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل السؤال'); }); };
     window.deleteFaq = (id) => { if(confirm('حذف؟')) { faqList = faqList.filter(f => f.id !== id); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف السؤال'); } };
+    
     window.showAddAnnouncementModal = () => showModal('إضافة إعلان', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="2"></textarea></div>`, () => {
         announcementsList.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, date: new Date().toLocaleDateString('ar') });
         saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة إعلان جديد');
     });
     window.editAnnouncement = (id) => { let a = announcementsList.find(a => a.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${a.title}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${a.content}</textarea></div>`, () => { a.title = document.getElementById('title').value; a.content = document.getElementById('content').value; saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل الإعلان'); }); };
     window.deleteAnnouncement = (id) => { if(confirm('حذف؟')) { announcementsList = announcementsList.filter(a => a.id !== id); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف الإعلان'); } };
+    
     window.showAddOrgDeptModal = () => showModal('إضافة قسم', `<div class="form-group"><label>اسم القسم</label><input id="name"></div><div class="form-group"><label>رئيس القسم</label><input id="head"></div><div class="form-group"><label>عدد الأعضاء</label><input id="members" type="number" value="1"></div>`, () => {
-        orgStructure.departments.push({ id: "dept_" + Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) });
+        let newId = "dept_" + Date.now();
+        orgStructure.departments.push({ id: newId, name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) });
         saveAll(); renderApp(); showNotification('تم الإضافة', 'تم إضافة قسم جديد');
     });
-    window.editDepartment = (id) => { let d = orgStructure.departments.find(d => d.id === id); showModal('تعديل', `<div class="form-group"><label>الاسم</label><input id="name" value="${d.name}"></div><div class="form-group"><label>رئيس القسم</label><input id="head" value="${d.head}"></div><div class="form-group"><label>الأعضاء</label><input id="members" value="${d.members}" type="number"></div>`, () => { d.name = document.getElementById('name').value; d.head = document.getElementById('head').value; d.members = parseInt(document.getElementById('members').value); saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل القسم'); }); };
-    window.deleteDepartment = (id) => { if(confirm('حذف القسم؟')) { orgStructure.departments = orgStructure.departments.filter(d => d.id !== id); saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف القسم'); } };
+    
+    window.editDepartment = (id) => {
+        let dept = orgStructure.departments.find(d => d.id === id);
+        if(!dept) return;
+        showModal('تعديل القسم', `<div class="form-group"><label>اسم القسم</label><input id="name" value="${dept.name}"></div><div class="form-group"><label>رئيس القسم</label><input id="head" value="${dept.head}"></div><div class="form-group"><label>عدد الأعضاء</label><input id="members" value="${dept.members}" type="number"></div>`, () => {
+            dept.name = document.getElementById('name').value;
+            dept.head = document.getElementById('head').value;
+            dept.members = parseInt(document.getElementById('members').value);
+            saveAll(); renderApp(); showNotification('تم التعديل', 'تم تعديل القسم');
+        });
+    };
+    
+    window.deleteDepartment = (id) => {
+        if(confirm('حذف القسم؟')) {
+            orgStructure.departments = orgStructure.departments.filter(d => d.id !== id);
+            saveAll(); renderApp(); showNotification('تم الحذف', 'تم حذف القسم');
+        }
+    };
+    
     window.exportAllData = () => { 
-        let data = { policiesList, behaviorsList, proceduresList, faqList, announcementsList, orgStructure, globalJobsList };
+        let data = { policiesList, behaviorsList, proceduresList, faqList, announcementsList, orgStructure, globalJobsList, performanceCriteria };
         let blob = new Blob([JSON.stringify(data)], {type:"application/json"});
         let url = URL.createObjectURL(blob);
         let a = document.createElement('a');
@@ -1132,6 +1068,7 @@
 
     window.sendManualAssistantMessage = sendManualAssistantMessage;
     window.quickAssistantQuestion = quickAssistantQuestion;
+    window.showPolicyDetail = showPolicyDetail;
 
     renderApp();
     saveAll();
