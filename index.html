@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>HR System | نظام الموارد البشرية المتكامل</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>HR System | نظام الموارد البشرية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -145,8 +145,8 @@
         }
         .page-title { font-size: 24px; font-weight: 800; color: #d4af37; }
         .avatar {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, #d4af37, #b8960c);
             border-radius: 50%;
             display: flex;
@@ -156,141 +156,155 @@
             overflow: hidden;
         }
 
-        .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #0a1a2f; padding: 10px; justify-content: space-around; z-index: 150; border-top: 1px solid rgba(212,175,55,0.2); }
-        .bottom-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; color: #94a3b8; cursor: pointer; padding: 8px; }
-        .bottom-nav-item.active { color: #d4af37; }
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #0a1a2f;
+            padding: 12px 16px 25px;
+            justify-content: space-around;
+            z-index: 150;
+            border-top: 1px solid rgba(212,175,55,0.2);
+        }
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 30px;
+        }
+        .bottom-nav-item i { font-size: 24px; }
+        .bottom-nav-item.active { color: #d4af37; background: rgba(212,175,55,0.15); }
 
         .card { background: rgba(10, 26, 47, 0.9); border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(212,175,55,0.2); transition: all 0.3s; }
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: rgba(10, 26, 47, 0.9); border-radius: 20px; padding: 18px; text-align: center; }
         .stat-number { font-size: 32px; font-weight: 800; color: #d4af37; }
 
-        /* ============ المساعد الذكي الجديد ============ */
-        .assistant-wrapper {
-            background: rgba(10, 26, 47, 0.9);
-            border-radius: 28px;
-            overflow: hidden;
-            border: 1px solid rgba(212,175,55,0.2);
+        /* ============ مركز المعرفة ============ */
+        .search-bar {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 50px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
         }
-        .assistant-header {
-            background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(10,26,47,0.9));
-            padding: 20px;
-            text-align: center;
+        .search-bar i { color: #d4af37; font-size: 18px; }
+        .search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+        .categories-tabs {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .category-tab {
+            background: rgba(212,175,55,0.1);
+            border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .category-tab.active { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
+        .policies-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .policy-item {
+            background: rgba(10, 26, 47, 0.7);
+            border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 20px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .policy-info { flex: 1; }
+        .policy-title-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+        .policy-icon { width: 45px; height: 45px; background: rgba(212,175,55,0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .policy-icon i { font-size: 22px; color: #d4af37; }
+        .policy-title { font-size: 16px; font-weight: bold; }
+        .policy-badge { background: rgba(212,175,55,0.2); border-radius: 30px; padding: 4px 12px; font-size: 11px; color: #d4af37; }
+        .policy-description { font-size: 13px; opacity: 0.7; }
+        .policy-arrow { color: #d4af37; font-size: 20px; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .assistant-modal {
+            background: linear-gradient(145deg, #0f1a2e, #0a1220);
+            border-radius: 32px;
+            width: 90%;
+            max-width: 550px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(212,175,55,0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 22px;
             border-bottom: 1px solid rgba(212,175,55,0.2);
         }
-        .assistant-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #d4af37, #b8960c);
+        .modal-header h3 { color: #d4af37; font-size: 18px; }
+        .close-modal {
+            width: 36px;
+            height: 36px;
+            background: rgba(212,175,55,0.15);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 10px;
-        }
-        .assistant-icon i { font-size: 30px; color: #0a1a2f; }
-        .assistant-header h3 { color: #d4af37; margin-bottom: 5px; }
-        .assistant-header p { font-size: 12px; opacity: 0.7; }
-        
-        .questions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 10px;
-            padding: 15px;
-            background: rgba(0,0,0,0.2);
-        }
-        .question-btn {
-            background: rgba(212,175,55,0.1);
-            padding: 10px 15px;
-            border-radius: 30px;
-            font-size: 13px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
         }
-        .question-btn:hover { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
-        
-        .chat-messages { height: 400px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .user-bubble {
-            background: linear-gradient(135deg, #d4af37, #b8960c);
-            color: #0a1a2f;
-            padding: 12px 18px;
-            border-radius: 25px 25px 8px 25px;
-            align-self: flex-end;
-            max-width: 85%;
-            font-weight: 500;
-        }
-        .typing-indicator {
-            background: rgba(212,175,55,0.1);
-            padding: 12px 18px;
-            border-radius: 25px 25px 25px 8px;
-            align-self: flex-start;
-            display: flex;
-            gap: 6px;
-        }
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            background: #d4af37;
-            border-radius: 50%;
-            animation: typingAnim 1.4s infinite;
-        }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typingAnim { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
-        
-        .response-card {
-            background: rgba(212,175,55,0.08);
-            border-radius: 20px;
-            padding: 18px;
-            align-self: flex-start;
-            max-width: 85%;
-            border-right: 3px solid #d4af37;
-        }
-        .response-title {
-            font-size: 18px;
+        .modal-content { padding: 22px; }
+        .response-section { margin-bottom: 25px; }
+        .section-title {
+            font-size: 16px;
             font-weight: bold;
             color: #d4af37;
             margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(212,175,55,0.3);
-        }
-        .response-content {
-            line-height: 1.7;
-            font-size: 14px;
-        }
-        .response-content p { margin-bottom: 10px; }
-        .response-content ul, .response-content ol { padding-right: 20px; margin: 8px 0; }
-        .response-content li { margin: 5px 0; }
-        
-        .chat-input-area {
             display: flex;
-            padding: 15px;
-            gap: 10px;
-            border-top: 1px solid rgba(212,175,55,0.2);
-            background: rgba(0,0,0,0.2);
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+            padding-bottom: 8px;
         }
-        .chat-input-area input {
-            flex: 1;
-            padding: 12px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(212,175,55,0.3);
-            border-radius: 30px;
-            color: white;
-        }
-        .send-btn {
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #d4af37, #b8960c);
-            border: none;
-            border-radius: 30px;
-            color: #0a1a2f;
-            cursor: pointer;
-            font-weight: bold;
-        }
+        .section-content { font-size: 14px; line-height: 1.7; color: #e2e8f0; }
+        .bullets-list { list-style: none; padding-right: 20px; }
+        .bullets-list li { margin-bottom: 8px; position: relative; }
+        .bullets-list li::before { content: "•"; color: #d4af37; position: absolute; right: -15px; }
 
-        /* Org Chart - Hierarchical قابل للتعديل */
+        /* ============ الهيكل التنظيمي ============ */
         .org-builder {
             background: rgba(0,0,0,0.2);
             border-radius: 30px;
@@ -310,25 +324,9 @@
             text-align: center;
             margin-bottom: 35px;
             color: #0a1a2f;
-            position: relative;
             cursor: pointer;
         }
-        .org-ceo-card::after {
-            content: '';
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            width: 2px;
-            height: 25px;
-            background: #d4af37;
-        }
-        .org-level {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-        }
+        .org-level { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; }
         .org-dept-card {
             background: rgba(10, 26, 47, 0.9);
             border-radius: 18px;
@@ -336,47 +334,82 @@
             min-width: 160px;
             text-align: center;
             border: 1px solid rgba(212,175,55,0.3);
-            position: relative;
             cursor: pointer;
+        }
+
+        /* ============ تقييم الأداء الاحترافي ============ */
+        .performance-card {
+            background: rgba(10, 26, 47, 0.7);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .performance-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .overall-score {
+            font-size: 48px;
+            font-weight: 800;
+            color: #d4af37;
+        }
+        .score-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .score-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #d4af37, #b8960c);
+        }
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .criteria-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 18px;
             transition: all 0.2s;
         }
-        .org-dept-card:hover { transform: translateY(-3px); border-color: #d4af37; }
-        .org-dept-card::before {
-            content: '';
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            width: 2px;
-            height: 25px;
-            background: #d4af37;
+        .criteria-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.08); }
+        .criteria-name { font-size: 16px; font-weight: bold; color: #d4af37; margin-bottom: 10px; }
+        .criteria-stats { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
+        .criteria-progress { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 5px; overflow: hidden; }
+        .criteria-progress-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, #d4af37, #b8960c); }
+
+        /* ============ لوحة التحكم ============ */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
         }
-        .org-dept-card i { font-size: 28px; color: #d4af37; margin-bottom: 8px; }
-        .org-jobs-list { font-size: 10px; opacity: 0.7; margin-top: 8px; }
-        .add-org-btn {
-            background: rgba(212,175,55,0.2);
-            border: 1px dashed #d4af37;
+        .admin-card {
+            background: rgba(10, 26, 47, 0.7);
             border-radius: 18px;
             padding: 15px;
-            min-width: 160px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .add-org-btn:hover { background: rgba(212,175,55,0.3); }
-
-        /* Performance */
-        .criteria-item { background: rgba(10, 26, 47, 0.7); border-radius: 16px; padding: 15px; margin-bottom: 12px; }
-        .criteria-header { display: flex; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; }
-        .criteria-name { font-weight: bold; color: #d4af37; }
-        .progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 8px 0; }
-        .progress-fill { height: 8px; border-radius: 10px; background: linear-gradient(90deg, #d4af37, #b8960c); }
-
-        /* Admin */
-        .admin-section { margin-bottom: 25px; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 18px; }
-        .admin-section h4 { margin-bottom: 15px; color: #d4af37; border-right: 3px solid #d4af37; padding-right: 10px; }
+        .admin-card:hover { transform: translateY(-3px); background: rgba(212,175,55,0.15); }
+        .admin-card i { font-size: 32px; color: #d4af37; margin-bottom: 8px; }
         .jobs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
-        .job-card { background: rgba(10, 26, 47, 0.7); border-radius: 18px; padding: 15px; text-align: center; }
-        
+        .job-card {
+            background: rgba(10, 26, 47, 0.7);
+            border-radius: 18px;
+            padding: 15px;
+            text-align: center;
+        }
+        .job-card i { font-size: 35px; color: #d4af37; margin-bottom: 8px; }
+
         .modal {
             position: fixed;
             top: 0;
@@ -402,12 +435,29 @@
         .form-group label { display: block; margin-bottom: 5px; color: #d4af37; }
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(212,175,55,0.3);
             border-radius: 15px;
             color: white;
         }
+
+        .fab {
+            position: fixed;
+            bottom: 90px;
+            left: 25px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #d4af37, #b8960c);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+        .fab i { font-size: 24px; color: #0a1a2f; }
 
         .menu-toggle { display: none; background: none; border: none; font-size: 24px; color: white; cursor: pointer; }
         @media (max-width: 992px) {
@@ -417,6 +467,10 @@
             .bottom-nav { display: flex; }
             .menu-toggle { display: block; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .fab { bottom: 80px; left: 20px; width: 50px; height: 50px; }
+            .bottom-nav-item { padding: 8px 8px; }
+            .bottom-nav-item i { font-size: 22px; }
+            .page-title { font-size: 20px; }
         }
     </style>
 </head>
@@ -427,8 +481,7 @@
     // ==================== بيانات النظام ====================
     const workQuotes = [
         { text: "خير الناس أنفعهم للناس", author: "الحديث الشريف" },
-        { text: "من جد وجد ومن زرع حصد", author: "حكمة عربية" },
-        { text: "اتقن عملك يُتقن لك", author: "حكمة" }
+        { text: "من جد وجد ومن زرع حصد", author: "حكمة عربية" }
     ];
     const dailyQuotes = [
         { text: "وَقُل رَّبِّ زِدْنِي عِلْمًا", author: "سورة طه" },
@@ -444,14 +497,13 @@
     let currentSession = JSON.parse(sessionStorage.getItem('hr_session')) || null;
     let showRegister = false;
 
-    // ==================== الهيكل التنظيمي (قابل للتعديل من المدير) ====================
+    // ==================== الهيكل التنظيمي ====================
     let orgStructure = JSON.parse(localStorage.getItem('hr_org_structure')) || {
-        ceo: { id: "ceo1", name: "مجلس الإدارة", head: "أحمد الراشد", members: 5 },
+        ceo: { name: "مجلس الإدارة", head: "أحمد الراشد", members: 5 },
         departments: [
-            { id: "dept1", name: "الموارد البشرية", head: "سارة العتيبي", members: 12, jobs: ["مدير الموارد البشرية", "أخصائي موارد بشرية"] },
-            { id: "dept2", name: "المالية", head: "ليلى الحربي", members: 15, jobs: ["محاسب", "مدير مالي", "محلل مالي"] },
-            { id: "dept3", name: "التقنية", head: "عمر القحطاني", members: 45, jobs: ["مبرمج", "مهندس برمجيات", "محلل أنظمة"] },
-            { id: "dept4", name: "التسويق", head: "نور الشمري", members: 20, jobs: ["مسوق رقمي", "مدير تسويق"] }
+            { id: "dept1", name: "الموارد البشرية", head: "سارة العتيبي", members: 12, jobs: ["مدير الموارد البشرية"] },
+            { id: "dept2", name: "المالية", head: "ليلى الحربي", members: 15, jobs: ["محاسب"] },
+            { id: "dept3", name: "التقنية", head: "عمر القحطاني", members: 45, jobs: ["مبرمج"] }
         ]
     };
 
@@ -459,89 +511,15 @@
     let globalJobsList = JSON.parse(localStorage.getItem('hr_global_jobs')) || [
         { id: 1, title: "مدير الموارد البشرية", department: "الموارد البشرية", level: "إداري" },
         { id: 2, title: "محاسب", department: "المالية", level: "تنفيذي" },
-        { id: 3, title: "مبرمج", department: "التقنية", level: "متخصص" },
-        { id: 4, title: "مدير مالي", department: "المالية", level: "إداري" },
-        { id: 5, title: "محلل مالي", department: "المالية", level: "متخصص" },
-        { id: 6, title: "مهندس برمجيات", department: "التقنية", level: "متقدم" },
-        { id: 7, title: "مسوق رقمي", department: "التسويق", level: "متخصص" },
-        { id: 8, title: "مدير تسويق", department: "التسويق", level: "إداري" },
-        { id: 9, title: "أخصائي موارد بشرية", department: "الموارد البشرية", level: "متخصص" },
-        { id: 10, title: "محلل أنظمة", department: "التقنية", level: "متخصص" }
+        { id: 3, title: "مبرمج", department: "التقنية", level: "متخصص" }
     ];
 
-    // ==================== معايير التقييم لكل وظيفة (تلقائي حسب الوظيفة) ====================
-    let performanceCriteria = JSON.parse(localStorage.getItem('hr_performance_criteria')) || {
-        "مدير الموارد البشرية": {
-            criteria: [
-                { name: "الإنتاجية", weight: 25, current: 90, target: 100, points: 90 },
-                { name: "الحضور والانضباط", weight: 15, current: 95, target: 100, points: 95 },
-                { name: "السلوك المهني", weight: 20, current: 88, target: 100, points: 88 },
-                { name: "التطوير الذاتي", weight: 20, current: 80, target: 100, points: 80 },
-                { name: "الالتزام بالسياسات", weight: 20, current: 92, target: 100, points: 92 }
-            ]
-        },
-        "محاسب": {
-            criteria: [
-                { name: "دقة التقارير", weight: 35, current: 98, target: 100, points: 98 },
-                { name: "الالتزام", weight: 25, current: 95, target: 100, points: 95 },
-                { name: "السلوك المهني", weight: 15, current: 85, target: 100, points: 85 },
-                { name: "التطوير", weight: 15, current: 75, target: 100, points: 75 },
-                { name: "السرعة", weight: 10, current: 90, target: 100, points: 90 }
-            ]
-        },
-        "مبرمج": {
-            criteria: [
-                { name: "جودة الكود", weight: 30, current: 88, target: 100, points: 88 },
-                { name: "الالتزام بالمهل", weight: 25, current: 90, target: 100, points: 90 },
-                { name: "حل المشكلات", weight: 20, current: 85, target: 100, points: 85 },
-                { name: "السلوك", weight: 15, current: 82, target: 100, points: 82 },
-                { name: "التوثيق", weight: 10, current: 80, target: 100, points: 80 }
-            ]
-        }
-    };
-
-    // توليد تقييم تلقائي لكل وظيفة جديدة
-    function generateDefaultCriteria(jobTitle) {
-        return {
-            criteria: [
-                { name: "الإنتاجية", weight: 25, current: 85, target: 100, points: 85 },
-                { name: "الحضور والانضباط", weight: 20, current: 90, target: 100, points: 90 },
-                { name: "السلوك المهني", weight: 20, current: 85, target: 100, points: 85 },
-                { name: "التطوير الذاتي", weight: 20, current: 75, target: 100, points: 75 },
-                { name: "الالتزام", weight: 15, current: 85, target: 100, points: 85 }
-            ]
-        };
-    }
-
-    function getPerformanceForJob(jobTitle) {
-        if(performanceCriteria[jobTitle]) return performanceCriteria[jobTitle];
-        let newCriteria = generateDefaultCriteria(jobTitle);
-        performanceCriteria[jobTitle] = newCriteria;
-        saveAll();
-        return newCriteria;
-    }
-
-    function calculateOverallScore(criteria) {
-        let total = criteria.reduce((sum, c) => sum + c.points, 0);
-        let max = criteria.length * 100;
-        return Math.round((total / max) * 100);
-    }
-
-    // ==================== بيانات أخرى ====================
-    let companyData = JSON.parse(localStorage.getItem('hr_company')) || {
-        name: "شركة التميز للاستشارات",
-        vision: "الريادة في تقديم حلول الموارد البشرية",
-        mission: "تمكين المؤسسات من خلال خدمات مبتكرة",
-        values: [
-            { name: "النزاهة", icon: "fas fa-handshake", desc: "نلتزم بأعلى المعايير الأخلاقية" },
-            { name: "الابتكار", icon: "fas fa-lightbulb", desc: "نتبنى الإبداع" },
-            { name: "التميز", icon: "fas fa-trophy", desc: "نطمح لأعلى جودة" }
-        ]
-    };
-
+    // ==================== السياسات ====================
     let policiesList = JSON.parse(localStorage.getItem('hr_policies')) || [
-        { id: 1, title: "سياسة الإجازة السنوية", category: "إجازات", content: "21 يوم عمل إجازة سنوية مدفوعة الأجر" },
-        { id: 2, title: "سياسة سلفة الراتب", category: "مالية", content: "بعد 6 أشهر عمل، بحد أقصى 50% من الراتب" }
+        { id: 1, title: "سياسة الإجازة السنوية", category: "إجازات", version: "2.0", description: "تنظيم الإجازات السنوية للموظفين",
+          fullContent: { overview: "جميع الموظفين بدوام كامل يحق لهم 21 يوم عمل إجازة سنوية.", keyPoints: ["تقديم الطلب قبل 5 أيام", "الحد الأقصى 10 أيام متصلة"], additionalPolicies: ["ترحيل 5 أيام كحد أقصى"], approvalProcess: ["تقديم الطلب", "موافقة المدير", "تأكيد HR"] } },
+        { id: 2, title: "سياسة سلفة الراتب", category: "مالية", version: "1.5", description: "تنظيم طلبات سلف الراتب",
+          fullContent: { overview: "يحق للموظفين بعد 6 أشهر طلب سلفة تصل 50% من الراتب.", keyPoints: ["الحد الأقصى 50%", "تسدد على 6 دفعات"], additionalPolicies: ["طلب واحد كل 6 أشهر"], approvalProcess: ["تقديم الطلب", "موافقة المدير", "موافقة المالية"] } }
     ];
 
     let behaviorsList = JSON.parse(localStorage.getItem('hr_behaviors')) || [
@@ -550,17 +528,47 @@
     ];
 
     let proceduresList = JSON.parse(localStorage.getItem('hr_procedures')) || [
-        { id: 1, step: 1, title: "تقديم طلب إجازة", desc: "سجل الدخول → اختار الإجازات" }
+        { id: 1, step: 1, title: "تقديم طلب إجازة", desc: "سجل الدخول → اختار الإجازات → حدد التواريخ" }
     ];
 
     let faqList = JSON.parse(localStorage.getItem('hr_faq')) || [
-        { id: 1, question: "ما هي سياسة الإجازة السنوية?", answer: "21 يوم عمل إجازة سنوية مدفوعة الأجر" },
-        { id: 2, question: "كيف أطلب سلفة راتب?", answer: "بعد 6 أشهر عمل، بحد أقصى 50% من الراتب" }
+        { id: 1, question: "ما هي سياسة الإجازة السنوية?", answer: "21 يوم عمل إجازة سنوية مدفوعة الأجر" }
     ];
 
     let announcementsList = JSON.parse(localStorage.getItem('hr_announcements')) || [
         { id: 1, title: "تحديث سياسة الإجازات", content: "تم تحديث سياسة الإجازة السنوية", date: new Date().toLocaleDateString('ar') }
     ];
+
+    let companyData = JSON.parse(localStorage.getItem('hr_company')) || {
+        name: "شركة التميز للاستشارات",
+        vision: "الريادة في تقديم حلول الموارد البشرية",
+        mission: "تمكين المؤسسات من خلال خدمات مبتكرة",
+        values: [{ name: "النزاهة", icon: "fas fa-handshake", desc: "نلتزم بأعلى المعايير الأخلاقية" }]
+    };
+
+    let performanceCriteria = JSON.parse(localStorage.getItem('hr_performance_criteria')) || {
+        "مدير الموارد البشرية": { criteria: [
+            { name: "الإنتاجية", weight: 25, current: 90, target: 100, points: 90 },
+            { name: "الحضور والانضباط", weight: 15, current: 95, target: 100, points: 95 },
+            { name: "السلوك المهني", weight: 20, current: 88, target: 100, points: 88 },
+            { name: "التطوير الذاتي", weight: 20, current: 80, target: 100, points: 80 },
+            { name: "الالتزام", weight: 20, current: 92, target: 100, points: 92 }
+        ] },
+        "محاسب": { criteria: [
+            { name: "دقة التقارير", weight: 35, current: 98, target: 100, points: 98 },
+            { name: "الالتزام", weight: 25, current: 95, target: 100, points: 95 },
+            { name: "السلوك", weight: 15, current: 85, target: 100, points: 85 },
+            { name: "التطوير", weight: 15, current: 75, target: 100, points: 75 },
+            { name: "السرعة", weight: 10, current: 90, target: 100, points: 90 }
+        ] },
+        "مبرمج": { criteria: [
+            { name: "جودة الكود", weight: 30, current: 88, target: 100, points: 88 },
+            { name: "الالتزام بالمهل", weight: 25, current: 90, target: 100, points: 90 },
+            { name: "حل المشكلات", weight: 20, current: 85, target: 100, points: 85 },
+            { name: "السلوك", weight: 15, current: 82, target: 100, points: 82 },
+            { name: "التوثيق", weight: 10, current: 80, target: 100, points: 80 }
+        ] }
+    };
 
     function saveAll() {
         localStorage.setItem('hr_users', JSON.stringify(usersDatabase));
@@ -578,121 +586,29 @@
     function getCurrentUser() { return currentSession ? usersDatabase.find(u => u.id === currentSession.userId) : null; }
     function getAllJobs() { return globalJobsList; }
 
-    // تحديث الأقسام بناءً على المسميات الوظيفية
+    function getPerformanceForJob(jobTitle) {
+        if(performanceCriteria[jobTitle]) return performanceCriteria[jobTitle];
+        return { criteria: [] };
+    }
+
+    function calculateOverallScore(criteria) {
+        let total = criteria.reduce((sum, c) => sum + c.points, 0);
+        let max = criteria.length * 100;
+        return max > 0 ? Math.round((total / max) * 100) : 0;
+    }
+
     function updateOrgDepartmentsFromJobs() {
-        let departmentsMap = {};
+        let deptMap = {};
         globalJobsList.forEach(job => {
-            if(!departmentsMap[job.department]) {
-                departmentsMap[job.department] = { jobs: [], count: 0 };
-            }
-            departmentsMap[job.department].jobs.push(job.title);
-            departmentsMap[job.department].count++;
+            if(!deptMap[job.department]) deptMap[job.department] = [];
+            deptMap[job.department].push(job.title);
         });
-        
-        let existingDepts = orgStructure.departments.map(d => d.name);
-        for(let deptName in departmentsMap) {
-            if(!existingDepts.includes(deptName)) {
-                orgStructure.departments.push({
-                    id: "dept_" + Date.now() + "_" + deptName,
-                    name: deptName,
-                    head: "مدير القسم",
-                    members: departmentsMap[deptName].count,
-                    jobs: departmentsMap[deptName].jobs
-                });
-            } else {
-                let dept = orgStructure.departments.find(d => d.name === deptName);
-                if(dept) {
-                    dept.jobs = departmentsMap[deptName].jobs;
-                    dept.members = departmentsMap[deptName].count;
-                }
-            }
+        for(let deptName in deptMap) {
+            let existing = orgStructure.departments.find(d => d.name === deptName);
+            if(existing) { existing.jobs = deptMap[deptName]; existing.members = deptMap[deptName].length; }
+            else { orgStructure.departments.push({ id: "dept_" + Date.now(), name: deptName, head: "مدير القسم", members: deptMap[deptName].length, jobs: deptMap[deptName] }); }
         }
         saveAll();
-    }
-
-    // ==================== المساعد الذكي مع تأثير الكتابة ====================
-    let assistantChatHistory = [];
-
-    async function typeText(element, text, speed = 20) {
-        element.innerHTML = '';
-        for(let i = 0; i < text.length; i++) {
-            element.innerHTML += text[i];
-            await new Promise(resolve => setTimeout(resolve, speed));
-        }
-    }
-
-    async function formatAndDisplayResponse(question, answer) {
-        let messagesDiv = document.getElementById('chatMessages');
-        
-        // إضافة فقاعة السؤال
-        let userBubble = document.createElement('div');
-        userBubble.className = 'user-bubble';
-        userBubble.innerText = question;
-        messagesDiv.appendChild(userBubble);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
-        // إضافة مؤشر الكتابة
-        let typingDiv = document.createElement('div');
-        typingDiv.className = 'typing-indicator';
-        typingDiv.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
-        messagesDiv.appendChild(typingDiv);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        typingDiv.remove();
-        
-        // إنشاء بطاقة الرد
-        let responseCard = document.createElement('div');
-        responseCard.className = 'response-card';
-        
-        // استخراج عنوان من السؤال
-        let title = question.replace("ما هي ", "").replace("كيف ", "").replace("؟", "");
-        
-        let responseHtml = `
-            <div class="response-title"><i class="fas fa-info-circle"></i> ${title}</div>
-            <div class="response-content" id="responseContent-${Date.now()}"></div>
-        `;
-        responseCard.innerHTML = responseHtml;
-        messagesDiv.appendChild(responseCard);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
-        // تأثير الكتابة التدريجي
-        let contentDiv = responseCard.querySelector('.response-content');
-        await typeText(contentDiv, answer, 15);
-        
-        assistantChatHistory.push({ question, answer });
-    }
-
-    async function quickQuestion(q) {
-        let answer = getAnswer(q);
-        await formatAndDisplayResponse(q, answer);
-    }
-
-    async function sendManualMessage() {
-        let input = document.getElementById('chatInput');
-        if(!input) return;
-        let q = input.value.trim();
-        if(!q) return;
-        let answer = getAnswer(q);
-        await formatAndDisplayResponse(q, answer);
-        input.value = '';
-    }
-
-    function getAnswer(question) {
-        let found = faqList.find(f => question.includes(f.question.substring(0, 15)));
-        if(found) return found.answer;
-        
-        // إجابات موسعة للأسئلة الشائعة
-        if(question.includes("إجازة") || question.includes("سنوية")) {
-            return "📋 **سياسة الإجازة السنوية**\n\n• 21 يوم عمل إجازة سنوية مدفوعة الأجر\n• يتم احتساب الإجازة بعد إتمام 6 أشهر عمل\n• يجب تقديم الطلب قبل أسبوعين من تاريخ الإجازة\n• يمكن ترحيل الإجازات غير المستخدمة لمدة سنة واحدة\n• في حالة الاستقالة، يتم تعويض الإجازات المتبقية مالياً";
-        }
-        if(question.includes("سلفة") || question.includes("راتب")) {
-            return "💰 **سياسة سلفة الراتب**\n\n• يشترط إتمام 6 أشهر عمل على الأقل\n• الحد الأقصى للسلفة: 50% من الراتب الشهري\n• تسدد السلفة على 6 دفعات شهرية متساوية\n• يمكن تقديم طلب سلفة واحدة كل 6 أشهر\n• يتم الرد على الطلب خلال 3 أيام عمل";
-        }
-        if(question.includes("ساعات العمل")) {
-            return "⏰ **ساعات العمل الرسمية**\n\n• من الأحد إلى الخميس: 8:00 صباحاً حتى 5:00 مساءً\n• استراحة الظهر: ساعة واحدة (12:30 - 1:30)\n• يومي الجمعة والسبت: إجازة أسبوعية\n• في شهر رمضان: 9:00 صباحاً حتى 3:00 مساءً";
-        }
-        return "❌ لم يتم العثور على إجابة لهذا السؤال. الرجاء التواصل مع قسم الموارد البشرية.";
     }
 
     // ==================== دوال تسجيل الدخول ====================
@@ -731,10 +647,7 @@
         return `
         <div class="login-container">
             <div class="login-card">
-                <div class="quran-quote">
-                    <div class="quote-arabic">"${verse.text}"</div>
-                    <div style="font-size:12px; opacity:0.7;">${verse.author}</div>
-                </div>
+                <div class="quran-quote"><div class="quote-arabic">"${verse.text}"</div><div style="font-size:12px;">${verse.author}</div></div>
                 <div class="logo-icon"><i class="fas fa-users"></i></div>
                 <h2>نظام إدارة الموارد البشرية</h2>
                 <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" value="${saved.email || ''}">
@@ -808,7 +721,70 @@
         }
     };
 
-    // ==================== الصفحات ====================
+    // ============ مركز المعرفة ============
+    let selectedCategory = "الكل";
+    let searchTerm = "";
+
+    function getFilteredPolicies() {
+        let filtered = policiesList;
+        if(selectedCategory !== "الكل") filtered = filtered.filter(p => p.category === selectedCategory);
+        if(searchTerm.trim()) filtered = filtered.filter(p => p.title.includes(searchTerm) || p.description.includes(searchTerm));
+        return filtered;
+    }
+
+    async function openAssistantModal(policy) {
+        let modalHtml = `
+            <div class="modal-overlay" id="assistantModalOverlay">
+                <div class="assistant-modal">
+                    <div class="modal-header">
+                        <h3><i class="fas fa-robot"></i> مساعد الموارد البشرية</h3>
+                        <div class="close-modal" onclick="closeAssistantModal()"><i class="fas fa-times"></i></div>
+                    </div>
+                    <div class="modal-content">
+                        <div class="response-section"><div class="section-title"><i class="fas fa-info-circle"></i> ${policy.title}</div><div class="section-content" id="overviewContent"></div></div>
+                        <div class="response-section" id="keyPointsSection" style="display:none;"><div class="section-title"><i class="fas fa-list-ul"></i> النقاط الأساسية</div><div class="section-content"><ul class="bullets-list" id="keyPointsList"></ul></div></div>
+                        <div class="response-section" id="additionalSection" style="display:none;"><div class="section-title"><i class="fas fa-file-alt"></i> السياسات الإضافية</div><div class="section-content"><ul class="bullets-list" id="additionalList"></ul></div></div>
+                        <div class="response-section" id="approvalSection" style="display:none;"><div class="section-title"><i class="fas fa-check-circle"></i> آلية الموافقة</div><div class="section-content"><ul class="bullets-list" id="approvalList"></ul></div></div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        let currentModal = document.getElementById('assistantModalOverlay');
+        currentModal.addEventListener('click', (e) => { if(e.target === currentModal) currentModal.remove(); });
+        document.getElementById('overviewContent').innerText = policy.fullContent.overview;
+        let keyPointsList = document.getElementById('keyPointsList');
+        policy.fullContent.keyPoints.forEach(p => { let li = document.createElement('li'); li.innerText = p; keyPointsList.appendChild(li); });
+        document.getElementById('keyPointsSection').style.display = 'block';
+        let additionalList = document.getElementById('additionalList');
+        policy.fullContent.additionalPolicies.forEach(p => { let li = document.createElement('li'); li.innerText = p; additionalList.appendChild(li); });
+        document.getElementById('additionalSection').style.display = 'block';
+        let approvalList = document.getElementById('approvalList');
+        policy.fullContent.approvalProcess.forEach(p => { let li = document.createElement('li'); li.innerText = p; approvalList.appendChild(li); });
+        document.getElementById('approvalSection').style.display = 'block';
+    }
+
+    window.openAssistantModalForPolicy = function(policyId) {
+        let policy = policiesList.find(p => p.id === policyId);
+        if(policy) openAssistantModal(policy);
+    };
+    window.closeAssistantModal = function() { document.getElementById('assistantModalOverlay')?.remove(); };
+    window.selectCategory = function(cat) { selectedCategory = cat; renderKnowledgePage(); };
+    window.filterPolicies = function() { searchTerm = document.getElementById('searchInput')?.value || ''; renderKnowledgePage(); };
+    function renderKnowledgePage() { document.getElementById('knowledgeContent').innerHTML = renderKnowledgeCenter(); }
+    function renderKnowledgeCenter() {
+        let filtered = getFilteredPolicies();
+        let categories = ["الكل", ...new Set(policiesList.map(p => p.category))];
+        return `
+            <div class="knowledge-header"><h2><i class="fas fa-database"></i> مركز المعرفة</h2><p>دليل السياسات والإجراءات</p></div>
+            <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="ابحث في السياسات..." onkeyup="filterPolicies()"></div>
+            <div class="categories-tabs">${categories.map(cat => `<div class="category-tab ${selectedCategory === cat ? 'active' : ''}" onclick="selectCategory('${cat}')">${cat}</div>`).join('')}</div>
+            <div class="policies-list">${filtered.map(p => `<div class="policy-item" onclick="openAssistantModalForPolicy(${p.id})"><div class="policy-info"><div class="policy-title-row"><div class="policy-icon"><i class="fas fa-file-alt"></i></div><span class="policy-title">${p.title}</span><span class="policy-badge">${p.category}</span><span class="policy-version">الإصدار ${p.version}</span></div><div class="policy-description">${p.description}</div></div><div class="policy-arrow"><i class="fas fa-chevron-left"></i></div></div>`).join('')}</div>
+            <div class="fab" onclick="showAddPolicyModal()"><i class="fas fa-plus"></i></div>
+        `;
+    }
+
+    // ============ الصفحات ============
     function getGreeting() {
         let h = new Date().getHours();
         if(h < 12) return "🌅 صباح الخير";
@@ -820,49 +796,19 @@
         let user = getCurrentUser();
         let workQuote = getRandomWorkQuote();
         let islamicQuote = getDailyIslamicQuote();
-        let allJobs = getAllJobs();
         return `
         <div class="card" style="text-align:center; background:linear-gradient(135deg, rgba(212,175,55,0.15), rgba(10,26,47,0.9));">
-            <div class="greeting" style="font-size:28px;">${getGreeting()}، ${user?.name?.split(' ')[0] || 'موظف'} 👋</div>
+            <div style="font-size:28px; font-weight:bold; color:#d4af37;">${getGreeting()}، ${user?.name?.split(' ')[0] || 'موظف'} 👋</div>
             <div style="margin:15px 0;"><i class="fas fa-briefcase"></i> ${user?.jobTitle || 'موظف'} • ${user?.department || 'قسم'}</div>
             <div><i class="fas fa-lightbulb"></i> "${workQuote.text}" — ${workQuote.author}</div>
             <div style="margin-top:15px;"><i class="fas fa-quran"></i> ${islamicQuote.text} — ${islamicQuote.author}</div>
         </div>
         <div class="stats-grid">
-            <div class="stat-card"><div class="stat-number">${allJobs.length}</div><div>المسميات</div></div>
-            <div class="stat-card"><div class="stat-number">${faqList.length}</div><div>أسئلة</div></div>
+            <div class="stat-card"><div class="stat-number">${globalJobsList.length}</div><div>المسميات</div></div>
             <div class="stat-card"><div class="stat-number">${policiesList.length}</div><div>سياسات</div></div>
-            <div class="stat-card"><div class="stat-number">${user?.role === 'admin' ? 'مدير' : 'موظف'}</div><div>صلاحية</div></div>
+            <div class="stat-card"><div class="stat-number">${faqList.length}</div><div>أسئلة</div></div>
+            <div class="stat-card"><div class="stat-number">${getCurrentUser()?.role === 'admin' ? 'مدير' : 'موظف'}</div><div>صلاحية</div></div>
         </div>`;
-    }
-
-    function renderAssistant() {
-        setTimeout(() => {
-            let grid = document.getElementById('questionsGrid');
-            if(grid) grid.innerHTML = faqList.map(f => `<div class="question-btn" onclick="quickQuestion('${f.question.replace(/'/g, "\\'")}')"><i class="fas fa-question-circle"></i> ${f.question}</div>`).join('');
-        }, 50);
-        return `
-        <div class="assistant-wrapper">
-            <div class="assistant-header">
-                <div class="assistant-icon"><i class="fas fa-robot"></i></div>
-                <h3>مساعد الموارد البشرية</h3>
-                <p>يعمل على بيانات الشركة فقط</p>
-            </div>
-            <div class="questions-grid" id="questionsGrid"></div>
-            <div class="chat-messages" id="chatMessages"></div>
-            <div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="اكتب سؤالك..." onkeypress="if(event.key==='Enter') sendManualMessage()">
-                <button class="send-btn" onclick="sendManualMessage()"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>`;
-    }
-
-    function renderEmployeeGuide() {
-        return `
-        <div class="card"><h3>📜 السياسات</h3>${policiesList.map(p => `<div style="padding:12px; border-bottom:1px solid rgba(212,175,55,0.1);"><strong>${p.title}</strong><br>${p.content}</div>`).join('')}</div>
-        <div class="card"><h3>🤝 السلوكيات</h3>${behaviorsList.map(b => `<div style="padding:8px;">• <strong>${b.title}</strong>: ${b.desc}</div>`).join('')}</div>
-        <div class="card"><h3>📋 الإجراءات</h3>${proceduresList.map(p => `<div style="padding:10px;"><strong>${p.step}. ${p.title}</strong><br>${p.desc}</div>`).join('')}</div>
-        <div class="card"><h3>❓ الأسئلة الشائعة</h3>${faqList.map(f => `<div style="padding:10px;"><strong>❓ ${f.question}</strong><br>${f.answer}</div>`).join('')}</div>`;
     }
 
     function renderOrg() {
@@ -888,157 +834,42 @@
                                 <h4>${dept.name}</h4>
                                 <p>${dept.head}</p>
                                 <div>${dept.members} عضو</div>
-                                <div class="org-jobs-list">${dept.jobs?.slice(0,3).join(' • ') || ''}${dept.jobs?.length > 3 ? ' ...' : ''}</div>
+                                <div style="font-size:10px; opacity:0.7;">${dept.jobs?.slice(0,2).join(' • ') || ''}</div>
                             </div>
                         `).join('')}
-                        ${getCurrentUser()?.role === 'admin' ? `<div class="add-org-btn" onclick="showAddOrgDeptModal()"><i class="fas fa-plus"></i><br>إضافة قسم جديد</div>` : ''}
                     </div>
                 </div>
             </div>
         </div>`;
     }
 
-    // دوال تعديل الهيكل التنظيمي
-    window.showAddOrgDeptModal = function() {
-        let modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.innerHTML = `
-            <div class="modal-content">
-                <h3>إضافة قسم جديد</h3>
-                <div class="form-group"><label>اسم القسم</label><input id="deptName" placeholder="مثال: التسويق"></div>
-                <div class="form-group"><label>رئيس القسم</label><input id="deptHead" placeholder="اسم رئيس القسم"></div>
-                <div class="form-group"><label>عدد الأعضاء</label><input id="deptMembers" type="number" value="1"></div>
-                <div style="display:flex; gap:10px; margin-top:15px;">
-                    <button class="btn" onclick="saveNewDept(this)">إضافة</button>
-                    <button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()">إلغاء</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        window.saveNewDept = function(btn) {
-            let newDept = {
-                id: "dept_" + Date.now(),
-                name: document.getElementById('deptName').value,
-                head: document.getElementById('deptHead').value,
-                members: parseInt(document.getElementById('deptMembers').value),
-                jobs: []
-            };
-            orgStructure.departments.push(newDept);
-            saveAll();
-            btn.closest('.modal').remove();
-            renderApp();
-            showNotification("تم الإضافة", "تم إضافة قسم جديد");
-        };
-    };
-
-    window.editOrgCEO = function() {
-        let modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.innerHTML = `
-            <div class="modal-content">
-                <h3>تعديل بيانات الإدارة العليا</h3>
-                <div class="form-group"><label>اسم الإدارة</label><input id="ceoName" value="${orgStructure.ceo.name}"></div>
-                <div class="form-group"><label>رئيس الإدارة</label><input id="ceoHead" value="${orgStructure.ceo.head}"></div>
-                <div class="form-group"><label>عدد الأعضاء</label><input id="ceoMembers" value="${orgStructure.ceo.members}" type="number"></div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn" onclick="saveCEOEdit(this)">حفظ</button>
-                    <button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()">إلغاء</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        window.saveCEOEdit = function(btn) {
-            orgStructure.ceo.name = document.getElementById('ceoName').value;
-            orgStructure.ceo.head = document.getElementById('ceoHead').value;
-            orgStructure.ceo.members = parseInt(document.getElementById('ceoMembers').value);
-            saveAll();
-            btn.closest('.modal').remove();
-            renderApp();
-            showNotification("تم التعديل", "تم تعديل بيانات الإدارة العليا");
-        };
-    };
-
-    window.editOrgDept = function(deptId) {
-        let dept = orgStructure.departments.find(d => d.id === deptId);
-        if(!dept) return;
-        let modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.innerHTML = `
-            <div class="modal-content">
-                <h3>تعديل القسم</h3>
-                <div class="form-group"><label>اسم القسم</label><input id="deptName" value="${dept.name}"></div>
-                <div class="form-group"><label>رئيس القسم</label><input id="deptHead" value="${dept.head}"></div>
-                <div class="form-group"><label>عدد الأعضاء</label><input id="deptMembers" value="${dept.members}" type="number"></div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn" onclick="saveDeptEdit(this, '${deptId}')">حفظ</button>
-                    <button class="btn" style="background:#ef4444;" onclick="deleteDept('${deptId}')">حذف</button>
-                    <button class="btn" style="background:#6b7280;" onclick="this.closest('.modal').remove()">إلغاء</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        window.saveDeptEdit = function(btn, id) {
-            let d = orgStructure.departments.find(d => d.id === id);
-            if(d) {
-                d.name = document.getElementById('deptName').value;
-                d.head = document.getElementById('deptHead').value;
-                d.members = parseInt(document.getElementById('deptMembers').value);
-                saveAll();
-                btn.closest('.modal').remove();
-                renderApp();
-                showNotification("تم التعديل", "تم تعديل بيانات القسم");
-            }
-        };
-        window.deleteDept = function(id) {
-            if(confirm('هل أنت متأكد من حذف هذا القسم؟')) {
-                orgStructure.departments = orgStructure.departments.filter(d => d.id !== id);
-                saveAll();
-                document.querySelector('.modal')?.remove();
-                renderApp();
-                showNotification("تم الحذف", "تم حذف القسم");
-            }
-        };
-    };
-
-    function showNotification(title, message) {
-        let toast = document.createElement('div');
-        toast.style.cssText = 'position:fixed;top:20px;left:20px;background:linear-gradient(135deg,#d4af37,#b8960c);color:#0a1a2f;padding:12px 20px;border-radius:30px;z-index:1000;animation:slideIn 0.3s ease;';
-        toast.innerHTML = `<i class="fas fa-bell"></i> <strong>${title}</strong><br><small>${message}</small>`;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 4000);
-    }
-
     function renderCompany() {
         return `<div class="card"><h2 style="color:#d4af37; text-align:center;">${companyData.name}</h2></div>
-        <div class="card"><h3>رؤيتنا</h3><p>${companyData.vision}</p></div>
-        <div class="card"><h3>رسالتنا</h3><p>${companyData.mission}</p></div>
-        <div class="card"><h3>قيمنا</h3>${companyData.values.map(v => `<div style="padding:8px;"><i class="${v.icon}"></i> <strong>${v.name}</strong><br>${v.desc}</div>`).join('')}</div>`;
+        <div class="card"><h3><i class="fas fa-eye"></i> رؤيتنا</h3><p>${companyData.vision}</p></div>
+        <div class="card"><h3><i class="fas fa-bullseye"></i> رسالتنا</h3><p>${companyData.mission}</p></div>
+        <div class="card"><h3><i class="fas fa-gem"></i> قيمنا</h3>${companyData.values.map(v => `<div style="padding:10px; border-bottom:1px solid rgba(212,175,55,0.1);"><i class="${v.icon}"></i> <strong>${v.name}</strong><br>${v.desc}</div>`).join('')}</div>`;
     }
 
     function renderPerformance() {
         let user = getCurrentUser();
-        let job = globalJobsList.find(j => j.title === user?.jobTitle);
-        if(!job) return `<div class="card"><h3>تقييم الأداء</h3><p>الرجاء تحديث المسمى الوظيفي من حسابي</p></div>`;
-        
-        let perf = getPerformanceForJob(user.jobTitle);
+        let perf = getPerformanceForJob(user?.jobTitle);
         let overall = calculateOverallScore(perf.criteria);
-        
         return `
-        <div class="card"><h3><i class="fas fa-chart-line"></i> تقييم الأداء - ${user.jobTitle}</h3>
-        <div class="stat-number" style="font-size:42px;">${overall}%</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${overall}%"></div></div>
-        </div>
-        <div class="card"><h3>📊 معايير التقييم (100 نقطة لكل معيار)</h3>
-        ${perf.criteria.map(c => `
-            <div class="criteria-item">
-                <div class="criteria-header">
-                    <span class="criteria-name">${c.name}</span>
-                    <span>${c.points} / ${c.target}</span>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" style="width:${(c.points/100)*100}%"></div></div>
-                <div style="font-size:12px;">الوزن: ${c.weight}% | الإنجاز: ${c.current}%</div>
+        <div class="performance-card">
+            <div class="performance-header">
+                <div class="overall-score">${overall}%</div>
+                <div class="score-bar"><div class="score-fill" style="width:${overall}%"></div></div>
+                <div style="font-size:14px; opacity:0.8;">تقييم الأداء - ${user?.jobTitle || 'غير محدد'}</div>
             </div>
-        `).join('')}
+            <div class="criteria-grid">
+                ${perf.criteria.map(c => `
+                    <div class="criteria-card">
+                        <div class="criteria-name">${c.name}</div>
+                        <div class="criteria-stats"><span>${c.points} / ${c.target}</span><span>${c.weight}%</span></div>
+                        <div class="criteria-progress"><div class="criteria-progress-fill" style="width:${(c.points/100)*100}%"></div></div>
+                    </div>
+                `).join('')}
+            </div>
         </div>`;
     }
 
@@ -1058,7 +889,6 @@
             <input type="file" id="profileAvatar" style="display:none" onchange="uploadProfileAvatar(this)">
             <div class="form-group"><label>الاسم</label><input id="profileName" value="${user?.name || ''}"></div>
             <div class="form-group"><label>البريد</label><input id="profileEmail" value="${user?.email || ''}"></div>
-            <div class="form-group"><label>الجوال</label><input id="profilePhone" value="${user?.phone || ''}"></div>
             <div class="form-group"><label>المسمى الوظيفي</label><select id="profileJob">${allJobs.map(j => `<option ${user?.jobTitle === j.title ? 'selected' : ''}>${j.title}</option>`).join('')}</select></div>
             <div class="form-group"><label>القسم</label><input id="profileDept" value="${user?.department || ''}"></div>
             <button class="btn" onclick="saveUserProfile()">حفظ التغييرات</button>
@@ -1069,7 +899,6 @@
         let user = getCurrentUser();
         user.name = document.getElementById('profileName').value;
         user.email = document.getElementById('profileEmail').value;
-        user.phone = document.getElementById('profilePhone').value;
         user.jobTitle = document.getElementById('profileJob').value;
         user.department = document.getElementById('profileDept').value;
         let idx = usersDatabase.findIndex(u => u.id === user.id);
@@ -1095,21 +924,32 @@
         }
     }
 
-    // ==================== لوحة التحكم ====================
+    // ============ لوحة التحكم الكاملة ============
     function renderAdminPanel() {
         let user = getCurrentUser();
         if(user?.role !== 'admin') return '<div class="card">🔒 هذه الصفحة للمدير فقط</div>';
         return `
-        <div class="card"><h3><i class="fas fa-crown"></i> لوحة تحكم المدير</h3>
-        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px;">
-            <button class="btn" onclick="showAddJobModal()"><i class="fas fa-plus"></i> إضافة مسمى</button>
-            <button class="btn" onclick="showAddPolicyModal()"><i class="fas fa-plus"></i> إضافة سياسة</button>
-            <button class="btn" onclick="showAddFaqModal()"><i class="fas fa-plus"></i> إضافة سؤال</button>
-            <button class="btn" onclick="showAddBehaviorModal()"><i class="fas fa-plus"></i> إضافة سلوك</button>
-            <button class="btn" onclick="showAddProcedureModal()"><i class="fas fa-plus"></i> إضافة إجراء</button>
-            <button class="btn" onclick="showAddAnnouncementModal()"><i class="fas fa-plus"></i> إضافة إعلان</button>
-        </div></div>
-        <div class="admin-section"><h4>📋 المسميات الوظيفية</h4><div class="jobs-grid">${globalJobsList.map(j => `<div class="job-card"><i class="fas fa-briefcase"></i><h4>${j.title}</h4><p>${j.department}</p><button class="btn" style="margin-top:8px; background:#f59e0b;" onclick="editJob(${j.id})">تعديل</button> <button class="btn" style="margin-top:8px; background:#ef4444;" onclick="deleteJob(${j.id})">حذف</button></div>`).join('')}</div></div>`;
+        <div class="card">
+            <h3><i class="fas fa-crown"></i> لوحة تحكم المدير</h3>
+            <div class="admin-grid">
+                <div class="admin-card" onclick="showAddJobModal()"><i class="fas fa-briefcase"></i><div>إضافة مسمى</div></div>
+                <div class="admin-card" onclick="showAddPolicyModal()"><i class="fas fa-file-alt"></i><div>إضافة سياسة</div></div>
+                <div class="admin-card" onclick="showAddBehaviorModal()"><i class="fas fa-handshake"></i><div>إضافة سلوك</div></div>
+                <div class="admin-card" onclick="showAddProcedureModal()"><i class="fas fa-list-ol"></i><div>إضافة إجراء</div></div>
+                <div class="admin-card" onclick="showAddFaqModal()"><i class="fas fa-question-circle"></i><div>إضافة سؤال</div></div>
+                <div class="admin-card" onclick="showAddAnnouncementModal()"><i class="fas fa-bell"></i><div>إضافة إعلان</div></div>
+                <div class="admin-card" onclick="showAddOrgDeptModal()"><i class="fas fa-building"></i><div>إضافة قسم</div></div>
+                <div class="admin-card" onclick="exportAllData()"><i class="fas fa-download"></i><div>تصدير البيانات</div></div>
+                <div class="admin-card" onclick="resetAllData()"><i class="fas fa-trash"></i><div>إعادة تعيين</div></div>
+            </div>
+        </div>
+        <div class="admin-section"><h4>📋 المسميات الوظيفية (${globalJobsList.length})</h4><div class="jobs-grid">${globalJobsList.map(j => `<div class="job-card"><i class="fas fa-briefcase"></i><h4>${j.title}</h4><p>${j.department}</p><div><button class="btn" style="margin-top:8px; background:#f59e0b; padding:5px 12px;" onclick="editJob(${j.id})"><i class="fas fa-edit"></i> تعديل</button> <button class="btn" style="margin-top:8px; background:#ef4444; padding:5px 12px;" onclick="deleteJob(${j.id})"><i class="fas fa-trash"></i> حذف</button></div></div>`).join('')}</div></div>
+        <div class="admin-section"><h4>📜 السياسات</h4><div class="jobs-grid">${policiesList.map(p => `<div class="job-card"><i class="fas fa-file-alt"></i><h4>${p.title}</h4><p>${p.category}</p><div><button class="btn" style="margin-top:8px; background:#f59e0b; padding:5px 12px;" onclick="editPolicy(${p.id})"><i class="fas fa-edit"></i> تعديل</button> <button class="btn" style="margin-top:8px; background:#ef4444; padding:5px 12px;" onclick="deletePolicy(${p.id})"><i class="fas fa-trash"></i> حذف</button></div></div>`).join('')}</div></div>
+        <div class="admin-section"><h4>❓ الأسئلة الشائعة</h4><div class="jobs-grid">${faqList.map(f => `<div class="job-card"><i class="fas fa-question-circle"></i><h4>${f.question}</h4><p>${f.answer.substring(0,30)}...</p><div><button class="btn" style="margin-top:8px; background:#f59e0b; padding:5px 12px;" onclick="editFaq(${f.id})"><i class="fas fa-edit"></i> تعديل</button> <button class="btn" style="margin-top:8px; background:#ef4444; padding:5px 12px;" onclick="deleteFaq(${f.id})"><i class="fas fa-trash"></i> حذف</button></div></div>`).join('')}</div></div>
+        <div class="admin-section"><h4>🤝 السلوكيات</h4><div class="jobs-grid">${behaviorsList.map(b => `<div class="job-card"><i class="fas fa-handshake"></i><h4>${b.title}</h4><p>${b.desc}</p><div><button class="btn" style="margin-top:8px; background:#f59e0b; padding:5px 12px;" onclick="editBehavior(${b.id})"><i class="fas fa-edit"></i> تعديل</button> <button class="btn" style="margin-top:8px; background:#ef4444; padding:5px 12px;" onclick="deleteBehavior(${b.id})"><i class="fas fa-trash"></i> حذف</button></div></div>`).join('')}</div></div>
+        <div class="admin-section"><h4>📋 الإجراءات</h4><div class="jobs-grid">${proceduresList.map(p => `<div class="job-card"><i class="fas fa-list-ol"></i><h4>${p.title}</h4><p>${p.desc}</p><div><button class="btn" style="margin-top:8px; background:#f59e0b; padding:5px 12px;" onclick="editProcedure(${p.id})"><i class="fas fa-edit"></i> تعديل</button> <button class="btn" style="margin-top:8px; background:#ef4444; padding:5px 12px;" onclick="deleteProcedure(${p.id})"><i class="fas fa-trash"></i> حذف</button></div></div>`).join('')}</div></div>
+        <div class="admin-section"><h4>🏢 الأقسام</h4><div class="jobs-grid">${orgStructure.departments.map(d => `<div class="job-card"><i class="fas fa-building"></i><h4>${d.name}</h4><p>المدير: ${d.head}</p><div><button class="btn" style="margin-top:8px; background:#f59e0b; padding:5px 12px;" onclick="editOrgDept('${d.id}')"><i class="fas fa-edit"></i> تعديل</button> <button class="btn" style="margin-top:8px; background:#ef4444; padding:5px 12px;" onclick="deleteOrgDept('${d.id}')"><i class="fas fa-trash"></i> حذف</button></div></div>`).join('')}</div></div>
+        <div class="admin-section"><h4>🔔 الإعلانات</h4><div class="jobs-grid">${announcementsList.map(a => `<div class="job-card"><i class="fas fa-bell"></i><h4>${a.title}</h4><p>${a.content}</p><div><button class="btn" style="margin-top:8px; background:#f59e0b; padding:5px 12px;" onclick="editAnnouncement(${a.id})"><i class="fas fa-edit"></i> تعديل</button> <button class="btn" style="margin-top:8px; background:#ef4444; padding:5px 12px;" onclick="deleteAnnouncement(${a.id})"><i class="fas fa-trash"></i> حذف</button></div></div>`).join('')}</div></div>`;
     }
 
     // دوال الإدارة
@@ -1121,25 +961,75 @@
         window.saveModal = (btn) => { onSave(); btn.closest('.modal').remove(); };
     }
 
-    window.showAddJobModal = () => showModal('إضافة مسمى وظيفي', `<input id="title" placeholder="المسمى"><input id="dept" placeholder="القسم" style="margin-top:10px;"><select id="level" style="margin-top:10px;"><option>إداري</option><option>تنفيذي</option><option>متخصص</option></select>`, () => {
-        let newId = Date.now();
-        let newTitle = document.getElementById('title').value;
-        let newDept = document.getElementById('dept').value;
-        globalJobsList.push({ id: newId, title: newTitle, department: newDept, level: document.getElementById('level').value });
-        updateOrgDepartmentsFromJobs();
-        saveAll();
-        showNotification("تم الإضافة", "تم إضافة مسمى وظيفي جديد");
-        renderApp();
+    window.showAddJobModal = () => showModal('إضافة مسمى وظيفي', `<div class="form-group"><label>المسمى</label><input id="title"></div><div class="form-group"><label>القسم</label><input id="dept"></div><div class="form-group"><label>المستوى</label><select id="level"><option>إداري</option><option>تنفيذي</option><option>متخصص</option></select></div>`, () => {
+        globalJobsList.push({ id: Date.now(), title: document.getElementById('title').value, department: document.getElementById('dept').value, level: document.getElementById('level').value });
+        updateOrgDepartmentsFromJobs(); saveAll(); renderApp(); alert('✅ تم الإضافة');
     });
-    window.editJob = (id) => { let j = globalJobsList.find(j => j.id === id); showModal('تعديل', `<input id="title" value="${j.title}"><input id="dept" value="${j.department}" style="margin-top:10px;">`, () => { j.title = document.getElementById('title').value; j.department = document.getElementById('dept').value; saveAll(); updateOrgDepartmentsFromJobs(); showNotification("تم التعديل", "تم تعديل المسمى"); renderApp(); }); };
-    window.deleteJob = (id) => { if(confirm('حذف؟')) { globalJobsList = globalJobsList.filter(j => j.id !== id); saveAll(); updateOrgDepartmentsFromJobs(); showNotification("تم الحذف", "تم حذف المسمى"); renderApp(); } };
-    window.showAddPolicyModal = () => showModal('إضافة سياسة', `<input id="title" placeholder="العنوان"><textarea id="content" rows="3" placeholder="المحتوى" style="margin-top:10px;"></textarea><select id="cat" style="margin-top:10px;"><option>إجازات</option><option>مالية</option></select>`, () => { policiesList.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, category: document.getElementById('cat').value }); saveAll(); showNotification("تم الإضافة", "تم إضافة سياسة جديدة"); renderApp(); });
-    window.showAddFaqModal = () => showModal('إضافة سؤال', `<input id="q" placeholder="السؤال"><textarea id="a" rows="3" placeholder="الإجابة" style="margin-top:10px;"></textarea>`, () => { faqList.push({ id: Date.now(), question: document.getElementById('q').value, answer: document.getElementById('a').value }); saveAll(); showNotification("تم الإضافة", "تم إضافة سؤال جديد"); renderApp(); });
-    window.showAddBehaviorModal = () => showModal('إضافة سلوك', `<input id="title" placeholder="العنوان"><textarea id="desc" placeholder="الوصف" style="margin-top:10px;"></textarea>`, () => { behaviorsList.push({ id: Date.now(), title: document.getElementById('title').value, desc: document.getElementById('desc').value }); saveAll(); showNotification("تم الإضافة", "تم إضافة سلوك جديد"); renderApp(); });
-    window.showAddProcedureModal = () => showModal('إضافة إجراء', `<input id="title" placeholder="العنوان"><textarea id="desc" placeholder="الوصف" style="margin-top:10px;"></textarea>`, () => { proceduresList.push({ id: Date.now(), step: proceduresList.length+1, title: document.getElementById('title').value, desc: document.getElementById('desc').value }); saveAll(); showNotification("تم الإضافة", "تم إضافة إجراء جديد"); renderApp(); });
-    window.showAddAnnouncementModal = () => showModal('إضافة إعلان', `<input id="title" placeholder="العنوان"><textarea id="content" placeholder="المحتوى" style="margin-top:10px;"></textarea>`, () => { announcementsList.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, date: new Date().toLocaleDateString('ar') }); saveAll(); showNotification("إعلان جديد", document.getElementById('title').value); renderApp(); });
+    window.editJob = (id) => { let j = globalJobsList.find(j => j.id === id); showModal('تعديل', `<div class="form-group"><label>المسمى</label><input id="title" value="${j.title}"></div><div class="form-group"><label>القسم</label><input id="dept" value="${j.department}"></div>`, () => { j.title = document.getElementById('title').value; j.department = document.getElementById('dept').value; saveAll(); updateOrgDepartmentsFromJobs(); renderApp(); alert('✅ تم التحديث'); }); };
+    window.deleteJob = (id) => { if(confirm('حذف؟')) { globalJobsList = globalJobsList.filter(j => j.id !== id); saveAll(); updateOrgDepartmentsFromJobs(); renderApp(); } };
+    window.showAddPolicyModal = () => showModal('إضافة سياسة', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>التصنيف</label><select id="cat"><option>إجازات</option><option>مالية</option><option>عام</option></select></div><div class="form-group"><label>الإصدار</label><input id="version" value="1.0"></div><div class="form-group"><label>الوصف</label><input id="desc"></div>`, () => {
+        policiesList.push({ id: Date.now(), title: document.getElementById('title').value, category: document.getElementById('cat').value, version: document.getElementById('version').value, description: document.getElementById('desc').value, fullContent: { overview: "وصف السياسة", keyPoints: ["نقطة 1"], additionalPolicies: ["سياسة إضافية"], approvalProcess: ["خطوة 1"] } });
+        saveAll(); renderApp(); alert('✅ تم الإضافة');
+    });
+    window.editPolicy = (id) => { let p = policiesList.find(p => p.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${p.title}"></div><div class="form-group"><label>التصنيف</label><select id="cat"><option ${p.category==='إجازات'?'selected':''}>إجازات</option><option ${p.category==='مالية'?'selected':''}>مالية</option><option ${p.category==='عام'?'selected':''}>عام</option></select></div>`, () => { p.title = document.getElementById('title').value; p.category = document.getElementById('cat').value; saveAll(); renderApp(); alert('✅ تم التحديث'); }); };
+    window.deletePolicy = (id) => { if(confirm('حذف؟')) { policiesList = policiesList.filter(p => p.id !== id); saveAll(); renderApp(); } };
+    window.showAddFaqModal = () => showModal('إضافة سؤال', `<div class="form-group"><label>السؤال</label><input id="q"></div><div class="form-group"><label>الإجابة</label><textarea id="a" rows="3"></textarea></div>`, () => { faqList.push({ id: Date.now(), question: document.getElementById('q').value, answer: document.getElementById('a').value }); saveAll(); renderApp(); alert('✅ تم الإضافة'); });
+    window.editFaq = (id) => { let f = faqList.find(f => f.id === id); showModal('تعديل', `<div class="form-group"><label>السؤال</label><input id="q" value="${f.question}"></div><div class="form-group"><label>الإجابة</label><textarea id="a">${f.answer}</textarea></div>`, () => { f.question = document.getElementById('q').value; f.answer = document.getElementById('a').value; saveAll(); renderApp(); alert('✅ تم التحديث'); }); };
+    window.deleteFaq = (id) => { if(confirm('حذف؟')) { faqList = faqList.filter(f => f.id !== id); saveAll(); renderApp(); } };
+    window.showAddBehaviorModal = () => showModal('إضافة سلوك', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><textarea id="desc" rows="2"></textarea></div>`, () => { behaviorsList.push({ id: Date.now(), title: document.getElementById('title').value, desc: document.getElementById('desc').value }); saveAll(); renderApp(); alert('✅ تم الإضافة'); });
+    window.editBehavior = (id) => { let b = behaviorsList.find(b => b.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${b.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${b.desc}</textarea></div>`, () => { b.title = document.getElementById('title').value; b.desc = document.getElementById('desc').value; saveAll(); renderApp(); alert('✅ تم التحديث'); }); };
+    window.deleteBehavior = (id) => { if(confirm('حذف؟')) { behaviorsList = behaviorsList.filter(b => b.id !== id); saveAll(); renderApp(); } };
+    window.showAddProcedureModal = () => showModal('إضافة إجراء', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><textarea id="desc" rows="2"></textarea></div>`, () => { proceduresList.push({ id: Date.now(), step: proceduresList.length+1, title: document.getElementById('title').value, desc: document.getElementById('desc').value }); saveAll(); renderApp(); alert('✅ تم الإضافة'); });
+    window.editProcedure = (id) => { let p = proceduresList.find(p => p.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${p.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${p.desc}</textarea></div>`, () => { p.title = document.getElementById('title').value; p.desc = document.getElementById('desc').value; saveAll(); renderApp(); alert('✅ تم التحديث'); }); };
+    window.deleteProcedure = (id) => { if(confirm('حذف؟')) { proceduresList = proceduresList.filter(p => p.id !== id); proceduresList.forEach((p,i)=>p.step=i+1); saveAll(); renderApp(); } };
+    window.showAddAnnouncementModal = () => showModal('إضافة إعلان', `<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="2"></textarea></div>`, () => { announcementsList.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, date: new Date().toLocaleDateString('ar') }); saveAll(); renderApp(); alert('✅ تم الإضافة'); });
+    window.editAnnouncement = (id) => { let a = announcementsList.find(a => a.id === id); showModal('تعديل', `<div class="form-group"><label>العنوان</label><input id="title" value="${a.title}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${a.content}</textarea></div>`, () => { a.title = document.getElementById('title').value; a.content = document.getElementById('content').value; saveAll(); renderApp(); alert('✅ تم التحديث'); }); };
+    window.deleteAnnouncement = (id) => { if(confirm('حذف؟')) { announcementsList = announcementsList.filter(a => a.id !== id); saveAll(); renderApp(); } };
+    window.deleteOrgDept = (id) => { if(confirm('حذف القسم؟')) { orgStructure.departments = orgStructure.departments.filter(d => d.id !== id); saveAll(); renderApp(); } };
+    window.exportAllData = () => { let data = { usersDatabase, policiesList, behaviorsList, proceduresList, faqList, announcementsList, orgStructure, globalJobsList, performanceCriteria }; let blob = new Blob([JSON.stringify(data)], {type:"application/json"}); let url = URL.createObjectURL(blob); let a = document.createElement('a'); a.href = url; a.download = `hr_backup_${Date.now()}.json`; a.click(); URL.revokeObjectURL(url); alert('تم تصدير البيانات'); };
+    window.resetAllData = () => { if(confirm('إعادة تعيين جميع البيانات؟')) { localStorage.clear(); sessionStorage.clear(); location.reload(); } };
 
-    // ==================== التطبيق الرئيسي ====================
+    // دوال الهيكل التنظيمي
+    window.showAddOrgDeptModal = function() {
+        let modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `<div class="modal-content"><h3>إضافة قسم جديد</h3><div class="form-group"><label>اسم القسم</label><input id="deptName"></div><div class="form-group"><label>رئيس القسم
+        <div class="form-group"><label>رئيس القسم</label><input id="deptHead"></div>
+<div class="form-group"><label>عدد الأعضاء</label><input id="deptMembers" type="number" value="1"></div>
+<button class="btn" onclick="saveNewDept(this)">إضافة</button>
+<button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()">إلغاء</button></div>`;
+        document.body.appendChild(modal);
+        window.saveNewDept = function(btn) {
+            orgStructure.departments.push({ id: "dept_" + Date.now(), name: document.getElementById('deptName').value, head: document.getElementById('deptHead').value, members: parseInt(document.getElementById('deptMembers').value), jobs: [] });
+            saveAll(); btn.closest('.modal').remove(); renderApp(); alert('✅ تم إضافة القسم');
+        };
+    };
+    window.editOrgCEO = function() {
+        let modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `<div class="modal-content"><h3>تعديل الإدارة العليا</h3><div class="form-group"><label>الاسم</label><input id="ceoName" value="${orgStructure.ceo.name}"></div><div class="form-group"><label>رئيس الإدارة</label><input id="ceoHead" value="${orgStructure.ceo.head}"></div><div class="form-group"><label>عدد الأعضاء</label><input id="ceoMembers" value="${orgStructure.ceo.members}" type="number"></div><button class="btn" onclick="saveCEOEdit(this)">حفظ</button><button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()">إلغاء</button></div>`;
+        document.body.appendChild(modal);
+        window.saveCEOEdit = function(btn) {
+            orgStructure.ceo.name = document.getElementById('ceoName').value;
+            orgStructure.ceo.head = document.getElementById('ceoHead').value;
+            orgStructure.ceo.members = parseInt(document.getElementById('ceoMembers').value);
+            saveAll(); btn.closest('.modal').remove(); renderApp(); alert('✅ تم التحديث');
+        };
+    };
+    window.editOrgDept = function(deptId) {
+        let dept = orgStructure.departments.find(d => d.id === deptId);
+        if(!dept) return;
+        let modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `<div class="modal-content"><h3>تعديل القسم</h3><div class="form-group"><label>اسم القسم</label><input id="deptName" value="${dept.name}"></div><div class="form-group"><label>رئيس القسم</label><input id="deptHead" value="${dept.head}"></div><div class="form-group"><label>عدد الأعضاء</label><input id="deptMembers" value="${dept.members}" type="number"></div><div style="display:flex; gap:10px;"><button class="btn" onclick="saveDeptEdit(this, '${deptId}')">حفظ</button><button class="btn" style="background:#ef4444;" onclick="deleteOrgDept('${deptId}')">حذف</button><button class="btn" style="background:#6b7280;" onclick="this.closest('.modal').remove()">إلغاء</button></div></div>`;
+        document.body.appendChild(modal);
+        window.saveDeptEdit = function(btn, id) {
+            let d = orgStructure.departments.find(d => d.id === id);
+            if(d) { d.name = document.getElementById('deptName').value; d.head = document.getElementById('deptHead').value; d.members = parseInt(document.getElementById('deptMembers').value); saveAll(); btn.closest('.modal').remove(); renderApp(); alert('✅ تم التحديث'); }
+        };
+    };
+
+    // ============ التطبيق الرئيسي ============
     let currentPage = "home";
 
     function renderApp() {
@@ -1150,10 +1040,9 @@
         root.innerHTML = `
         <div class="app-container">
             <div class="sidebar" id="sidebar">
-                <div class="sidebar-header"><div class="logo-area"><div class="company-logo"><i class="fas fa-crown"></i></div><div class="logo">HR<span>SYSTEM</span></div></div><div style="font-size:10px;">نظام متكامل</div></div>
+                <div class="sidebar-header"><div class="logo-area"><div class="company-logo"><i class="fas fa-crown"></i></div><div class="logo">HR<span>SYSTEM</span></div></div></div>
                 <div class="nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
-                <div class="nav-item ${currentPage === 'assistant' ? 'active' : ''}" data-page="assistant"><i class="fas fa-robot"></i> المساعد الذكي</div>
-                <div class="nav-item ${currentPage === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book-open"></i> دليل الموظف</div>
+                <div class="nav-item ${currentPage === 'knowledge' ? 'active' : ''}" data-page="knowledge"><i class="fas fa-database"></i> مركز المعرفة</div>
                 <div class="nav-item ${currentPage === 'org' ? 'active' : ''}" data-page="org"><i class="fas fa-project-diagram"></i> الهيكل التنظيمي</div>
                 <div class="nav-item ${currentPage === 'company' ? 'active' : ''}" data-page="company"><i class="fas fa-flag-checkered"></i> عن الشركة</div>
                 <div class="nav-item ${currentPage === 'performance' ? 'active' : ''}" data-page="performance"><i class="fas fa-chart-line"></i> تقييم الأداء</div>
@@ -1163,11 +1052,11 @@
                 <div style="margin-top:30px;"><div class="nav-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</div></div>
             </div>
             <div class="bottom-nav">
-                <div class="bottom-nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i></div>
-                <div class="bottom-nav-item ${currentPage === 'assistant' ? 'active' : ''}" data-page="assistant"><i class="fas fa-robot"></i></div>
-                <div class="bottom-nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i></div>
-                <div class="bottom-nav-item ${currentPage === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i></div>
-                ${isAdmin ? `<div class="bottom-nav-item ${currentPage === 'admin' ? 'active' : ''}" data-page="admin"><i class="fas fa-cog"></i></div>` : ''}
+                <div class="bottom-nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i><span>الرئيسية</span></div>
+                <div class="bottom-nav-item ${currentPage === 'knowledge' ? 'active' : ''}" data-page="knowledge"><i class="fas fa-database"></i><span>المعرفة</span></div>
+                <div class="bottom-nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i><span>حسابي</span></div>
+                <div class="bottom-nav-item ${currentPage === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i><span>إشعارات</span></div>
+                ${isAdmin ? `<div class="bottom-nav-item ${currentPage === 'admin' ? 'active' : ''}" data-page="admin"><i class="fas fa-cog"></i><span>تحكم</span></div>` : ''}
             </div>
             <div class="main-content">
                 <div class="top-bar"><button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div class="page-title">${getPageTitle()}</div><div class="avatar">${user?.avatar ? `<img src="${user.avatar}">` : '<i class="fas fa-user"></i>'}</div></div>
@@ -1179,14 +1068,20 @@
     }
 
     function getPageTitle() {
-        let titles = { home:"الرئيسية", assistant:"المساعد الذكي", guide:"دليل الموظف", org:"الهيكل التنظيمي", company:"عن الشركة", performance:"تقييم الأداء", notifications:"الإشعارات", profile:"حسابي", admin:"لوحة التحكم" };
+        let titles = { home:"الرئيسية", knowledge:"مركز المعرفة", org:"الهيكل التنظيمي", company:"عن الشركة", performance:"تقييم الأداء", notifications:"الإشعارات", profile:"حسابي", admin:"لوحة التحكم" };
         return titles[currentPage] || "الرئيسية";
     }
 
     function renderPageContent() {
-        const pages = { home: renderHome, assistant: renderAssistant, guide: renderEmployeeGuide, org: renderOrg, company: renderCompany, performance: renderPerformance, notifications: renderNotifications, profile: renderProfile, admin: renderAdminPanel };
-        document.getElementById('pageContent').innerHTML = (pages[currentPage] || renderHome)();
-        if(currentPage === 'assistant') setTimeout(() => { document.getElementById('chatMessages') && (document.getElementById('chatMessages').innerHTML = ''); }, 50);
+        if(currentPage === 'knowledge') { document.getElementById('pageContent').innerHTML = `<div id="knowledgeContent"></div>`; renderKnowledgePage(); }
+        else if(currentPage === 'home') document.getElementById('pageContent').innerHTML = renderHome();
+        else if(currentPage === 'org') document.getElementById('pageContent').innerHTML = renderOrg();
+        else if(currentPage === 'company') document.getElementById('pageContent').innerHTML = renderCompany();
+        else if(currentPage === 'performance') document.getElementById('pageContent').innerHTML = renderPerformance();
+        else if(currentPage === 'notifications') document.getElementById('pageContent').innerHTML = renderNotifications();
+        else if(currentPage === 'profile') document.getElementById('pageContent').innerHTML = renderProfile();
+        else if(currentPage === 'admin') document.getElementById('pageContent').innerHTML = renderAdminPanel();
+        else document.getElementById('pageContent').innerHTML = renderHome();
     }
 
     function attachEvents() {
@@ -1197,9 +1092,6 @@
         });
         document.getElementById('logoutBtn')?.addEventListener('click', () => { logout(); });
     }
-
-    window.sendManualMessage = sendManualMessage;
-    window.quickQuestion = quickQuestion;
 
     renderApp();
     saveAll();
