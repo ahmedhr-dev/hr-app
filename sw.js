@@ -3,7 +3,8 @@
 // مع آلية التحديث التلقائي الكاملة
 // ========================================
 
-const CACHE_NAME = 'hr-system-v2';
+const CACHE_NAME = 'hr-system-v3';
+
 const urlsToCache = [
   '.',
   'index.html',
