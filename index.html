@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>HR System | نظام إدارة الموارد البشرية</title>
-    <!-- PWA -->
+    
+    <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0a1a2f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="HR System">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -205,6 +211,42 @@
         
         .menu-toggle { display: none; background: none; border: none; font-size: 24px; color: white; cursor: pointer; }
         
+        /* زر التحديث المنبثق */
+        .update-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            left: 20px;
+            max-width: 380px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #d4af37, #b8960c);
+            color: #0a1a2f;
+            padding: 14px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            z-index: 10000;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            direction: rtl;
+            font-family: 'Cairo', sans-serif;
+            transform: translateY(100px);
+            transition: transform 0.3s ease;
+        }
+        .update-toast.show {
+            transform: translateY(0);
+        }
+        .update-toast i:first-child {
+            font-size: 20px;
+            animation: spin 1s infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.open { transform: translateX(0); }
@@ -221,9 +263,7 @@
 <div id="app"></div>
 
 <script>
-    // نظام إدارة الموارد البشرية - الإصدار 2.0 (تم إصلاح مشكلة الحفظ)
-    // Developer: Ahmed HR
-    // GitHub: https://github.com/ahmedhr-dev/hr-app
+    // نظام إدارة الموارد البشرية - الإصدار 2.0 (مع PWA والتحديث التلقائي)
     
     // ========== بيانات النظام ==========
     let users = [{ id: 1, email: "admin@hr.com", password: "admin123", name: "أحمد المدير", role: "admin", jobTitle: "مدير الموارد البشرية" }];
@@ -324,7 +364,6 @@
         }
     };
     
-    // تحميل البيانات من localStorage عند بدء التطبيق (إذا وجدت)
     function loadDataFromLocalStorage() {
         const savedUsers = localStorage.getItem('hr_users');
         const savedCompany = localStorage.getItem('hr_company');
@@ -362,7 +401,6 @@
         localStorage.setItem('hr_performance', JSON.stringify(performance));
     }
     
-    // تسجيل الدخول
     function login(email, pass) {
         let u = users.find(u => u.email === email && u.password === pass);
         if(u) { currentUser = u; sessionStorage.setItem('user', JSON.stringify(u)); renderApp(); return true; }
@@ -644,7 +682,6 @@
         document.getElementById('logoFileInput').click();
     };
     
-    // دالة مساعدة لعرض النوافذ المنبثقة وحفظ البيانات بشكل موحد
     function showModal(title, html, onSave) {
         let modal = document.createElement('div');
         modal.className = 'modal';
@@ -851,29 +888,90 @@
         });
     }
     
-    // تحميل البيانات المحفوظة عند بدء التطبيق
     loadDataFromLocalStorage();
     
     let savedUser = sessionStorage.getItem('user');
     if(savedUser) currentUser = JSON.parse(savedUser);
     renderApp();
-    // حفظ البيانات بشكل أولي للتأكد من وجودها
     saveAll();
 </script>
 
-<!-- PWA Service Worker Registration -->
+<!-- PWA Service Worker Registration with Auto-Update -->
 <script>
+// ========================================
+// تسجيل Service Worker مع آلية التحديث التلقائي
+// ========================================
+
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-        navigator.serviceWorker.register('sw.js')
-            .then(function () {
-                console.log('Service Worker Registered ✅');
-            })
-            .catch(function (err) {
-                console.log('Service Worker Error ❌', err);
-            });
+    let refreshing = false;
+    let swRegistration = null;
+    
+    // منع التحديث المتكرر
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+        console.log('🔄 تم اكتشاف تحديث، جاري إعادة تحميل الصفحة...');
+        window.location.reload();
     });
+    
+    // إنشاء عنصر الإشعار المنبثق
+    function showUpdateToast() {
+        let toast = document.createElement('div');
+        toast.className = 'update-toast';
+        toast.innerHTML = `
+            <i class="fas fa-sync-alt"></i>
+            <span style="flex: 1;">📱 يتوفر تحديث جديد للتطبيق</span>
+            <i class="fas fa-chevron-left"></i>
+        `;
+        toast.onclick = () => {
+            console.log('🔄 المستخدم وافق على التحديث');
+            window.location.reload();
+        };
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 100);
+        
+        // إخفاء الإشعار بعد 10 ثواني
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 500);
+        }, 10000);
+    }
+    
+    // استقبال رسائل من Service Worker
+    navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
+            console.log('✨ نسخة جديدة متاحة:', event.data.version);
+            showUpdateToast();
+        }
+    });
+    
+    // تسجيل Service Worker
+    navigator.serviceWorker.register('sw.js')
+        .then(registration => {
+            swRegistration = registration;
+            console.log('✅ Service Worker Registered بنجاح');
+            
+            // التحقق من وجود تحديث فور التسجيل
+            registration.update();
+            
+            // التحقق من وجود تحديث كل ساعة
+            setInterval(() => {
+                registration.update();
+                console.log('🔍 جاري التحقق من وجود تحديثات جديدة...');
+            }, 60 * 60 * 1000);
+            
+            // التحقق عند عودة الاتصال بالإنترنت
+            window.addEventListener('online', () => {
+                console.log('🌐 تم استعادة الاتصال، جاري التحقق من التحديثات...');
+                registration.update();
+            });
+        })
+        .catch(err => {
+            console.log('❌ Service Worker Registration Error:', err);
+        });
 }
+
+console.log('🚀 PWA System Ready - Auto Update Enabled');
 </script>
 </body>
 </html>
