@@ -267,7 +267,7 @@
 <div id="app"></div>
 
 <script>
-    // نظام إدارة الموارد البشرية - الإصدار 3.0 (مع PWA والتحديث التلقائي)
+    // نظام إدارة الموارد البشرية - الإصدار 3.0 (مع PWA بدون رفراش تلقائي)
     
     // ========== بيانات النظام ==========
     let users = [{ id: 1, email: "admin@hr.com", password: "admin123", name: "أحمد المدير", role: "admin", jobTitle: "مدير الموارد البشرية" }];
@@ -900,27 +900,23 @@
     saveAll();
 </script>
 
-<!-- PWA Service Worker Registration with Auto-Update -->
+<!-- PWA Service Worker Registration - بدون رفراش تلقائي -->
 <script>
 // ========================================
-// تسجيل Service Worker مع آلية التحديث التلقائي
+// تسجيل Service Worker - بدون إعادة تحميل تلقائي
 // ========================================
 
 if ('serviceWorker' in navigator) {
-    let refreshing = false;
     let swRegistration = null;
-    
-    // منع التحديث المتكرر
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (refreshing) return;
-        refreshing = true;
-        console.log('🔄 تم اكتشاف تحديث، جاري إعادة تحميل الصفحة...');
-        window.location.reload();
-    });
+    let updateAvailable = false;
     
     // إنشاء عنصر الإشعار المنبثق
     function showUpdateToast() {
+        // التأكد من عدم وجود إشعار مكرر
+        if (document.getElementById('updateToast')) return;
+        
         let toast = document.createElement('div');
+        toast.id = 'updateToast';
         toast.className = 'update-toast';
         toast.innerHTML = `
             <i class="fas fa-sync-alt"></i>
@@ -929,36 +925,48 @@ if ('serviceWorker' in navigator) {
         `;
         toast.onclick = () => {
             console.log('🔄 المستخدم وافق على التحديث');
+            toast.remove();
             window.location.reload();
         };
         document.body.appendChild(toast);
         setTimeout(() => toast.classList.add('show'), 100);
         
-        // إخفاء الإشعار بعد 10 ثواني
+        // إخفاء الإشعار بعد 15 ثانية إذا لم ينقر عليه المستخدم
         setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 500);
-        }, 10000);
+            if (toast && toast.remove) {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 500);
+            }
+        }, 15000);
     }
     
     // استقبال رسائل من Service Worker
     navigator.serviceWorker.addEventListener('message', event => {
         if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
             console.log('✨ نسخة جديدة متاحة:', event.data.version);
+            if (!updateAvailable) {
+                updateAvailable = true;
+                showUpdateToast();
+            }
+        }
+    });
+    
+    // لا نقوم بإعادة التحميل التلقائي عند تغيير الـ Controller
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('🔄 تم تغيير Service Worker، تحديث متاح');
+        if (!updateAvailable) {
+            updateAvailable = true;
             showUpdateToast();
         }
     });
     
-    // 🔧 تسجيل Service Worker مع منع التخزين المؤقت
-    navigator.serviceWorker.register('sw.js?v=' + Date.now())
+    // تسجيل Service Worker
+    navigator.serviceWorker.register('sw.js')
         .then(registration => {
             swRegistration = registration;
             console.log('✅ Service Worker Registered بنجاح');
             
-            // التحقق من وجود تحديث فور التسجيل
-            registration.update();
-            
-            // التحقق من وجود تحديث كل ساعة
+            // التحقق من وجود تحديث كل ساعة (بدون إعادة تحميل)
             setInterval(() => {
                 registration.update();
                 console.log('🔍 جاري التحقق من وجود تحديثات جديدة...');
@@ -975,7 +983,7 @@ if ('serviceWorker' in navigator) {
         });
 }
 
-console.log('🚀 PWA System Ready - Auto Update Enabled - Version 3.0');
+console.log('🚀 PWA System Ready - تحديث يدوي فقط (بدون رفراش تلقائي)');
 </script>
 </body>
 </html>
