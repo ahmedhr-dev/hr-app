@@ -6,14 +6,9 @@
     <title>HR System | نظام إدارة الموارد البشرية</title>
     
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0a1a2f">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="HR System">
     <link rel="apple-touch-icon" href="icon-192x192.png">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -36,67 +31,20 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-
-        window.firebaseDB = db;
-        window.firebaseRef = ref;
         
-        window.saveToFirebase = async function(data) {
-            try {
-                await set(ref(db, "hr-data"), {
-                    users: data.users,
-                    companyData: data.companyData,
-                    jobs: data.jobs,
-                    policies: data.policies,
-                    behaviors: data.behaviors,
-                    procedures: data.procedures,
-                    faq: data.faq,
-                    announcements: data.announcements,
-                    orgStructure: data.orgStructure,
-                    performance: data.performance,
-                    lastUpdated: new Date().toISOString()
-                });
-                console.log('✅ تم الحفظ في Firebase');
-                return true;
-            } catch (error) {
-                console.error('❌ خطأ في الحفظ:', error);
-                return false;
-            }
-        }
+        window.db = db;
+        window.ref = ref;
+        window.set = set;
+        window.get = get;
+        window.onValue = onValue;
         
-        window.loadFromFirebase = async function() {
-            try {
-                const dataRef = ref(db, "hr-data");
-                const snapshot = await get(dataRef);
-                if (snapshot.exists()) {
-                    console.log('✅ تم تحميل البيانات من Firebase');
-                    return snapshot.val();
-                } else {
-                    console.log('📭 لا توجد بيانات في Firebase');
-                    return null;
-                }
-            } catch (error) {
-                console.error('❌ خطأ في التحميل:', error);
-                return null;
-            }
-        }
-        
-        window.listenToFirebase = function(callback) {
-            const dataRef = ref(db, "hr-data");
-            onValue(dataRef, (snapshot) => {
-                if (snapshot.exists()) {
-                    console.log('🔄 تحديث فوري من Firebase');
-                    callback(snapshot.val());
-                }
-            });
-        }
-        
-        console.log('🔥 Firebase initialized successfully');
+        console.log('🔥 Firebase ready');
     </script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Cairo', 'Segoe UI', sans-serif;
             background: linear-gradient(145deg, #0a1a2f, #061220);
             direction: rtl;
             color: #fff;
@@ -150,7 +98,7 @@
             border-radius: 20px; margin-bottom: 20px;
         }
         .page-title { font-size: 22px; color: #d4af37; font-weight: bold; }
-        .avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         
         .bottom-nav {
             display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #0a1a2f;
@@ -175,7 +123,6 @@
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
         }
         .hero-image { width: 70px; height: 70px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .hero-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         .hero-image i { font-size: 35px; color: #0a1a2f; }
         
         .guide-tabs { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
@@ -231,27 +178,13 @@
         .performance-score { font-size: 48px; font-weight: bold; color: #d4af37; text-align: center; }
         .score-bar { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 15px 0; overflow: hidden; }
         .score-fill { height: 100%; background: linear-gradient(90deg, #d4af37, #b8960c); }
-        .criteria-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
-        }
-        .criteria-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 14px;
-        }
+        .criteria-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 15px; }
+        .criteria-card { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 14px; }
         .criteria-name { font-size: 14px; font-weight: bold; color: #d4af37; margin-bottom: 8px; }
         .criteria-progress { width: 100%; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px; margin: 8px 0; overflow: hidden; }
         .criteria-progress-fill { height: 100%; background: linear-gradient(90deg, #d4af37, #b8960c); }
         
-        .org-grid {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
+        .org-grid { display: flex; flex-direction: column; align-items: center; gap: 20px; }
         .org-ceo {
             background: linear-gradient(135deg, #d4af37, #b8960c);
             border-radius: 18px;
@@ -260,12 +193,7 @@
             color: #0a1a2f;
             cursor: pointer;
         }
-        .org-departments {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-        }
+        .org-departments { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
         .org-dept {
             background: rgba(10, 26, 47, 0.8);
             border-radius: 14px;
@@ -287,40 +215,30 @@
             margin: 0 auto 15px;
             overflow: hidden;
         }
-        .company-logo-img img { width: 100%; height: 100%; object-fit: cover; }
         
         .menu-toggle { display: none; background: none; border: none; font-size: 24px; color: white; cursor: pointer; }
         
-        .sync-toast {
+        .toast {
             position: fixed;
             bottom: 20px;
             right: 20px;
             left: 20px;
             max-width: 380px;
             margin: 0 auto;
-            background: linear-gradient(135deg, #4caf50, #45a049);
+            background: #4caf50;
             color: white;
             padding: 14px 20px;
             border-radius: 30px;
             z-index: 10000;
             font-weight: bold;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            direction: rtl;
-            font-family: 'Cairo', sans-serif;
+            text-align: center;
             transform: translateY(100px);
             transition: transform 0.3s ease;
         }
-        .sync-toast.show {
-            transform: translateY(0);
-        }
-        .sync-toast.error {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-        }
+        .toast.show { transform: translateY(0); }
+        .toast.error { background: #ef4444; }
         
-        .loading-screen {
+        .loading {
             position: fixed;
             top: 0;
             left: 0;
@@ -334,7 +252,7 @@
             flex-direction: column;
             gap: 20px;
         }
-        .loading-spinner {
+        .spinner {
             width: 50px;
             height: 50px;
             border: 4px solid rgba(212,175,55,0.3);
@@ -342,9 +260,7 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
@@ -354,25 +270,22 @@
             .menu-toggle { display: block; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .admin-grid { grid-template-columns: repeat(2, 1fr); }
-            .criteria-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 <div id="app">
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-spinner"></div>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
         <div style="color: #d4af37;">جاري تحميل البيانات من السحابة...</div>
     </div>
 </div>
 
 <script>
     // ========================================
-    // نظام إدارة الموارد البشرية - الإصدار 5.0
-    // مزامنة فورية بين جميع الأجهزة عبر Firebase
+    // البيانات الافتراضية (تستخدم فقط عند عدم وجود بيانات في السحابة)
     // ========================================
     
-    // بيانات افتراضية أولية (تستخدم فقط في حالة عدم وجود بيانات)
     let users = [{ id: 1, email: "admin@hr.com", password: "admin123", name: "أحمد المدير", role: "admin", jobTitle: "مدير الموارد البشرية" }];
     let currentUser = null;
     let companyData = {
@@ -453,18 +366,16 @@
         }
     };
     
-    let isDataLoaded = false;
+    let currentPage = "home";
+    let guideTab = "policies";
+    let isSyncing = false;
     
-    // ========== دوال Firebase ==========
-    
+    // ========== دوال الإشعارات ==========
     function showToast(message, isError = false) {
         let toast = document.createElement('div');
-        toast.className = 'sync-toast';
+        toast.className = 'toast';
         if (isError) toast.classList.add('error');
-        toast.innerHTML = `
-            <i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i>
-            <span style="flex: 1;">${message}</span>
-        `;
+        toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> ${message}`;
         document.body.appendChild(toast);
         setTimeout(() => toast.classList.add('show'), 100);
         setTimeout(() => {
@@ -473,213 +384,161 @@
         }, 3000);
     }
     
-    // حفظ جميع البيانات في Firebase (بدون استثناء!)
-    async function saveAllToFirebase() {
-        // حفظ في localStorage أولاً
-        localStorage.setItem('hr_users', JSON.stringify(users));
-        localStorage.setItem('hr_company', JSON.stringify(companyData));
-        localStorage.setItem('hr_jobs', JSON.stringify(jobs));
-        localStorage.setItem('hr_policies', JSON.stringify(policies));
-        localStorage.setItem('hr_behaviors', JSON.stringify(behaviors));
-        localStorage.setItem('hr_procedures', JSON.stringify(procedures));
-        localStorage.setItem('hr_faq', JSON.stringify(faq));
-        localStorage.setItem('hr_announcements', JSON.stringify(announcements));
-        localStorage.setItem('hr_org_structure', JSON.stringify(orgStructure));
-        localStorage.setItem('hr_performance', JSON.stringify(performance));
-        localStorage.setItem('hr_last_sync', new Date().toISOString());
+    // ========== حفظ البيانات في Firebase ==========
+    async function saveToFirebase() {
+        if (isSyncing) return;
         
-        // حفظ في Firebase
-        if (window.saveToFirebase) {
-            const firebaseData = {
-                users: users,
-                companyData: companyData,
-                jobs: jobs,
-                policies: policies,
-                behaviors: behaviors,
-                procedures: procedures,
-                faq: faq,
-                announcements: announcements,
-                orgStructure: orgStructure,
-                performance: performance
-            };
-            const success = await window.saveToFirebase(firebaseData);
-            if (success) {
-                console.log('✅ تم حفظ البيانات في Firebase');
-                showToast('☁️ تم حفظ التغييرات في السحابة');
-            } else {
-                console.log('⚠️ فشل حفظ البيانات في Firebase');
-            }
-        }
-    }
-    
-    // تحميل البيانات من Firebase أو localStorage
-    async function loadFromFirebase() {
-        if (!window.loadFromFirebase) return false;
+        const data = {
+            users, companyData, jobs, policies, behaviors,
+            procedures, faq, announcements, orgStructure, performance,
+            lastUpdated: new Date().toISOString()
+        };
         
         try {
-            const firebaseData = await window.loadFromFirebase();
-            
-            if (firebaseData && firebaseData.users) {
-                // استخدام البيانات من Firebase
-                users = firebaseData.users;
-                companyData = firebaseData.companyData;
-                jobs = firebaseData.jobs;
-                policies = firebaseData.policies;
-                behaviors = firebaseData.behaviors;
-                procedures = firebaseData.procedures;
-                faq = firebaseData.faq;
-                announcements = firebaseData.announcements;
-                orgStructure = firebaseData.orgStructure;
-                performance = firebaseData.performance;
-                
-                // حفظ في localStorage
-                localStorage.setItem('hr_users', JSON.stringify(users));
-                localStorage.setItem('hr_company', JSON.stringify(companyData));
-                localStorage.setItem('hr_jobs', JSON.stringify(jobs));
-                localStorage.setItem('hr_policies', JSON.stringify(policies));
-                localStorage.setItem('hr_behaviors', JSON.stringify(behaviors));
-                localStorage.setItem('hr_procedures', JSON.stringify(procedures));
-                localStorage.setItem('hr_faq', JSON.stringify(faq));
-                localStorage.setItem('hr_announcements', JSON.stringify(announcements));
-                localStorage.setItem('hr_org_structure', JSON.stringify(orgStructure));
-                localStorage.setItem('hr_performance', JSON.stringify(performance));
-                
-                console.log('✅ تم تحميل البيانات من Firebase');
-                return true;
-            } else {
-                // أول مرة: حفظ البيانات الافتراضية في Firebase
-                console.log('📭 لا توجد بيانات في Firebase، جاري حفظ البيانات الافتراضية...');
-                await saveAllToFirebase();
-                return true;
-            }
+            await window.set(window.ref(window.db, 'hr-data'), data);
+            console.log('✅ حفظ في Firebase');
+            return true;
         } catch (error) {
-            console.error('❌ خطأ في التحميل من Firebase:', error);
-            // محاولة تحميل من localStorage
-            const savedUsers = localStorage.getItem('hr_users');
-            if (savedUsers) {
-                users = JSON.parse(savedUsers);
-                companyData = JSON.parse(localStorage.getItem('hr_company') || '{}');
-                jobs = JSON.parse(localStorage.getItem('hr_jobs') || '[]');
-                policies = JSON.parse(localStorage.getItem('hr_policies') || '[]');
-                behaviors = JSON.parse(localStorage.getItem('hr_behaviors') || '[]');
-                procedures = JSON.parse(localStorage.getItem('hr_procedures') || '[]');
-                faq = JSON.parse(localStorage.getItem('hr_faq') || '[]');
-                announcements = JSON.parse(localStorage.getItem('hr_announcements') || '[]');
-                orgStructure = JSON.parse(localStorage.getItem('hr_org_structure') || '{}');
-                performance = JSON.parse(localStorage.getItem('hr_performance') || '{}');
-                console.log('📱 تم تحميل البيانات من localStorage');
-            }
+            console.error('❌ خطأ في الحفظ:', error);
             return false;
         }
     }
     
-    // الاستماع للتغييرات من Firebase (للتحديث الفوري بين الأجهزة)
-    function setupRealtimeSync() {
-        if (!window.listenToFirebase) return;
-        
-        window.listenToFirebase(async (firebaseData) => {
-            if (!firebaseData || !firebaseData.users) return;
-            
-            // تجنب التحديث إذا كانت البيانات من نفس الجهاز
-            const lastSync = localStorage.getItem('hr_last_sync');
-            const firebaseTime = firebaseData.lastUpdated;
-            
-            let hasChanges = false;
-            
-            if (firebaseData.users && JSON.stringify(users) !== JSON.stringify(firebaseData.users)) {
-                users = firebaseData.users;
-                hasChanges = true;
+    // ========== تحميل البيانات من Firebase ==========
+    async function loadFromFirebase() {
+        try {
+            const snapshot = await window.get(window.ref(window.db, 'hr-data'));
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                users = data.users || users;
+                companyData = data.companyData || companyData;
+                jobs = data.jobs || jobs;
+                policies = data.policies || policies;
+                behaviors = data.behaviors || behaviors;
+                procedures = data.procedures || procedures;
+                faq = data.faq || faq;
+                announcements = data.announcements || announcements;
+                orgStructure = data.orgStructure || orgStructure;
+                performance = data.performance || performance;
+                console.log('✅ تحميل من Firebase');
+                return true;
+            } else {
+                // أول مرة: حفظ البيانات الافتراضية
+                await saveToFirebase();
+                console.log('✅ تم حفظ البيانات الافتراضية في Firebase');
+                return true;
             }
-            if (firebaseData.companyData && JSON.stringify(companyData) !== JSON.stringify(firebaseData.companyData)) {
-                companyData = firebaseData.companyData;
-                hasChanges = true;
-            }
-            if (firebaseData.jobs && JSON.stringify(jobs) !== JSON.stringify(firebaseData.jobs)) {
-                jobs = firebaseData.jobs;
-                hasChanges = true;
-            }
-            if (firebaseData.policies && JSON.stringify(policies) !== JSON.stringify(firebaseData.policies)) {
-                policies = firebaseData.policies;
-                hasChanges = true;
-            }
-            if (firebaseData.behaviors && JSON.stringify(behaviors) !== JSON.stringify(firebaseData.behaviors)) {
-                behaviors = firebaseData.behaviors;
-                hasChanges = true;
-            }
-            if (firebaseData.procedures && JSON.stringify(procedures) !== JSON.stringify(firebaseData.procedures)) {
-                procedures = firebaseData.procedures;
-                hasChanges = true;
-            }
-            if (firebaseData.faq && JSON.stringify(faq) !== JSON.stringify(firebaseData.faq)) {
-                faq = firebaseData.faq;
-                hasChanges = true;
-            }
-            if (firebaseData.announcements && JSON.stringify(announcements) !== JSON.stringify(firebaseData.announcements)) {
-                announcements = firebaseData.announcements;
-                hasChanges = true;
-            }
-            if (firebaseData.orgStructure && JSON.stringify(orgStructure) !== JSON.stringify(firebaseData.orgStructure)) {
-                orgStructure = firebaseData.orgStructure;
-                hasChanges = true;
-            }
-            if (firebaseData.performance && JSON.stringify(performance) !== JSON.stringify(firebaseData.performance)) {
-                performance = firebaseData.performance;
-                hasChanges = true;
-            }
-            
-            if (hasChanges) {
-                // تحديث localStorage
-                localStorage.setItem('hr_users', JSON.stringify(users));
-                localStorage.setItem('hr_company', JSON.stringify(companyData));
-                localStorage.setItem('hr_jobs', JSON.stringify(jobs));
-                localStorage.setItem('hr_policies', JSON.stringify(policies));
-                localStorage.setItem('hr_behaviors', JSON.stringify(behaviors));
-                localStorage.setItem('hr_procedures', JSON.stringify(procedures));
-                localStorage.setItem('hr_faq', JSON.stringify(faq));
-                localStorage.setItem('hr_announcements', JSON.stringify(announcements));
-                localStorage.setItem('hr_org_structure', JSON.stringify(orgStructure));
-                localStorage.setItem('hr_performance', JSON.stringify(performance));
+        } catch (error) {
+            console.error('❌ خطأ في التحميل:', error);
+            return false;
+        }
+    }
+    
+    // ========== الاستماع للتغييرات من Firebase (التحديث الفوري) ==========
+    function listenToFirebase() {
+        const dataRef = window.ref(window.db, 'hr-data');
+        window.onValue(dataRef, async (snapshot) => {
+            if (snapshot.exists() && !isSyncing) {
+                isSyncing = true;
+                const data = snapshot.val();
                 
-                // تحديث المستخدم الحالي
-                if (currentUser) {
-                    const updatedUser = users.find(u => u.email === currentUser.email);
-                    if (updatedUser) {
-                        currentUser = updatedUser;
-                        sessionStorage.setItem('user', JSON.stringify(currentUser));
-                    }
+                let hasChanges = false;
+                
+                if (JSON.stringify(users) !== JSON.stringify(data.users)) {
+                    users = data.users;
+                    hasChanges = true;
+                }
+                if (JSON.stringify(companyData) !== JSON.stringify(data.companyData)) {
+                    companyData = data.companyData;
+                    hasChanges = true;
+                }
+                if (JSON.stringify(jobs) !== JSON.stringify(data.jobs)) {
+                    jobs = data.jobs;
+                    hasChanges = true;
+                }
+                if (JSON.stringify(policies) !== JSON.stringify(data.policies)) {
+                    policies = data.policies;
+                    hasChanges = true;
+                }
+                if (JSON.stringify(behaviors) !== JSON.stringify(data.behaviors)) {
+                    behaviors = data.behaviors;
+                    hasChanges = true;
+                }
+                if (JSON.stringify(procedures) !== JSON.stringify(data.procedures)) {
+                    procedures = data.procedures;
+                    hasChanges = true;
+                }
+                if (JSON.stringify(faq) !== JSON.stringify(data.faq)) {
+                    faq = data.faq;
+                    hasChanges = true;
+                }
+                if (JSON.stringify(announcements) !== JSON.stringify(data.announcements)) {
+                    announcements = data.announcements;
+                    hasChanges = true;
+                }
+                if (JSON.stringify(orgStructure) !== JSON.stringify(data.orgStructure)) {
+                    orgStructure = data.orgStructure;
+                    hasChanges = true;
+                }
+                if (JSON.stringify(performance) !== JSON.stringify(data.performance)) {
+                    performance = data.performance;
+                    hasChanges = true;
                 }
                 
-                // إعادة تحميل الواجهة
-                renderApp();
-                showToast('🔄 تم تحديث البيانات من جهاز آخر', false);
-                console.log('✅ تم تحديث البيانات من Firebase');
+                if (hasChanges && currentUser) {
+                    // تحديث المستخدم الحالي إذا تغير
+                    const updatedUser = users.find(u => u.email === currentUser?.email);
+                    if (updatedUser) currentUser = updatedUser;
+                    renderApp();
+                    showToast('🔄 تم تحديث البيانات من جهاز آخر');
+                }
+                
+                isSyncing = false;
             }
         });
     }
     
-    // ========== دوال التطبيق الأساسية (كلها تستدعي saveAllToFirebase) ==========
+    // ========== دوال التطبيق الأساسية ==========
     
     function login(email, pass) {
-        let u = users.find(u => u.email === email && u.password === pass);
-        if(u) { currentUser = u; sessionStorage.setItem('user', JSON.stringify(u)); renderApp(); return true; }
+        const user = users.find(u => u.email === email && u.password === pass);
+        if (user) {
+            currentUser = user;
+            sessionStorage.setItem('user', JSON.stringify(user));
+            renderApp();
+            return true;
+        }
         return false;
     }
     
     async function register(name, email, pass, confirm) {
-        if(pass !== confirm) { alert("كلمة المرور غير متطابقة"); return false; }
-        if(users.find(u => u.email === email)) { alert("البريد موجود"); return false; }
+        if (pass !== confirm) { alert("كلمة المرور غير متطابقة"); return false; }
+        if (users.find(u => u.email === email)) { alert("البريد موجود"); return false; }
         users.push({ id: Date.now(), name, email, password: pass, role: "employee", jobTitle: "موظف" });
-        await saveAllToFirebase();
+        await saveToFirebase();
         return true;
     }
     
-    function logout() { currentUser = null; sessionStorage.removeItem('user'); renderApp(); }
+    function logout() {
+        currentUser = null;
+        sessionStorage.removeItem('user');
+        renderApp();
+    }
+    
+    // ========== دوال العرض ==========
     
     function renderLogin() {
         return `
         <div class="login-container">
             <div class="login-card">
-                <div style="text-align:center; margin-bottom:20px;"><div style="width:60px;height:60px;background:linear-gradient(135deg,#d4af37,#b8960c);border-radius:20px;margin:0 auto;display:flex;align-items:center;justify-content:center;"><i class="fas fa-cloud"></i></div><h2>HR SYSTEM</h2><p style="font-size:12px; text-align:center;">نظام متزامن مع السحابة ☁️</p><p style="font-size:10px; text-align:center;">التعديلات من أي جهاز تظهر فوراً</p></div>
+                <div style="text-align:center; margin-bottom:20px;">
+                    <div style="width:60px;height:60px;background:linear-gradient(135deg,#d4af37,#b8960c);border-radius:20px;margin:0 auto;display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h2>HR SYSTEM</h2>
+                    <p style="font-size:12px;">نظام متزامن مع السحابة ☁️</p>
+                    <p style="font-size:10px; opacity:0.7;">التعديلات تظهر على جميع الأجهزة فوراً</p>
+                </div>
                 <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" value="admin@hr.com">
                 <input type="password" id="loginPass" placeholder="كلمة المرور" value="admin123">
                 <button class="btn" onclick="doLogin()">دخول</button>
@@ -696,38 +555,39 @@
     }
     
     window.doLogin = function() {
-        let email = document.getElementById('loginEmail').value;
-        let pass = document.getElementById('loginPass').value;
-        if(login(email, pass)) alert('تم الدخول بنجاح ✅');
-        else alert('بيانات غير صحيحة ❌');
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPass').value;
+        if (login(email, pass)) showToast('تم الدخول بنجاح ✅');
+        else showToast('بيانات غير صحيحة ❌', true);
     };
     
     window.doRegister = async function() {
-        let name = document.getElementById('regName').value;
-        let email = document.getElementById('regEmail').value;
-        let pass = document.getElementById('regPass').value;
-        let confirm = document.getElementById('regConfirm').value;
-        if(await register(name, email, pass, confirm)) { alert('تم التسجيل بنجاح ✅'); toggleReg(); }
+        const name = document.getElementById('regName').value;
+        const email = document.getElementById('regEmail').value;
+        const pass = document.getElementById('regPass').value;
+        const confirm = document.getElementById('regConfirm').value;
+        if (await register(name, email, pass, confirm)) {
+            showToast('تم التسجيل بنجاح ✅');
+            toggleReg();
+        }
     };
     
     window.toggleReg = function() {
-        let f = document.getElementById('regForm');
-        f.classList.toggle('show');
+        document.getElementById('regForm').classList.toggle('show');
     };
     
     function showDetail(title, content) {
-        let modal = document.createElement('div');
+        const modal = document.createElement('div');
         modal.className = 'modal';
         modal.innerHTML = `<div class="modal-content"><h3 style="color:#d4af37;">${title}</h3><div style="margin:15px 0;">${content}</div><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div>`;
         document.body.appendChild(modal);
     }
     
-    let guideTab = "policies";
     function renderGuide() {
         let items = [];
-        if(guideTab === 'policies') {
+        if (guideTab === 'policies') {
             items = policies.map(p => `<div class="guide-item" onclick="showDetail('${p.title}', '<strong>الوصف:</strong><br>${p.description}<br><br><strong>المحتوى:</strong><br>${p.content}')"><div><strong>${p.title}</strong><br><small>${p.description.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
-        } else if(guideTab === 'procedures') {
+        } else if (guideTab === 'procedures') {
             items = procedures.map(p => `<div class="guide-item" onclick="showDetail('${p.title}', '<strong>الوصف:</strong><br>${p.desc}')"><div><strong>${p.title}</strong><br><small>${p.desc.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
         } else {
             items = behaviors.map(b => `<div class="guide-item" onclick="showDetail('${b.title}', '<strong>الوصف:</strong><br>${b.desc}')"><div><strong>${b.title}</strong><br><small>${b.desc.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
@@ -742,26 +602,25 @@
             ${items.join('')}
         </div>`;
     }
+    
     window.setGuideTab = function(tab) { guideTab = tab; renderApp(); };
     
-    let currentPageVar = "home";
-    
     function getGreeting() {
-        let h = new Date().getHours();
-        if(h < 12) return "صباح الخير";
-        if(h < 17) return "مساء الخير";
+        const h = new Date().getHours();
+        if (h < 12) return "صباح الخير";
+        if (h < 17) return "مساء الخير";
         return "مساء النور";
     }
     
     function renderHome() {
-        let logoHtml = companyData.logo ? `<img src="${companyData.logo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '<i class="fas fa-cloud"></i>';
+        const logoHtml = companyData.logo ? `<img src="${companyData.logo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '<i class="fas fa-cloud"></i>';
         return `
         <div class="hero-section">
             <div class="hero-text">
                 <div style="font-size:24px; font-weight:bold; color:#d4af37;">${getGreeting()}، ${currentUser?.name?.split(' ')[0] || 'موظف'} 👋</div>
                 <div style="margin:8px 0;"><i class="fas fa-briefcase"></i> ${currentUser?.jobTitle || 'موظف'}</div>
                 <div><i class="fas fa-cloud"></i> "متزامن مع السحابة ☁️"</div>
-                <div style="font-size:11px; opacity:0.6; margin-top:8px;">الإصدار 5.0 | مزامنة فورية</div>
+                <div style="font-size:11px; opacity:0.6;">جميع التعديلات تظهر على جميع الأجهزة</div>
             </div>
             <div class="hero-image">${logoHtml}</div>
         </div>
@@ -774,7 +633,7 @@
     }
     
     function renderCompany() {
-        let logoHtml = companyData.logo ? `<img src="${companyData.logo}" style="width:100px;height:100px;object-fit:cover;border-radius:50%;">` : '<i class="fas fa-building" style="font-size:50px;"></i>';
+        const logoHtml = companyData.logo ? `<img src="${companyData.logo}" style="width:100px;height:100px;object-fit:cover;border-radius:50%;">` : '<i class="fas fa-building" style="font-size:50px;"></i>';
         return `
         <div class="card">
             <div class="company-logo-img">${logoHtml}</div>
@@ -811,11 +670,11 @@
     }
     
     function renderPerformance() {
-        let perf = performance[currentUser?.jobTitle];
-        if(!perf) return `<div class="card"><h3>⭐ تقييم الأداء</h3><p>الرجاء تحديث المسمى الوظيفي من حسابي</p></div>`;
-        let total = perf.criteria.reduce((s,c)=>s + c.value,0);
-        let maxTotal = perf.criteria.reduce((s,c)=>s + c.max,0);
-        let percent = Math.round((total/maxTotal)*100);
+        const perf = performance[currentUser?.jobTitle];
+        if (!perf) return `<div class="card"><h3>⭐ تقييم الأداء</h3><p>الرجاء تحديث المسمى الوظيفي من حسابي</p></div>`;
+        const total = perf.criteria.reduce((s,c) => s + c.value, 0);
+        const maxTotal = perf.criteria.reduce((s,c) => s + c.max, 0);
+        const percent = Math.round((total / maxTotal) * 100);
         return `
         <div class="card">
             <h3>⭐ تقييم الأداء - ${currentUser?.jobTitle}</h3>
@@ -856,15 +715,15 @@
         currentUser.name = document.getElementById('pName').value;
         currentUser.email = document.getElementById('pEmail').value;
         currentUser.jobTitle = document.getElementById('pJob').value;
-        let idx = users.findIndex(u => u.id === currentUser.id);
-        if(idx !== -1) users[idx] = currentUser;
-        await saveAllToFirebase();
-        alert('تم حفظ البيانات ✅');
+        const idx = users.findIndex(u => u.id === currentUser.id);
+        if (idx !== -1) users[idx] = currentUser;
+        await saveToFirebase();
+        showToast('تم حفظ البيانات ✅');
         renderApp();
     }
     
     function renderAdmin() {
-        if(currentUser?.role !== 'admin') return '<div class="card">🔒 هذه الصفحة للمدير فقط</div>';
+        if (currentUser?.role !== 'admin') return '<div class="card">🔒 هذه الصفحة للمدير فقط</div>';
         return `
         <div class="card">
             <h3>⚙️ لوحة تحكم المدير</h3>
@@ -881,7 +740,6 @@
                 <div class="admin-card" onclick="showAddModal('dept')"><i class="fas fa-building"></i><div>إضافة قسم</div></div>
                 <div class="admin-card" onclick="showAddModal('announcement')"><i class="fas fa-bell"></i><div>إضافة إعلان</div></div>
                 <div class="admin-card" onclick="editCompanyData()"><i class="fas fa-building"></i><div>تعديل بيانات الشركة</div></div>
-                <div class="admin-card" onclick="saveAllToFirebase()"><i class="fas fa-cloud-upload-alt"></i><div>حفظ في السحابة</div></div>
             </div>
         </div>
         
@@ -910,7 +768,7 @@
     }
     
     window.editCompanyData = function() {
-        let logoPreview = companyData.logo ? `<img src="${companyData.logo}" style="width:80px;height:80px;border-radius:50%;margin-bottom:10px;">` : '<div style="width:80px;height:80px;background:rgba(212,175,55,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;"><i class="fas fa-building" style="font-size:40px;"></i></div>';
+        const logoPreview = companyData.logo ? `<img src="${companyData.logo}" style="width:80px;height:80px;border-radius:50%;margin-bottom:10px;">` : '<div style="width:80px;height:80px;background:rgba(212,175,55,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;"><i class="fas fa-building" style="font-size:40px;"></i></div>';
         
         showModal('تعديل بيانات الشركة', `
             <div style="text-align:center; margin-bottom:15px;">
@@ -926,16 +784,16 @@
             companyData.name = document.getElementById('compName').value;
             companyData.vision = document.getElementById('compVision').value;
             companyData.mission = document.getElementById('compMission').value;
-            if(document.getElementById('compLogo').value) companyData.logo = document.getElementById('compLogo').value;
-            await saveAllToFirebase();
+            if (document.getElementById('compLogo').value) companyData.logo = document.getElementById('compLogo').value;
+            await saveToFirebase();
             renderApp();
-            alert('تم تحديث بيانات الشركة ✅');
+            showToast('تم تحديث بيانات الشركة ✅');
         });
     };
     
     window.handleCompanyLogoUpload = function(input) {
-        if(input.files && input.files[0]) {
-            let reader = new FileReader();
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
             reader.onload = function(e) {
                 document.getElementById('compLogo').value = e.target.result;
             };
@@ -948,7 +806,7 @@
     };
     
     function showModal(title, html, onSave) {
-        let modal = document.createElement('div');
+        const modal = document.createElement('div');
         modal.className = 'modal';
         modal.innerHTML = `<div class="modal-content"><h3>${title}</h3>${html}<div style="margin-top:15px;"><button class="btn" onclick="saveModal(this)">حفظ</button><button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()">إلغاء</button></div></div>`;
         document.body.appendChild(modal);
@@ -959,7 +817,7 @@
     }
     
     window.showAddModal = function(type) {
-        let fields = {
+        const fields = {
             job: '<div class="form-group"><label>المسمى</label><input id="title"></div><div class="form-group"><label>القسم</label><input id="dept"></div>',
             policy: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><input id="desc"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="3"></textarea></div>',
             behavior: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><textarea id="desc" rows="2"></textarea></div>',
@@ -969,56 +827,56 @@
             dept: '<div class="form-group"><label>اسم القسم</label><input id="name"></div><div class="form-group"><label>رئيس القسم</label><input id="head"></div><div class="form-group"><label>عدد الأعضاء</label><input id="members" type="number"></div>'
         };
         showModal('إضافة', fields[type], async () => {
-            if(type === 'job') jobs.push({ id: Date.now(), title: document.getElementById('title').value, department: document.getElementById('dept').value });
-            else if(type === 'policy') policies.push({ id: Date.now(), title: document.getElementById('title').value, description: document.getElementById('desc').value, content: document.getElementById('content').value });
-            else if(type === 'behavior') behaviors.push({ id: Date.now(), title: document.getElementById('title').value, desc: document.getElementById('desc').value });
-            else if(type === 'procedure') procedures.push({ id: Date.now(), step: procedures.length+1, title: document.getElementById('title').value, desc: document.getElementById('desc').value });
-            else if(type === 'faq') faq.push({ id: Date.now(), question: document.getElementById('q').value, answer: document.getElementById('a').value });
-            else if(type === 'announcement') announcements.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, date: new Date().toLocaleDateString() });
-            else if(type === 'dept') orgStructure.departments.push({ id: Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) });
-            await saveAllToFirebase();
+            if (type === 'job') jobs.push({ id: Date.now(), title: document.getElementById('title').value, department: document.getElementById('dept').value });
+            else if (type === 'policy') policies.push({ id: Date.now(), title: document.getElementById('title').value, description: document.getElementById('desc').value, content: document.getElementById('content').value });
+            else if (type === 'behavior') behaviors.push({ id: Date.now(), title: document.getElementById('title').value, desc: document.getElementById('desc').value });
+            else if (type === 'procedure') procedures.push({ id: Date.now(), step: procedures.length + 1, title: document.getElementById('title').value, desc: document.getElementById('desc').value });
+            else if (type === 'faq') faq.push({ id: Date.now(), question: document.getElementById('q').value, answer: document.getElementById('a').value });
+            else if (type === 'announcement') announcements.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, date: new Date().toLocaleDateString() });
+            else if (type === 'dept') orgStructure.departments.push({ id: Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) });
+            await saveToFirebase();
             renderApp();
-            alert('تم الإضافة ✅');
+            showToast('تم الإضافة ✅');
         });
     };
     
     window.editItem = function(type, id) {
         let item, fields;
-        if(type === 'job') { item = jobs.find(i => i.id === id); fields = `<div class="form-group"><label>المسمى</label><input id="title" value="${item.title}"></div><div class="form-group"><label>القسم</label><input id="dept" value="${item.department}"></div>`; }
-        else if(type === 'policy') { item = policies.find(i => i.id === id); fields = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><input id="desc" value="${item.description}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${item.content}</textarea></div>`; }
-        else if(type === 'behavior') { item = behaviors.find(i => i.id === id); fields = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${item.desc}</textarea></div>`; }
-        else if(type === 'procedure') { item = procedures.find(i => i.id === id); fields = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${item.desc}</textarea></div>`; }
-        else if(type === 'faq') { item = faq.find(i => i.id === id); fields = `<div class="form-group"><label>السؤال</label><input id="q" value="${item.question}"></div><div class="form-group"><label>الإجابة</label><textarea id="a">${item.answer}</textarea></div>`; }
-        else if(type === 'announcement') { item = announcements.find(i => i.id === id); fields = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${item.content}</textarea></div>`; }
+        if (type === 'job') { item = jobs.find(i => i.id === id); fields = `<div class="form-group"><label>المسمى</label><input id="title" value="${item.title}"></div><div class="form-group"><label>القسم</label><input id="dept" value="${item.department}"></div>`; }
+        else if (type === 'policy') { item = policies.find(i => i.id === id); fields = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><input id="desc" value="${item.description}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${item.content}</textarea></div>`; }
+        else if (type === 'behavior') { item = behaviors.find(i => i.id === id); fields = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${item.desc}</textarea></div>`; }
+        else if (type === 'procedure') { item = procedures.find(i => i.id === id); fields = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${item.desc}</textarea></div>`; }
+        else if (type === 'faq') { item = faq.find(i => i.id === id); fields = `<div class="form-group"><label>السؤال</label><input id="q" value="${item.question}"></div><div class="form-group"><label>الإجابة</label><textarea id="a">${item.answer}</textarea></div>`; }
+        else if (type === 'announcement') { item = announcements.find(i => i.id === id); fields = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${item.content}</textarea></div>`; }
         showModal('تعديل', fields, async () => {
-            if(type === 'job') { item.title = document.getElementById('title').value; item.department = document.getElementById('dept').value; }
-            else if(type === 'policy') { item.title = document.getElementById('title').value; item.description = document.getElementById('desc').value; item.content = document.getElementById('content').value; }
-            else if(type === 'behavior') { item.title = document.getElementById('title').value; item.desc = document.getElementById('desc').value; }
-            else if(type === 'procedure') { item.title = document.getElementById('title').value; item.desc = document.getElementById('desc').value; }
-            else if(type === 'faq') { item.question = document.getElementById('q').value; item.answer = document.getElementById('a').value; }
-            else if(type === 'announcement') { item.title = document.getElementById('title').value; item.content = document.getElementById('content').value; item.date = new Date().toLocaleDateString(); }
-            await saveAllToFirebase();
+            if (type === 'job') { item.title = document.getElementById('title').value; item.department = document.getElementById('dept').value; }
+            else if (type === 'policy') { item.title = document.getElementById('title').value; item.description = document.getElementById('desc').value; item.content = document.getElementById('content').value; }
+            else if (type === 'behavior') { item.title = document.getElementById('title').value; item.desc = document.getElementById('desc').value; }
+            else if (type === 'procedure') { item.title = document.getElementById('title').value; item.desc = document.getElementById('desc').value; }
+            else if (type === 'faq') { item.question = document.getElementById('q').value; item.answer = document.getElementById('a').value; }
+            else if (type === 'announcement') { item.title = document.getElementById('title').value; item.content = document.getElementById('content').value; item.date = new Date().toLocaleDateString(); }
+            await saveToFirebase();
             renderApp();
-            alert('تم التعديل ✅');
+            showToast('تم التعديل ✅');
         });
     };
     
     window.deleteItem = async function(type, id) {
-        if(confirm('حذف؟')) {
-            if(type === 'job') jobs = jobs.filter(i => i.id !== id);
-            else if(type === 'policy') policies = policies.filter(i => i.id !== id);
-            else if(type === 'behavior') behaviors = behaviors.filter(i => i.id !== id);
-            else if(type === 'procedure') procedures = procedures.filter(i => i.id !== id);
-            else if(type === 'faq') faq = faq.filter(i => i.id !== id);
-            else if(type === 'announcement') announcements = announcements.filter(i => i.id !== id);
-            await saveAllToFirebase();
+        if (confirm('حذف؟')) {
+            if (type === 'job') jobs = jobs.filter(i => i.id !== id);
+            else if (type === 'policy') policies = policies.filter(i => i.id !== id);
+            else if (type === 'behavior') behaviors = behaviors.filter(i => i.id !== id);
+            else if (type === 'procedure') procedures = procedures.filter(i => i.id !== id);
+            else if (type === 'faq') faq = faq.filter(i => i.id !== id);
+            else if (type === 'announcement') announcements = announcements.filter(i => i.id !== id);
+            await saveToFirebase();
             renderApp();
-            alert('تم الحذف ✅');
+            showToast('تم الحذف ✅');
         }
     };
     
     window.editOrgDept = function(id) {
-        let dept = orgStructure.departments.find(d => d.id === id);
+        const dept = orgStructure.departments.find(d => d.id === id);
         showModal('تعديل القسم', `
             <div class="form-group"><label>اسم القسم</label><input id="name" value="${dept.name}"></div>
             <div class="form-group"><label>رئيس القسم</label><input id="head" value="${dept.head}"></div>
@@ -1027,18 +885,18 @@
             dept.name = document.getElementById('name').value;
             dept.head = document.getElementById('head').value;
             dept.members = parseInt(document.getElementById('members').value);
-            await saveAllToFirebase();
+            await saveToFirebase();
             renderApp();
-            alert('تم تعديل القسم ✅');
+            showToast('تم تعديل القسم ✅');
         });
     };
     
     window.deleteOrgDept = async function(id) {
-        if(confirm('حذف القسم؟')) {
+        if (confirm('حذف القسم؟')) {
             orgStructure.departments = orgStructure.departments.filter(d => d.id !== id);
-            await saveAllToFirebase();
+            await saveToFirebase();
             renderApp();
-            alert('تم الحذف ✅');
+            showToast('تم الحذف ✅');
         }
     };
     
@@ -1049,14 +907,14 @@
             <div class="form-group"><label>عدد الأعضاء</label><input id="members" type="number" value="1"></div>
         `, async () => {
             orgStructure.departments.push({ id: Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) });
-            await saveAllToFirebase();
+            await saveToFirebase();
             renderApp();
-            alert('تم إضافة القسم ✅');
+            showToast('تم إضافة القسم ✅');
         });
     };
     
     window.editOrgItem = function(type) {
-        if(type === 'ceo') {
+        if (type === 'ceo') {
             showModal('تعديل الإدارة العليا', `
                 <div class="form-group"><label>الاسم</label><input id="name" value="${orgStructure.ceo.name}"></div>
                 <div class="form-group"><label>رئيس الإدارة</label><input id="head" value="${orgStructure.ceo.head}"></div>
@@ -1065,16 +923,16 @@
                 orgStructure.ceo.name = document.getElementById('name').value;
                 orgStructure.ceo.head = document.getElementById('head').value;
                 orgStructure.ceo.members = parseInt(document.getElementById('members').value);
-                await saveAllToFirebase();
+                await saveToFirebase();
                 renderApp();
-                alert('تم التعديل ✅');
+                showToast('تم التعديل ✅');
             });
         }
     };
     
     window.editPerformance = function(jobTitle) {
-        let perf = performance[jobTitle];
-        let criteriaHtml = perf.criteria.map((c, idx) => `
+        const perf = performance[jobTitle];
+        const criteriaHtml = perf.criteria.map((c, idx) => `
             <div style="margin-bottom:10px; padding:10px; background:rgba(255,255,255,0.05); border-radius:10px;">
                 <div class="form-group"><label>اسم المعيار</label><input id="cName${idx}" value="${c.name}"></div>
                 <div style="display:flex; gap:10px;">
@@ -1085,12 +943,10 @@
             </div>
         `).join('');
         
-        showModal(`تعديل معايير التقييم - ${jobTitle} (5 معايير)`, `
-            ${criteriaHtml}
-        `, async () => {
-            let newCriteria = [];
-            for(let i = 0; i < perf.criteria.length; i++) {
-                if(document.getElementById(`cName${i}`)) {
+        showModal(`تعديل معايير التقييم - ${jobTitle} (5 معايير)`, criteriaHtml, async () => {
+            const newCriteria = [];
+            for (let i = 0; i < perf.criteria.length; i++) {
+                if (document.getElementById(`cName${i}`)) {
                     newCriteria.push({
                         name: document.getElementById(`cName${i}`).value,
                         value: parseInt(document.getElementById(`cValue${i}`).value),
@@ -1100,26 +956,29 @@
                 }
             }
             performance[jobTitle].criteria = newCriteria;
-            await saveAllToFirebase();
+            await saveToFirebase();
             renderApp();
-            alert('تم تعديل معايير التقييم ✅');
+            showToast('تم تعديل معايير التقييم ✅');
         });
     };
     
     function renderApp() {
-        if(!currentUser) { document.getElementById('app').innerHTML = renderLogin(); return; }
-        let isAdmin = currentUser.role === 'admin';
+        if (!currentUser) {
+            document.getElementById('app').innerHTML = renderLogin();
+            return;
+        }
+        const isAdmin = currentUser.role === 'admin';
         document.getElementById('app').innerHTML = `
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header"><div class="logo">🏢 HR SYSTEM</div><div style="font-size:10px; opacity:0.6;">متزامن مع السحابة ☁️</div></div>
-            <div class="nav-item ${currentPageVar === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
-            <div class="nav-item ${currentPageVar === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i> دليل الموظف</div>
-            <div class="nav-item ${currentPageVar === 'org' ? 'active' : ''}" data-page="org"><i class="fas fa-building"></i> الهيكل التنظيمي</div>
-            <div class="nav-item ${currentPageVar === 'company' ? 'active' : ''}" data-page="company"><i class="fas fa-flag-checkered"></i> عن الشركة</div>
-            <div class="nav-item ${currentPageVar === 'performance' ? 'active' : ''}" data-page="performance"><i class="fas fa-chart-line"></i> تقييم الأداء</div>
-            <div class="nav-item ${currentPageVar === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i> الإشعارات</div>
-            <div class="nav-item ${currentPageVar === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i> حسابي</div>
-            ${isAdmin ? `<div class="nav-item ${currentPageVar === 'admin' ? 'active' : ''}" data-page="admin"><i class="fas fa-cog"></i> لوحة التحكم</div>` : ''}
+            <div class="nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
+            <div class="nav-item ${currentPage === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i> دليل الموظف</div>
+            <div class="nav-item ${currentPage === 'org' ? 'active' : ''}" data-page="org"><i class="fas fa-building"></i> الهيكل التنظيمي</div>
+            <div class="nav-item ${currentPage === 'company' ? 'active' : ''}" data-page="company"><i class="fas fa-flag-checkered"></i> عن الشركة</div>
+            <div class="nav-item ${currentPage === 'performance' ? 'active' : ''}" data-page="performance"><i class="fas fa-chart-line"></i> تقييم الأداء</div>
+            <div class="nav-item ${currentPage === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i> الإشعارات</div>
+            <div class="nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i> حسابي</div>
+            ${isAdmin ? `<div class="nav-item ${currentPage === 'admin' ? 'active' : ''}" data-page="admin"><i class="fas fa-cog"></i> لوحة التحكم</div>` : ''}
             <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</div>
         </div>
         <div class="main-content">
@@ -1127,54 +986,54 @@
             <div id="pageContent"></div>
         </div>
         <div class="bottom-nav">
-            <div class="bottom-nav-item ${currentPageVar === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i><span>الرئيسية</span></div>
-            <div class="bottom-nav-item ${currentPageVar === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i><span>الدليل</span></div>
-            <div class="bottom-nav-item ${currentPageVar === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i><span>حسابي</span></div>
-            <div class="bottom-nav-item ${currentPageVar === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i><span>إشعارات</span></div>
+            <div class="bottom-nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i><span>الرئيسية</span></div>
+            <div class="bottom-nav-item ${currentPage === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i><span>الدليل</span></div>
+            <div class="bottom-nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i><span>حسابي</span></div>
+            <div class="bottom-nav-item ${currentPage === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i><span>إشعارات</span></div>
         </div>`;
         renderPage();
         attachEvents();
     }
     
     function getTitle() {
-        let titles = { home:"الرئيسية", guide:"دليل الموظف", org:"الهيكل التنظيمي", company:"عن الشركة", performance:"تقييم الأداء", notifications:"الإشعارات", profile:"حسابي", admin:"لوحة التحكم" };
-        return titles[currentPageVar] || "الرئيسية";
+        const titles = { home:"الرئيسية", guide:"دليل الموظف", org:"الهيكل التنظيمي", company:"عن الشركة", performance:"تقييم الأداء", notifications:"الإشعارات", profile:"حسابي", admin:"لوحة التحكم" };
+        return titles[currentPage] || "الرئيسية";
     }
     
     function renderPage() {
-        let pages = { home: renderHome, guide: renderGuide, org: renderOrg, company: renderCompany, performance: renderPerformance, notifications: renderNotifications, profile: renderProfile, admin: renderAdmin };
-        document.getElementById('pageContent').innerHTML = (pages[currentPageVar] || renderHome)();
+        const pages = { home: renderHome, guide: renderGuide, org: renderOrg, company: renderCompany, performance: renderPerformance, notifications: renderNotifications, profile: renderProfile, admin: renderAdmin };
+        document.getElementById('pageContent').innerHTML = (pages[currentPage] || renderHome)();
     }
     
     function attachEvents() {
         document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(el => {
-            let page = el.dataset.page;
-            if(page) el.onclick = () => { currentPageVar = page; renderApp(); };
+            const page = el.dataset.page;
+            if (page) el.onclick = () => { currentPage = page; renderApp(); };
         });
     }
     
-    // بدء التطبيق
-    async function initApp() {
-        // إخفاء شاشة التحميل بعد ثانية
+    // ========== بدء التطبيق ==========
+    async function init() {
+        // إخفاء شاشة التحميل
         setTimeout(() => {
-            const loadingScreen = document.getElementById('loadingScreen');
-            if(loadingScreen) loadingScreen.style.display = 'none';
+            const loading = document.getElementById('loading');
+            if (loading) loading.style.display = 'none';
         }, 1500);
         
         // تحميل البيانات من Firebase
         await loadFromFirebase();
         
-        // إعداد الاستماع للتحديثات الفورية
-        setupRealtimeSync();
+        // الاستماع للتغييرات
+        listenToFirebase();
         
         // استعادة جلسة المستخدم
-        let savedUser = sessionStorage.getItem('user');
-        if(savedUser) currentUser = JSON.parse(savedUser);
+        const savedUser = sessionStorage.getItem('user');
+        if (savedUser) currentUser = JSON.parse(savedUser);
         
         renderApp();
     }
     
-    initApp();
+    init();
 </script>
 
 <script>
