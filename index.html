@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>HR System | نظام إدارة الموارد البشرية</title>
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a1a2f">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -856,6 +859,21 @@
     renderApp();
     // حفظ البيانات بشكل أولي للتأكد من وجودها
     saveAll();
+</script>
+
+<!-- PWA Service Worker Registration -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js')
+            .then(function () {
+                console.log('Service Worker Registered ✅');
+            })
+            .catch(function (err) {
+                console.log('Service Worker Error ❌', err);
+            });
+    });
+}
 </script>
 </body>
 </html>
