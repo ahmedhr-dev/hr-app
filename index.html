@@ -218,7 +218,7 @@
 <div id="app"></div>
 
 <script>
-    // نظام إدارة الموارد البشرية - الإصدار 2.0
+    // نظام إدارة الموارد البشرية - الإصدار 2.0 (تم إصلاح مشكلة الحفظ)
     // Developer: Ahmed HR
     // GitHub: https://github.com/ahmedhr-dev/hr-app
     
@@ -321,6 +321,31 @@
         }
     };
     
+    // تحميل البيانات من localStorage عند بدء التطبيق (إذا وجدت)
+    function loadDataFromLocalStorage() {
+        const savedUsers = localStorage.getItem('hr_users');
+        const savedCompany = localStorage.getItem('hr_company');
+        const savedJobs = localStorage.getItem('hr_jobs');
+        const savedPolicies = localStorage.getItem('hr_policies');
+        const savedBehaviors = localStorage.getItem('hr_behaviors');
+        const savedProcedures = localStorage.getItem('hr_procedures');
+        const savedFaq = localStorage.getItem('hr_faq');
+        const savedAnnouncements = localStorage.getItem('hr_announcements');
+        const savedOrg = localStorage.getItem('hr_org_structure');
+        const savedPerf = localStorage.getItem('hr_performance');
+        
+        if (savedUsers) users = JSON.parse(savedUsers);
+        if (savedCompany) companyData = JSON.parse(savedCompany);
+        if (savedJobs) jobs = JSON.parse(savedJobs);
+        if (savedPolicies) policies = JSON.parse(savedPolicies);
+        if (savedBehaviors) behaviors = JSON.parse(savedBehaviors);
+        if (savedProcedures) procedures = JSON.parse(savedProcedures);
+        if (savedFaq) faq = JSON.parse(savedFaq);
+        if (savedAnnouncements) announcements = JSON.parse(savedAnnouncements);
+        if (savedOrg) orgStructure = JSON.parse(savedOrg);
+        if (savedPerf) performance = JSON.parse(savedPerf);
+    }
+    
     function saveAll() {
         localStorage.setItem('hr_users', JSON.stringify(users));
         localStorage.setItem('hr_company', JSON.stringify(companyData));
@@ -418,7 +443,7 @@
     }
     window.setGuideTab = function(tab) { guideTab = tab; renderApp(); };
     
-    let currentPage = "home";
+    let currentPageVar = "home";
     
     function getGreeting() {
         let h = new Date().getHours();
@@ -596,7 +621,9 @@
             companyData.vision = document.getElementById('compVision').value;
             companyData.mission = document.getElementById('compMission').value;
             if(document.getElementById('compLogo').value) companyData.logo = document.getElementById('compLogo').value;
-            saveAll(); renderApp(); alert('تم تحديث بيانات الشركة ✅');
+            saveAll(); 
+            renderApp(); 
+            alert('تم تحديث بيانات الشركة ✅');
         });
     };
     
@@ -605,7 +632,6 @@
             let reader = new FileReader();
             reader.onload = function(e) {
                 document.getElementById('compLogo').value = e.target.result;
-                companyData.logo = e.target.result;
             };
             reader.readAsDataURL(input.files[0]);
         }
@@ -615,12 +641,16 @@
         document.getElementById('logoFileInput').click();
     };
     
+    // دالة مساعدة لعرض النوافذ المنبثقة وحفظ البيانات بشكل موحد
     function showModal(title, html, onSave) {
         let modal = document.createElement('div');
         modal.className = 'modal';
         modal.innerHTML = `<div class="modal-content"><h3>${title}</h3>${html}<div style="margin-top:15px;"><button class="btn" onclick="saveModal(this)">حفظ</button><button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()">إلغاء</button></div></div>`;
         document.body.appendChild(modal);
-        window.saveModal = (btn) => { onSave(); btn.closest('.modal').remove(); };
+        window.saveModal = (btn) => { 
+            onSave(); 
+            btn.closest('.modal').remove(); 
+        };
     }
     
     window.showAddModal = function(type) {
@@ -641,7 +671,9 @@
             else if(type === 'faq') faq.push({ id: Date.now(), question: document.getElementById('q').value, answer: document.getElementById('a').value });
             else if(type === 'announcement') announcements.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, date: new Date().toLocaleDateString() });
             else if(type === 'dept') orgStructure.departments.push({ id: Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) });
-            saveAll(); renderApp(); alert('تم الإضافة ✅');
+            saveAll(); 
+            renderApp(); 
+            alert('تم الإضافة ✅');
         });
     };
     
@@ -660,7 +692,9 @@
             else if(type === 'procedure') { item.title = document.getElementById('title').value; item.desc = document.getElementById('desc').value; }
             else if(type === 'faq') { item.question = document.getElementById('q').value; item.answer = document.getElementById('a').value; }
             else if(type === 'announcement') { item.title = document.getElementById('title').value; item.content = document.getElementById('content').value; item.date = new Date().toLocaleDateString(); }
-            saveAll(); renderApp(); alert('تم التعديل ✅');
+            saveAll(); 
+            renderApp(); 
+            alert('تم التعديل ✅');
         });
     };
     
@@ -672,7 +706,9 @@
             else if(type === 'procedure') procedures = procedures.filter(i => i.id !== id);
             else if(type === 'faq') faq = faq.filter(i => i.id !== id);
             else if(type === 'announcement') announcements = announcements.filter(i => i.id !== id);
-            saveAll(); renderApp(); alert('تم الحذف ✅');
+            saveAll(); 
+            renderApp(); 
+            alert('تم الحذف ✅');
         }
     };
     
@@ -686,14 +722,18 @@
             dept.name = document.getElementById('name').value;
             dept.head = document.getElementById('head').value;
             dept.members = parseInt(document.getElementById('members').value);
-            saveAll(); renderApp(); alert('تم تعديل القسم ✅');
+            saveAll(); 
+            renderApp(); 
+            alert('تم تعديل القسم ✅');
         });
     };
     
     window.deleteOrgDept = function(id) {
         if(confirm('حذف القسم؟')) {
             orgStructure.departments = orgStructure.departments.filter(d => d.id !== id);
-            saveAll(); renderApp(); alert('تم الحذف ✅');
+            saveAll(); 
+            renderApp(); 
+            alert('تم الحذف ✅');
         }
     };
     
@@ -704,7 +744,9 @@
             <div class="form-group"><label>عدد الأعضاء</label><input id="members" type="number" value="1"></div>
         `, () => {
             orgStructure.departments.push({ id: Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) });
-            saveAll(); renderApp(); alert('تم إضافة القسم ✅');
+            saveAll(); 
+            renderApp(); 
+            alert('تم إضافة القسم ✅');
         });
     };
     
@@ -718,7 +760,9 @@
                 orgStructure.ceo.name = document.getElementById('name').value;
                 orgStructure.ceo.head = document.getElementById('head').value;
                 orgStructure.ceo.members = parseInt(document.getElementById('members').value);
-                saveAll(); renderApp(); alert('تم التعديل ✅');
+                saveAll(); 
+                renderApp(); 
+                alert('تم التعديل ✅');
             });
         }
     };
@@ -751,11 +795,11 @@
                 }
             }
             performance[jobTitle].criteria = newCriteria;
-            saveAll(); renderApp(); alert('تم تعديل معايير التقييم ✅');
+            saveAll(); 
+            renderApp(); 
+            alert('تم تعديل معايير التقييم ✅');
         });
     };
-    
-    let currentPageVar = "home";
     
     function renderApp() {
         if(!currentUser) { document.getElementById('app').innerHTML = renderLogin(); return; }
@@ -804,9 +848,13 @@
         });
     }
     
+    // تحميل البيانات المحفوظة عند بدء التطبيق
+    loadDataFromLocalStorage();
+    
     let savedUser = sessionStorage.getItem('user');
     if(savedUser) currentUser = JSON.parse(savedUser);
     renderApp();
+    // حفظ البيانات بشكل أولي للتأكد من وجودها
     saveAll();
 </script>
 </body>
