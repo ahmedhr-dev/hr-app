@@ -4,40 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>دليل الموظف | HR Guide</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Firebase -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
-            authDomain: "hr-app-710f3.firebaseapp.com",
-            databaseURL: "https://hr-app-710f3-default-rtdb.firebaseio.com",
-            projectId: "hr-app-710f3",
-            storageBucket: "hr-app-710f3.firebasestorage.app",
-            messagingSenderId: "324936659395",
-            appId: "1:324936659395:web:bb5d491b52be3013c00d76",
-            measurementId: "G-6K3SCQTFW7"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        
-        window.db = db;
-        window.ref = ref;
-        window.set = set;
-        window.get = get;
-        window.onValue = onValue;
-        
-        console.log("✅ Firebase جاهز");
-    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Cairo', 'Segoe UI', sans-serif;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
             background: linear-gradient(145deg, #0a1a2f, #061220);
             direction: rtl;
             color: #fff;
@@ -56,9 +30,10 @@
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
         .login-card h2 { text-align: center; color: #d4af37; margin-bottom: 20px; }
-        .login-card input { width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.3); border-radius: 30px; color: white; }
-        .btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; transition: 0.2s; }
-        .btn:hover { transform: scale(1.02); }
+        .login-card input { width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.3); border-radius: 30px; color: white; font-size: 16px; }
+        .login-card input::placeholder { color: rgba(255,255,255,0.5); }
+        .btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .btn:hover { transform: scale(1.02); opacity: 0.9; }
         .register-link { text-align: center; margin-top: 15px; font-size: 13px; }
         .register-link span { color: #d4af37; cursor: pointer; }
         .register-form { display: none; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(212,175,55,0.2); }
@@ -85,7 +60,7 @@
         }
         .nav-item:hover { background: rgba(212,175,55,0.15); color: #d4af37; }
         .nav-item.active { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
-        .nav-item i { width: 25px; }
+        .nav-item i { width: 25px; font-size: 18px; }
         
         /* المحتوى الرئيسي */
         .main-content { margin-right: 270px; padding: 20px; }
@@ -96,8 +71,8 @@
         }
         .page-title { font-size: 22px; color: #d4af37; font-weight: bold; }
         .avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .avatar i { font-size: 20px; color: #0a1a2f; }
         
-        /* القائمة السفلية للجوال */
         .bottom-nav {
             display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #0a1a2f;
             padding: 10px 12px 25px; justify-content: space-around; z-index: 150;
@@ -110,11 +85,11 @@
         .bottom-nav-item.active { color: #d4af37; background: rgba(212,175,55,0.15); }
         .bottom-nav-item i { font-size: 22px; }
         
-        /* البطاقات */
         .card { background: rgba(10, 26, 47, 0.9); border-radius: 20px; padding: 18px; margin-bottom: 18px; border: 1px solid rgba(212,175,55,0.2); }
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
         .stat-card { background: rgba(10, 26, 47, 0.9); border-radius: 16px; padding: 15px; text-align: center; }
         .stat-number { font-size: 28px; font-weight: bold; color: #d4af37; }
+        .stat-card i { font-size: 24px; margin-bottom: 8px; color: #d4af37; }
         
         .hero-section {
             background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(10,26,47,0.9));
@@ -124,7 +99,6 @@
         .hero-image { width: 70px; height: 70px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .hero-image i { font-size: 35px; color: #0a1a2f; }
         
-        /* تبويبات الدليل */
         .guide-tabs { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .guide-tab { padding: 6px 15px; border-radius: 30px; cursor: pointer; background: rgba(212,175,55,0.1); }
         .guide-tab.active { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
@@ -141,10 +115,9 @@
         }
         .guide-item:hover { border-color: #d4af37; }
         
-        /* نوافذ منبثقة */
         .modal {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.8);
             display: flex; align-items: center; justify-content: center; z-index: 1000;
         }
         .modal-content {
@@ -159,7 +132,6 @@
             border: 1px solid rgba(212,175,55,0.3); border-radius: 12px; color: white;
         }
         
-        /* لوحة التحكم */
         .admin-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -175,7 +147,25 @@
             transition: 0.2s;
         }
         .admin-card:hover { background: rgba(212,175,55,0.15); transform: translateY(-2px); }
-        .admin-card i { font-size: 26px; color: #d4af37; margin-bottom: 6px; }
+        .admin-card i { font-size: 26px; color: #d4af37; margin-bottom: 6px; display: block; }
+        
+        .org-ceo {
+            background: linear-gradient(135deg, #d4af37, #b8960c);
+            border-radius: 18px;
+            padding: 15px;
+            text-align: center;
+            color: #0a1a2f;
+            cursor: pointer;
+        }
+        .org-dept {
+            background: rgba(10, 26, 47, 0.8);
+            border-radius: 14px;
+            padding: 12px;
+            min-width: 140px;
+            text-align: center;
+            border: 1px solid rgba(212,175,55,0.3);
+            cursor: pointer;
+        }
         
         .menu-toggle { display: none; background: none; border: none; font-size: 24px; color: white; cursor: pointer; }
         
@@ -184,14 +174,13 @@
             bottom: 20px;
             right: 20px;
             left: 20px;
-            max-width: 380px;
+            max-width: 350px;
             margin: 0 auto;
             background: #4caf50;
             color: white;
-            padding: 14px 20px;
+            padding: 12px 20px;
             border-radius: 30px;
             z-index: 10000;
-            font-weight: bold;
             text-align: center;
             transform: translateY(100px);
             transition: 0.3s ease;
@@ -206,6 +195,7 @@
             .bottom-nav { display: flex; }
             .menu-toggle { display: block; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .admin-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -213,12 +203,7 @@
 <div id="app"></div>
 
 <script>
-    // ========================================
-    // دليل الموظف - مزامنة فورية مع Firebase
-    // جميع التعديلات تظهر لكل المستخدمين فوراً
-    // ========================================
-    
-    // -------------------- البيانات --------------------
+    // بيانات أولية بسيطة
     let users = [{ id: 1, email: "admin@hr.com", password: "admin123", name: "المدير", role: "admin", jobTitle: "مدير" }];
     let currentUser = null;
     let currentPage = "home";
@@ -226,150 +211,84 @@
     
     let policies = [
         { id: 1, title: "سياسة الإجازة السنوية", description: "21 يوم إجازة مدفوعة", content: "يحق للموظف 21 يوم إجازة سنوية مدفوعة الأجر" },
-        { id: 2, title: "سياسة سلفة الراتب", description: "سلفة تصل 50%", content: "بعد 6 أشهر يحق للموظف طلب سلفة تصل 50% من الراتب" }
+        { id: 2, title: "سياسة سلفة الراتب", description: "سلفة تصل 50%", content: "بعد 6 أشهر يحق للموظف طلب سلفة" }
     ];
     
     let behaviors = [
-        { id: 1, title: "الاحترافية", desc: "الحفاظ على سلوك محترم مع جميع الزملاء" },
+        { id: 1, title: "الاحترافية", desc: "الحفاظ على سلوك محترم مع الزملاء" },
         { id: 2, title: "الالتزام بالمواعيد", desc: "الحضور في الوقت المحدد" }
     ];
     
     let procedures = [
-        { id: 1, title: "تقديم إجازة", desc: "سجل الدخول → اختار الإجازات → حدد التواريخ" },
-        { id: 2, title: "تقديم شكوى", desc: "قسم الشكاوى → اكتب الشكوى → إرسال" }
+        { id: 1, title: "تقديم إجازة", desc: "سجل الدخول واختر الإجازات" },
+        { id: 2, title: "تقديم شكوى", desc: "اكتب الشكوى في قسم الشكاوى" }
     ];
     
     let faq = [
-        { id: 1, question: "ما هي سياسة الإجازة؟", answer: "21 يوم إجازة سنوية مدفوعة" }
+        { id: 1, question: "ما هي سياسة الإجازة؟", answer: "21 يوم إجازة سنوية" }
     ];
     
     let announcements = [
-        { id: 1, title: "مرحباً بكم", content: "نرحب بكم في دليل الموظف", date: new Date().toLocaleDateString() }
+        { id: 1, title: "مرحباً", content: "مرحباً بكم في دليل الموظف", date: new Date().toLocaleDateString() }
     ];
     
     let companyData = {
         name: "شركة التميز للاستشارات",
-        logo: null,
         vision: "الريادة في تقديم الحلول المتميزة",
-        mission: "تقديم خدمات مبتكرة تخلق قيمة لعملائنا",
-        values: [
-            { name: "النزاهة", icon: "fas fa-handshake", desc: "نلتزم بأعلى المعايير" },
-            { name: "الابتكار", icon: "fas fa-lightbulb", desc: "نتبنى الإبداع" },
-            { name: "التميز", icon: "fas fa-trophy", desc: "نطمح للأفضل" }
-        ]
+        mission: "تقديم خدمات مبتكرة لعملائنا"
     };
     
     let orgStructure = {
-        ceo: { name: "الإدارة العليا", head: "المدير التنفيذي", members: 5 },
+        ceo: { name: "مجلس الإدارة", head: "المدير التنفيذي", members: 5 },
         departments: [
-            { id: 1, name: "الموارد البشرية", head: "مدير الموارد", members: 12 },
-            { id: 2, name: "التقنية", head: "مدير التقنية", members: 20 }
+            { id: 1, name: "الموارد البشرية", head: "مدير الموارد", members: 12 }
         ]
     };
     
-    // -------------------- دوال Firebase --------------------
-    let isSyncing = false;
-    
-    async function saveToFirebase() {
-        if (isSyncing) return;
-        const data = { users, policies, behaviors, procedures, faq, announcements, companyData, orgStructure, updated: Date.now() };
-        try {
-            await window.set(window.ref(window.db, 'hr-guide'), data);
-            console.log("✅ حفظ في Firebase");
-        } catch(e) { console.log("❌ فشل الحفظ"); }
-    }
-    
-    async function loadFromFirebase() {
-        try {
-            const snapshot = await window.get(window.ref(window.db, 'hr-guide'));
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                users = data.users || users;
-                policies = data.policies || policies;
-                behaviors = data.behaviors || behaviors;
-                procedures = data.procedures || procedures;
-                faq = data.faq || faq;
-                announcements = data.announcements || announcements;
-                companyData = data.companyData || companyData;
-                orgStructure = data.orgStructure || orgStructure;
-                console.log("✅ تحميل من Firebase");
-                return true;
-            } else {
-                await saveToFirebase();
-                return true;
-            }
-        } catch(e) { console.log("❌ فشل التحميل"); return false; }
-    }
-    
-    function listenToFirebase() {
-        const dataRef = window.ref(window.db, 'hr-guide');
-        window.onValue(dataRef, async (snapshot) => {
-            if (snapshot.exists() && !isSyncing) {
-                isSyncing = true;
-                const data = snapshot.val();
-                let needRender = false;
-                
-                if (JSON.stringify(policies) !== JSON.stringify(data.policies)) {
-                    policies = data.policies; needRender = true;
-                }
-                if (JSON.stringify(behaviors) !== JSON.stringify(data.behaviors)) {
-                    behaviors = data.behaviors; needRender = true;
-                }
-                if (JSON.stringify(procedures) !== JSON.stringify(data.procedures)) {
-                    procedures = data.procedures; needRender = true;
-                }
-                if (JSON.stringify(faq) !== JSON.stringify(data.faq)) {
-                    faq = data.faq; needRender = true;
-                }
-                if (JSON.stringify(announcements) !== JSON.stringify(data.announcements)) {
-                    announcements = data.announcements; needRender = true;
-                }
-                if (JSON.stringify(companyData) !== JSON.stringify(data.companyData)) {
-                    companyData = data.companyData; needRender = true;
-                }
-                
-                if (needRender && currentUser) {
-                    renderApp();
-                    showToast("🔄 تم تحديث البيانات من جهاز آخر");
-                }
-                isSyncing = false;
-            }
-        });
-    }
-    
-    // -------------------- دوال التطبيق --------------------
+    // دوال مساعدة
     function showToast(msg, isError = false) {
         let toast = document.createElement('div');
         toast.className = 'toast';
         if (isError) toast.classList.add('error');
-        toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> ${msg}`;
+        toast.innerHTML = msg;
         document.body.appendChild(toast);
         setTimeout(() => toast.classList.add('show'), 100);
-        setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 500); }, 3000);
+        setTimeout(() => { toast.remove(); }, 3000);
     }
     
     function login(email, pass) {
         let user = users.find(u => u.email === email && u.password === pass);
-        if (user) { currentUser = user; sessionStorage.setItem('user', JSON.stringify(user)); renderApp(); return true; }
+        if (user) {
+            currentUser = user;
+            sessionStorage.setItem('user', JSON.stringify(user));
+            renderApp();
+            return true;
+        }
         return false;
     }
     
-    async function register(name, email, pass, confirm) {
+    function register(name, email, pass, confirm) {
         if (pass !== confirm) { showToast("كلمة المرور غير متطابقة", true); return false; }
-        if (users.find(u => u.email === email)) { showToast("البريد موجود مسبقاً", true); return false; }
+        if (users.find(u => u.email === email)) { showToast("البريد موجود", true); return false; }
         users.push({ id: Date.now(), name, email, password: pass, role: "employee", jobTitle: "موظف" });
-        await saveToFirebase();
-        showToast("تم التسجيل بنجاح");
+        showToast("تم التسجيل");
         return true;
     }
     
     function logout() { currentUser = null; sessionStorage.removeItem('user'); renderApp(); }
     
-    // -------------------- دوال العرض --------------------
+    function showDetail(title, content) {
+        let modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `<div class="modal-content"><h3 style="color:#d4af37;">${title}</h3><div style="margin:15px 0;">${content}</div><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div>`;
+        document.body.appendChild(modal);
+    }
+    
+    // دوال العرض
     function renderLogin() {
         return `<div class="login-container"><div class="login-card">
-            <div style="text-align:center;"><div style="width:60px;height:60px;background:linear-gradient(135deg,#d4af37,#b8960c);border-radius:20px;margin:0 auto;display:flex;align-items:center;justify-content:center;"><i class="fas fa-book"></i></div><h2>دليل الموظف</h2><p style="font-size:12px">نظام متزامن ☁️</p></div>
-            <input type="email" id="loginEmail" placeholder="البريد" value="admin@hr.com">
+            <div style="text-align:center;"><div style="width:60px;height:60px;background:linear-gradient(135deg,#d4af37,#b8960c);border-radius:20px;margin:0 auto;display:flex;align-items:center;justify-content:center;"><i class="fas fa-book" style="font-size:28px;color:#0a1a2f;"></i></div><h2>دليل الموظف</h2><p style="font-size:12px;">نظام متزامن مع السحابة ☁️</p></div>
+            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" value="admin@hr.com">
             <input type="password" id="loginPass" placeholder="كلمة المرور" value="admin123">
             <button class="btn" onclick="doLogin()">دخول</button>
             <div class="register-link">حساب جديد؟ <span onclick="toggleReg()">إنشاء حساب</span></div>
@@ -383,68 +302,96 @@
         </div></div>`;
     }
     
-    window.doLogin = function() { login(document.getElementById('loginEmail').value, document.getElementById('loginPass').value) || showToast("بيانات غير صحيحة", true); };
-    window.doRegister = async function() {
-        let n=document.getElementById('regName').value, e=document.getElementById('regEmail').value, p=document.getElementById('regPass').value, c=document.getElementById('regConfirm').value;
-        if(await register(n,e,p,c)) toggleReg();
+    window.doLogin = function() {
+        let email = document.getElementById('loginEmail').value;
+        let pass = document.getElementById('loginPass').value;
+        if (!login(email, pass)) showToast("بيانات غير صحيحة", true);
     };
-    window.toggleReg = function() { document.getElementById('regForm').classList.toggle('show'); };
     
-    function showDetail(title, content) {
-        let modal = document.createElement('div'); modal.className='modal';
-        modal.innerHTML = `<div class="modal-content"><h3 style="color:#d4af37;">${title}</h3><div style="margin:15px 0;">${content}</div><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div>`;
-        document.body.appendChild(modal);
-    }
+    window.doRegister = function() {
+        let n = document.getElementById('regName').value;
+        let e = document.getElementById('regEmail').value;
+        let p = document.getElementById('regPass').value;
+        let c = document.getElementById('regConfirm').value;
+        if (register(n, e, p, c)) toggleReg();
+    };
+    
+    window.toggleReg = function() {
+        document.getElementById('regForm').classList.toggle('show');
+    };
     
     function renderGuide() {
         let items = [];
-        if(guideTab === 'policies') items = policies.map(p => `<div class="guide-item" onclick="showDetail('${p.title}','<strong>${p.description}</strong><br><br>${p.content}')"><div><strong>${p.title}</strong><br><small>${p.description.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
-        else if(guideTab === 'procedures') items = procedures.map(p => `<div class="guide-item" onclick="showDetail('${p.title}','${p.desc}')"><div><strong>${p.title}</strong><br><small>${p.desc.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
-        else items = behaviors.map(b => `<div class="guide-item" onclick="showDetail('${b.title}','${b.desc}')"><div><strong>${b.title}</strong><br><small>${b.desc.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
-        return `<div class="card"><div class="guide-tabs"><div class="guide-tab ${guideTab==='policies'?'active':''}" onclick="setGuideTab('policies')">📜 السياسات</div><div class="guide-tab ${guideTab==='procedures'?'active':''}" onclick="setGuideTab('procedures')">📋 الإجراءات</div><div class="guide-tab ${guideTab==='behaviors'?'active':''}" onclick="setGuideTab('behaviors')">🤝 السلوكيات</div></div>${items.join('')}</div><div class="card"><h3>❓ أسئلة شائعة</h3>${faq.map(f=>`<div style="padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><strong>${f.question}</strong><br>${f.answer}</div>`).join('')}</div>`;
+        if (guideTab === 'policies') {
+            items = policies.map(p => `<div class="guide-item" onclick="showDetail('${p.title}','<strong>${p.description}</strong><br><br>${p.content}')"><div><strong>${p.title}</strong><br><small>${p.description.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
+        } else if (guideTab === 'procedures') {
+            items = procedures.map(p => `<div class="guide-item" onclick="showDetail('${p.title}','${p.desc}')"><div><strong>${p.title}</strong><br><small>${p.desc.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
+        } else {
+            items = behaviors.map(b => `<div class="guide-item" onclick="showDetail('${b.title}','${b.desc}')"><div><strong>${b.title}</strong><br><small>${b.desc.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
+        }
+        return `<div class="card"><div class="guide-tabs"><div class="guide-tab ${guideTab==='policies'?'active':''}" onclick="setGuideTab('policies')">📜 السياسات</div><div class="guide-tab ${guideTab==='procedures'?'active':''}" onclick="setGuideTab('procedures')">📋 الإجراءات</div><div class="guide-tab ${guideTab==='behaviors'?'active':''}" onclick="setGuideTab('behaviors')">🤝 السلوكيات</div></div>${items.join('')}</div>
+        <div class="card"><h3>❓ أسئلة شائعة</h3>${faq.map(f=>`<div style="padding:10px;"><strong>${f.question}</strong><br>${f.answer}</div>`).join('')}</div>`;
     }
+    
     window.setGuideTab = function(tab) { guideTab = tab; renderApp(); };
     
-    function getGreeting() { let h=new Date().getHours(); if(h<12) return "صباح الخير"; if(h<17) return "مساء الخير"; return "مساء النور"; }
-    
-    function renderHome() {
-        return `<div class="hero-section"><div><div style="font-size:24px;font-weight:bold;color:#d4af37;">${getGreeting()}، ${currentUser?.name || 'موظف'} 👋</div><div><i class="fas fa-briefcase"></i> ${currentUser?.jobTitle || 'موظف'}</div><div><i class="fas fa-cloud"></i> نظام متزامن مع السحابة</div></div><div class="hero-image"><i class="fas fa-book"></i></div></div>
-        <div class="stats-grid"><div class="stat-card"><div class="stat-number">${policies.length}</div><div>سياسات</div></div><div class="stat-card"><div class="stat-number">${behaviors.length}</div><div>سلوكيات</div></div><div class="stat-card"><div class="stat-number">${procedures.length}</div><div>إجراءات</div></div><div class="stat-card"><div class="stat-number">${faq.length}</div><div>أسئلة</div></div></div>`;
+    function getGreeting() {
+        let h = new Date().getHours();
+        if (h < 12) return "صباح الخير";
+        if (h < 17) return "مساء الخير";
+        return "مساء النور";
     }
     
-    function renderCompany() { return `<div class="card"><h2 style="color:#d4af37;text-align:center;">${companyData.name}</h2></div><div class="card"><h3>الرؤية</h3><p>${companyData.vision}</p></div><div class="card"><h3>الرسالة</h3><p>${companyData.mission}</p></div>`; }
-    function renderOrg() { return `<div class="card"><div class="org-ceo" style="background:linear-gradient(135deg,#d4af37,#b8960c);border-radius:18px;padding:15px;text-align:center;color:#0a1a2f;"><i class="fas fa-crown"></i><h3>${orgStructure.ceo.name}</h3><p>${orgStructure.ceo.head}</p></div><div style="display:flex;flex-wrap:wrap;gap:15px;margin-top:15px;">${orgStructure.departments.map(d=>`<div style="background:rgba(10,26,47,0.8);border-radius:14px;padding:12px;flex:1;min-width:120px;text-align:center;"><i class="fas fa-building"></i><h4>${d.name}</h4><p>${d.head}</p></div>`).join('')}</div></div>`; }
-    function renderNotifications() { return `<div class="card"><h3>📢 الإعلانات</h3>${announcements.map(a=>`<div style="padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><strong>${a.title}</strong><br>${a.content}<br><small>${a.date}</small></div>`).join('')}</div>`; }
-    function renderProfile() { return `<div class="card"><h3>👤 حسابي</h3><div class="form-group"><label>الاسم</label><input id="pName" value="${currentUser?.name||''}"></div><div class="form-group"><label>البريد</label><input id="pEmail" value="${currentUser?.email||''}"></div><button class="btn" onclick="updateProfile()">💾 حفظ</button><button class="btn" style="margin-top:10px;background:#ef4444;" onclick="logout()">🚪 خروج</button></div>`; }
-    async function updateProfile() { currentUser.name=document.getElementById('pName').value; currentUser.email=document.getElementById('pEmail').value; let idx=users.findIndex(u=>u.id===currentUser.id); if(idx!==-1) users[idx]=currentUser; await saveToFirebase(); showToast("تم حفظ البيانات"); renderApp(); }
+    function renderHome() {
+        return `<div class="hero-section"><div><div style="font-size:24px;font-weight:bold;color:#d4af37;">${getGreeting()}، ${currentUser?.name || 'موظف'} 👋</div><div><i class="fas fa-briefcase"></i> ${currentUser?.jobTitle || 'موظف'}</div><div><i class="fas fa-cloud"></i> مرحباً بك في دليل الموظف</div></div><div class="hero-image"><i class="fas fa-book"></i></div></div>
+        <div class="stats-grid"><div class="stat-card"><i class="fas fa-file-alt"></i><div class="stat-number">${policies.length}</div><div>سياسات</div></div><div class="stat-card"><i class="fas fa-handshake"></i><div class="stat-number">${behaviors.length}</div><div>سلوكيات</div></div><div class="stat-card"><i class="fas fa-list-ol"></i><div class="stat-number">${procedures.length}</div><div>إجراءات</div></div><div class="stat-card"><i class="fas fa-question-circle"></i><div class="stat-number">${faq.length}</div><div>أسئلة</div></div></div>`;
+    }
+    
+    function renderCompany() {
+        return `<div class="card"><h2 style="color:#d4af37; text-align:center;">${companyData.name}</h2></div>
+        <div class="card"><h3>الرؤية</h3><p>${companyData.vision}</p></div>
+        <div class="card"><h3>الرسالة</h3><p>${companyData.mission}</p></div>`;
+    }
+    
+    function renderOrg() {
+        return `<div class="card"><div class="org-ceo" style="margin-bottom:15px;"><i class="fas fa-crown"></i><h3>${orgStructure.ceo.name}</h3><p>${orgStructure.ceo.head}</p></div><div style="display:flex;flex-wrap:wrap;gap:15px;">${orgStructure.departments.map(d=>`<div class="org-dept"><i class="fas fa-building"></i><h4>${d.name}</h4><p>${d.head}</p></div>`).join('')}</div></div>`;
+    }
+    
+    function renderNotifications() {
+        return `<div class="card"><h3>📢 الإعلانات</h3>${announcements.map(a=>`<div style="padding:10px;"><strong>${a.title}</strong><br>${a.content}<br><small>${a.date}</small></div>`).join('')}</div>`;
+    }
+    
+    function renderProfile() {
+        return `<div class="card"><h3>👤 حسابي</h3><div class="form-group"><label>الاسم</label><input id="pName" value="${currentUser?.name||''}"></div><div class="form-group"><label>البريد</label><input id="pEmail" value="${currentUser?.email||''}"></div><button class="btn" onclick="updateProfile()">💾 حفظ</button><button class="btn" style="margin-top:10px;background:#ef4444;" onclick="logout()">🚪 خروج</button></div>`;
+    }
+    
+    function updateProfile() {
+        currentUser.name = document.getElementById('pName').value;
+        currentUser.email = document.getElementById('pEmail').value;
+        let idx = users.findIndex(u => u.id === currentUser.id);
+        if (idx !== -1) users[idx] = currentUser;
+        showToast("تم حفظ البيانات");
+        renderApp();
+    }
     
     function renderAdmin() {
-        if(currentUser?.role!=='admin') return '<div class="card">🔒 هذه الصفحة للمدير فقط</div>';
+        if (currentUser?.role !== 'admin') return '<div class="card">🔒 للمدير فقط</div>';
         return `<div class="card"><h3>⚙️ لوحة التحكم</h3><div class="admin-grid">
             <div class="admin-card" onclick="showAddModal('policy')"><i class="fas fa-file-alt"></i><div>إضافة سياسة</div></div>
             <div class="admin-card" onclick="showAddModal('behavior')"><i class="fas fa-handshake"></i><div>إضافة سلوك</div></div>
-            <div class="admin-card" onclick="showAddModal('procedure')"><i class="fas fa-list"></i><div>إضافة إجراء</div></div>
+            <div class="admin-card" onclick="showAddModal('procedure')"><i class="fas fa-list-ol"></i><div>إضافة إجراء</div></div>
             <div class="admin-card" onclick="showAddModal('faq')"><i class="fas fa-question"></i><div>إضافة سؤال</div></div>
             <div class="admin-card" onclick="showAddModal('announcement')"><i class="fas fa-bell"></i><div>إضافة إعلان</div></div>
-            <div class="admin-card" onclick="editCompanyData()"><i class="fas fa-building"></i><div>تعديل الشركة</div></div>
         </div></div>
-        <div class="card"><h4>📜 السياسات</h4>${policies.map(p=>`<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${p.title}</strong></span><span><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('policy',${p.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('policy',${p.id})">🗑️</button></span></div>`).join('')}</div>
-        <div class="card"><h4>🤝 السلوكيات</h4>${behaviors.map(b=>`<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${b.title}</strong></span><span><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('behavior',${b.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('behavior',${b.id})">🗑️</button></span></div>`).join('')}</div>
-        <div class="card"><h4>📋 الإجراءات</h4>${procedures.map(p=>`<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${p.title}</strong></span><span><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('procedure',${p.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('procedure',${p.id})">🗑️</button></span></div>`).join('')}</div>`;
+        <div class="card"><h4>📜 السياسات</h4>${policies.map(p=>`<div style="display:flex;justify-content:space-between;padding:10px;"><span><strong>${p.title}</strong></span><span><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('policy',${p.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('policy',${p.id})">🗑️</button></span></div>`).join('')}</div>
+        <div class="card"><h4>🤝 السلوكيات</h4>${behaviors.map(b=>`<div style="display:flex;justify-content:space-between;padding:10px;"><span><strong>${b.title}</strong></span><span><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('behavior',${b.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('behavior',${b.id})">🗑️</button></span></div>`).join('')}</div>
+        <div class="card"><h4>📋 الإجراءات</h4>${procedures.map(p=>`<div style="display:flex;justify-content:space-between;padding:10px;"><span><strong>${p.title}</strong></span><span><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('procedure',${p.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('procedure',${p.id})">🗑️</button></span></div>`).join('')}</div>`;
     }
     
-    window.editCompanyData = function() {
-        showModal('تعديل بيانات الشركة', `<div class="form-group"><label>اسم الشركة</label><input id="compName" value="${companyData.name}"></div><div class="form-group"><label>الرؤية</label><textarea id="compVision">${companyData.vision}</textarea></div><div class="form-group"><label>الرسالة</label><textarea id="compMission">${companyData.mission}</textarea></div>`, async ()=>{
-            companyData.name=document.getElementById('compName').value;
-            companyData.vision=document.getElementById('compVision').value;
-            companyData.mission=document.getElementById('compMission').value;
-            await saveToFirebase(); renderApp(); showToast("تم التحديث");
-        });
-    };
-    
     function showModal(title, html, onSave) {
-        let modal = document.createElement('div'); modal.className='modal';
-        modal.innerHTML=`<div class="modal-content"><h3>${title}</h3>${html}<div style="margin-top:15px;"><button class="btn" onclick="saveModal(this)">حفظ</button><button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()">إلغاء</button></div></div>`;
+        let modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `<div class="modal-content"><h3>${title}</h3>${html}<div style="margin-top:15px;"><button class="btn" onclick="saveModal(this)">حفظ</button><button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()">إلغاء</button></div></div>`;
         document.body.appendChild(modal);
         window.saveModal = async (btn) => { await onSave(); btn.closest('.modal').remove(); };
     }
@@ -458,72 +405,100 @@
             announcement: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="2"></textarea></div>'
         };
         showModal('إضافة', fields[type], async () => {
-            if(type==='policy') policies.push({ id:Date.now(), title:document.getElementById('title').value, description:document.getElementById('desc').value, content:document.getElementById('content').value });
-            else if(type==='behavior') behaviors.push({ id:Date.now(), title:document.getElementById('title').value, desc:document.getElementById('desc').value });
-            else if(type==='procedure') procedures.push({ id:Date.now(), title:document.getElementById('title').value, desc:document.getElementById('desc').value });
-            else if(type==='faq') faq.push({ id:Date.now(), question:document.getElementById('q').value, answer:document.getElementById('a').value });
-            else if(type==='announcement') announcements.push({ id:Date.now(), title:document.getElementById('title').value, content:document.getElementById('content').value, date:new Date().toLocaleDateString() });
-            await saveToFirebase(); renderApp(); showToast("تم الإضافة");
+            if (type === 'policy') policies.push({ id: Date.now(), title: document.getElementById('title').value, description: document.getElementById('desc').value, content: document.getElementById('content').value });
+            else if (type === 'behavior') behaviors.push({ id: Date.now(), title: document.getElementById('title').value, desc: document.getElementById('desc').value });
+            else if (type === 'procedure') procedures.push({ id: Date.now(), title: document.getElementById('title').value, desc: document.getElementById('desc').value });
+            else if (type === 'faq') faq.push({ id: Date.now(), question: document.getElementById('q').value, answer: document.getElementById('a').value });
+            else if (type === 'announcement') announcements.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, date: new Date().toLocaleDateString() });
+            renderApp();
+            showToast("تمت الإضافة");
         });
     };
     
     window.editItem = function(type, id) {
         let item, html;
-        if(type==='policy'){ item=policies.find(i=>i.id===id); html=`<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><input id="desc" value="${item.description}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${item.content}</textarea></div>`; }
-        else if(type==='behavior'){ item=behaviors.find(i=>i.id===id); html=`<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${item.desc}</textarea></div>`; }
-        else{ item=procedures.find(i=>i.id===id); html=`<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${item.desc}</textarea></div>`; }
+        if (type === 'policy') { 
+            item = policies.find(i => i.id === id); 
+            html = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><input id="desc" value="${item.description}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${item.content}</textarea></div>`; 
+        } else if (type === 'behavior') { 
+            item = behaviors.find(i => i.id === id); 
+            html = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${item.desc}</textarea></div>`; 
+        } else { 
+            item = procedures.find(i => i.id === id); 
+            html = `<div class="form-group"><label>العنوان</label><input id="title" value="${item.title}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${item.desc}</textarea></div>`; 
+        }
         showModal('تعديل', html, async () => {
-            if(type==='policy'){ item.title=document.getElementById('title').value; item.description=document.getElementById('desc').value; item.content=document.getElementById('content').value; }
-            else if(type==='behavior'){ item.title=document.getElementById('title').value; item.desc=document.getElementById('desc').value; }
-            else{ item.title=document.getElementById('title').value; item.desc=document.getElementById('desc').value; }
-            await saveToFirebase(); renderApp(); showToast("تم التعديل");
+            if (type === 'policy') { item.title = document.getElementById('title').value; item.description = document.getElementById('desc').value; item.content = document.getElementById('content').value; }
+            else if (type === 'behavior') { item.title = document.getElementById('title').value; item.desc = document.getElementById('desc').value; }
+            else { item.title = document.getElementById('title').value; item.desc = document.getElementById('desc').value; }
+            renderApp();
+            showToast("تم التعديل");
         });
     };
     
-    window.deleteItem = async function(type, id) {
-        if(confirm('حذف؟')){
-            if(type==='policy') policies=policies.filter(i=>i.id!==id);
-            else if(type==='behavior') behaviors=behaviors.filter(i=>i.id!==id);
-            else procedures=procedures.filter(i=>i.id!==id);
-            await saveToFirebase(); renderApp(); showToast("تم الحذف");
+    window.deleteItem = function(type, id) {
+        if (confirm('حذف؟')) {
+            if (type === 'policy') policies = policies.filter(i => i.id !== id);
+            else if (type === 'behavior') behaviors = behaviors.filter(i => i.id !== id);
+            else procedures = procedures.filter(i => i.id !== id);
+            renderApp();
+            showToast("تم الحذف");
         }
     };
     
-    // -------------------- العرض الرئيسي --------------------
+    // العرض الرئيسي
     function renderApp() {
-        if(!currentUser) { document.getElementById('app').innerHTML = renderLogin(); return; }
+        if (!currentUser) {
+            document.getElementById('app').innerHTML = renderLogin();
+            return;
+        }
         let isAdmin = currentUser.role === 'admin';
         document.getElementById('app').innerHTML = `
-        <div class="sidebar" id="sidebar"><div class="sidebar-header"><div class="logo">📖 دليل الموظف</div><div style="font-size:10px;opacity:0.7;">متزامن ☁️</div></div>
-            <div class="nav-item ${currentPage==='home'?'active':''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
-            <div class="nav-item ${currentPage==='guide'?'active':''}" data-page="guide"><i class="fas fa-book"></i> الدليل</div>
-            <div class="nav-item ${currentPage==='company'?'active':''}" data-page="company"><i class="fas fa-building"></i> عن الشركة</div>
-            <div class="nav-item ${currentPage==='org'?'active':''}" data-page="org"><i class="fas fa-sitemap"></i> الهيكل التنظيمي</div>
-            <div class="nav-item ${currentPage==='notifications'?'active':''}" data-page="notifications"><i class="fas fa-bell"></i> الإشعارات</div>
-            <div class="nav-item ${currentPage==='profile'?'active':''}" data-page="profile"><i class="fas fa-user"></i> حسابي</div>
-            ${isAdmin ? `<div class="nav-item ${currentPage==='admin'?'active':''}" data-page="admin"><i class="fas fa-cog"></i> لوحة التحكم</div>` : ''}
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header"><div class="logo"><i class="fas fa-book"></i> دليل الموظف</div></div>
+            <div class="nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
+            <div class="nav-item ${currentPage === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i> الدليل</div>
+            <div class="nav-item ${currentPage === 'company' ? 'active' : ''}" data-page="company"><i class="fas fa-building"></i> عن الشركة</div>
+            <div class="nav-item ${currentPage === 'org' ? 'active' : ''}" data-page="org"><i class="fas fa-sitemap"></i> الهيكل التنظيمي</div>
+            <div class="nav-item ${currentPage === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i> الإشعارات</div>
+            <div class="nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i> حسابي</div>
+            ${isAdmin ? `<div class="nav-item ${currentPage === 'admin' ? 'active' : ''}" data-page="admin"><i class="fas fa-cog"></i> لوحة التحكم</div>` : ''}
             <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</div>
         </div>
-        <div class="main-content"><div class="top-bar"><button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div class="page-title">${getTitle()}</div><div class="avatar"><i class="fas fa-user"></i></div></div><div id="pageContent"></div></div>
-        <div class="bottom-nav"><div class="bottom-nav-item ${currentPage==='home'?'active':''}" data-page="home"><i class="fas fa-home"></i><span>الرئيسية</span></div><div class="bottom-nav-item ${currentPage==='guide'?'active':''}" data-page="guide"><i class="fas fa-book"></i><span>الدليل</span></div><div class="bottom-nav-item ${currentPage==='profile'?'active':''}" data-page="profile"><i class="fas fa-user"></i><span>حسابي</span></div></div>`;
+        <div class="main-content">
+            <div class="top-bar"><button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button><div class="page-title">${getTitle()}</div><div class="avatar"><i class="fas fa-user"></i></div></div>
+            <div id="pageContent"></div>
+        </div>
+        <div class="bottom-nav">
+            <div class="bottom-nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i><span>الرئيسية</span></div>
+            <div class="bottom-nav-item ${currentPage === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i><span>الدليل</span></div>
+            <div class="bottom-nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i><span>حسابي</span></div>
+        </div>`;
         renderPage();
         attachEvents();
     }
     
-    function getTitle() { let t={home:"الرئيسية",guide:"الدليل",company:"عن الشركة",org:"الهيكل التنظيمي",notifications:"الإشعارات",profile:"حسابي",admin:"لوحة التحكم"}; return t[currentPage]||"الرئيسية"; }
-    function renderPage() { let p={home:renderHome,guide:renderGuide,company:renderCompany,org:renderOrg,notifications:renderNotifications,profile:renderProfile,admin:renderAdmin}; document.getElementById('pageContent').innerHTML = (p[currentPage]||renderHome)(); }
-    function attachEvents() { document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(el=>{ let page=el.dataset.page; if(page) el.onclick = ()=>{ currentPage=page; renderApp(); }; }); }
-    
-    // -------------------- بدء التشغيل --------------------
-    async function init() {
-        await loadFromFirebase();
-        listenToFirebase();
-        let saved = sessionStorage.getItem('user');
-        if(saved) currentUser = JSON.parse(saved);
-        renderApp();
+    function getTitle() {
+        let titles = { home: "الرئيسية", guide: "الدليل", company: "عن الشركة", org: "الهيكل التنظيمي", notifications: "الإشعارات", profile: "حسابي", admin: "لوحة التحكم" };
+        return titles[currentPage] || "الرئيسية";
     }
     
-    init();
+    function renderPage() {
+        let pages = { home: renderHome, guide: renderGuide, company: renderCompany, org: renderOrg, notifications: renderNotifications, profile: renderProfile, admin: renderAdmin };
+        document.getElementById('pageContent').innerHTML = (pages[currentPage] || renderHome)();
+    }
+    
+    function attachEvents() {
+        document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(el => {
+            let page = el.dataset.page;
+            if (page) el.onclick = () => { currentPage = page; renderApp(); };
+        });
+    }
+    
+    // بدء التشغيل
+    let savedUser = sessionStorage.getItem('user');
+    if (savedUser) currentUser = JSON.parse(savedUser);
+    renderApp();
 </script>
 </body>
 </html>
