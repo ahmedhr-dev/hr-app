@@ -10,161 +10,191 @@ import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebase
 
 // 🔥 Firebase Config
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "YOUR_DB_URL",
-    projectId: "YOUR_PROJECT_ID"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "YOUR_DB_URL",
+  projectId: "YOUR_PROJECT_ID"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// ==========================
-// 🧠 البيانات
-// ==========================
-let users = [];
+// =======================
+// 🧠 بيانات التطبيق
+// =======================
+let users = [
+  { id: "1", email: "admin@hr.com", password: "123456", name: "Admin", role: "admin" }
+];
+
 let currentUser = null;
+
+let companyData = {
+  name: "شركة افتراضية",
+  vision: "رؤية الشركة",
+  mission: "رسالة الشركة"
+};
+
 let jobs = [];
 let policies = [];
 
-// ==========================
-// ☁️ حفظ
-// ==========================
+// =======================
+// ☁️ حفظ في Firebase
+// =======================
 async function saveAll() {
-    await set(ref(db, "hr-data"), {
-        users,
-        jobs,
-        policies
-    });
-    console.log("✅ Saved to Firebase");
+  await set(ref(db, "hr-data"), {
+    users,
+    companyData,
+    jobs,
+    policies
+  });
 }
 
-// ==========================
+// =======================
 // 🔄 مزامنة فورية
-// ==========================
-function startRealtimeSync() {
-    onValue(ref(db, "hr-data"), (snapshot) => {
-        const data = snapshot.val();
-        if (!data) return;
+// =======================
+function startRealtime() {
+  onValue(ref(db, "hr-data"), (snapshot) => {
+    const data = snapshot.val();
+    if (!data) return;
 
-        users = data.users || [];
-        jobs = data.jobs || [];
-        policies = data.policies || [];
+    users = data.users || [];
+    companyData = data.companyData || {};
+    jobs = data.jobs || [];
+    policies = data.policies || [];
 
-        if (currentUser) {
-            const updated = users.find(u => u.email === currentUser.email);
-            if (updated) currentUser = updated;
-        }
-
-        renderApp();
-        console.log("🔄 Sync updated");
-    });
+    renderApp();
+  });
 }
 
-// ==========================
+// =======================
 // 🔐 تسجيل دخول
-// ==========================
+// =======================
 function login(email, password) {
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user) {
-        currentUser = user;
-        renderApp();
-    } else {
-        alert("❌ بيانات غلط");
-    }
+  const user = users.find(u => u.email === email && u.password === password);
+  if (!user) {
+    alert("❌ بيانات غلط");
+    return;
+  }
+
+  currentUser = user;
+  renderApp();
 }
 
-// ==========================
-// 📝 تسجيل
-// ==========================
+// =======================
+// 📝 تسجيل مستخدم
+// =======================
 async function register(name, email, password) {
-    if (users.find(u => u.email === email)) {
-        alert("البريد موجود");
-        return;
-    }
+  if (users.find(u => u.email === email)) {
+    alert("البريد مستخدم");
+    return;
+  }
 
-    users.push({
-        id: Date.now(),
-        name,
-        email,
-        password,
-        role: "employee"
-    });
+  users.push({
+    id: Date.now().toString(),
+    name,
+    email,
+    password,
+    role: "employee"
+  });
 
-    await saveAll();
-    alert("✅ تم التسجيل");
+  await saveAll();
+  alert("✅ تم التسجيل");
 }
 
-// ==========================
-// 🎨 واجهة
-// ==========================
+// =======================
+// 🎨 واجهات
+// =======================
 function renderLogin() {
-    document.body.innerHTML = `
-        <h2>تسجيل الدخول</h2>
-        <input id="email" placeholder="email"><br>
-        <input id="pass" placeholder="password"><br>
-        <button onclick="doLogin()">دخول</button>
+  document.body.innerHTML = `
+    <h2>تسجيل الدخول</h2>
+    <input id="email" placeholder="email"><br><br>
+    <input id="pass" placeholder="password"><br><br>
+    <button onclick="doLogin()">دخول</button>
 
-        <h3>إنشاء حساب</h3>
-        <input id="name"><br>
-        <input id="email2"><br>
-        <input id="pass2"><br>
-        <button onclick="doRegister()">تسجيل</button>
-    `;
+    <hr>
+
+    <h3>تسجيل جديد</h3>
+    <input id="name"><br><br>
+    <input id="email2"><br><br>
+    <input id="pass2"><br><br>
+    <button onclick="doRegister()">تسجيل</button>
+  `;
 }
 
 function renderApp() {
-    if (!currentUser) {
-        renderLogin();
-        return;
-    }
+  if (!currentUser) {
+    renderLogin();
+    return;
+  }
 
-    document.body.innerHTML = `
-        <h2>مرحباً ${currentUser.name}</h2>
+  document.body.innerHTML = `
+    <h2>مرحباً ${currentUser.name}</h2>
 
-        <button onclick="addJob()">إضافة وظيفة</button>
+    <h3>🏢 بيانات الشركة</h3>
+    <input id="compName" value="${companyData.name}">
+    <button onclick="updateCompany()">حفظ</button>
 
-        <h3>الوظائف</h3>
-        ${jobs.map(j => `<div>${j.title}</div>`).join("")}
+    <h3>💼 الوظائف</h3>
+    ${jobs.map(j => `<div>${j.title}</div>`).join("")}
+    <button onclick="addJob()">إضافة وظيفة</button>
 
-        <br>
-        <button onclick="logout()">خروج</button>
-    `;
+    <h3>📜 السياسات</h3>
+    ${policies.map(p => `<div>${p.title}</div>`).join("")}
+    <button onclick="addPolicy()">إضافة سياسة</button>
+
+    <br><br>
+    <button onclick="logout()">خروج</button>
+  `;
 }
 
-// ==========================
+// =======================
 // ⚙️ Actions
-// ==========================
+// =======================
 window.doLogin = function () {
-    login(
-        document.getElementById("email").value,
-        document.getElementById("pass").value
-    );
+  login(
+    document.getElementById("email").value,
+    document.getElementById("pass").value
+  );
 };
 
 window.doRegister = function () {
-    register(
-        document.getElementById("name").value,
-        document.getElementById("email2").value,
-        document.getElementById("pass2").value
-    );
-};
-
-window.addJob = async function () {
-    const title = prompt("اسم الوظيفة");
-    jobs.push({ id: Date.now(), title });
-    await saveAll();
+  register(
+    document.getElementById("name").value,
+    document.getElementById("email2").value,
+    document.getElementById("pass2").value
+  );
 };
 
 window.logout = function () {
-    currentUser = null;
-    renderApp();
+  currentUser = null;
+  renderApp();
 };
 
-// ==========================
+window.addJob = async function () {
+  const title = prompt("اسم الوظيفة");
+  if (!title) return;
+
+  jobs.push({ id: Date.now(), title });
+  await saveAll();
+};
+
+window.addPolicy = async function () {
+  const title = prompt("اسم السياسة");
+  if (!title) return;
+
+  policies.push({ id: Date.now(), title });
+  await saveAll();
+};
+
+window.updateCompany = async function () {
+  companyData.name = document.getElementById("compName").value;
+  await saveAll();
+};
+
+// =======================
 // 🚀 تشغيل
-// ==========================
-startRealtimeSync();
+// =======================
+startRealtime();
 renderApp();
 
 </script>
