@@ -1,3 +1,8 @@
+// ========================================
+// Service Worker لتطبيق HR System
+// مع آلية التحديث التلقائي الكاملة
+// ========================================
+
 const CACHE_NAME = 'hr-system-v2';
 const urlsToCache = [
   '.',
@@ -9,13 +14,16 @@ const urlsToCache = [
 
 // تثبيت Service Worker
 self.addEventListener('install', event => {
-  console.log('Service Worker installing...');
-  self.skipWaiting(); // تفعيل الـ SW فوراً
+  console.log('[SW] جاري تثبيت Service Worker...');
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Caching app shell');
+        console.log('[SW] تم تخزين الملفات في الكاش');
         return cache.addAll(urlsToCache);
+      })
+      .catch(err => {
+        console.error('[SW] خطأ في تخزين الملفات:', err);
       })
   );
 });
@@ -23,7 +31,9 @@ self.addEventListener('install', event => {
 // استراتيجية متقدمة: Cache First ثم Network مع تحديث الخلفية
 self.addEventListener('fetch', event => {
   // نستثني طلبات API لأنها ديناميكية
-  if (event.request.url.includes('/api/') || event.request.method !== 'GET') {
+  if (event.request.url.includes('/api/') || 
+      event.request.url.includes('localhost') ||
+      event.request.method !== 'GET') {
     event.respondWith(fetch(event.request));
     return;
   }
@@ -55,27 +65,61 @@ self.addEventListener('fetch', event => {
       })
       .catch(() => {
         // إذا فشل كل شيء، نقدم صفحة خطأ مخصصة
-        return caches.match('offline.html');
+        return caches.match('offline.html').then(response => {
+          return response || new Response('⚠️ لا يوجد اتصال بالإنترنت', { 
+            status: 503,
+            headers: { 'Content-Type': 'text/html; charset=utf-8' }
+          });
+        });
       })
   );
 });
 
-// تنظيف الكاش القديم عند تفعيل SW جديد
+// تنظيف الكاش القديم وإرسال إشعار التحديث
 self.addEventListener('activate', event => {
-  console.log('Service Worker activating...');
+  console.log('[SW] جاري تفعيل Service Worker...');
+  
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
+            console.log('[SW] جاري حذف الكاش القديم:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
     }).then(() => {
-      console.log('Service Worker activated, claiming clients...');
-      return self.clients.claim(); // يسيطر على الصفحات المفتوحة فوراً
+      console.log('[SW] تم تفعيل Service Worker بنجاح');
+      
+      // إرسال رسالة لجميع الصفحات المفتوحة لتحديث نفسها
+      return self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'UPDATE_AVAILABLE',
+            version: CACHE_NAME,
+            timestamp: new Date().getTime()
+          });
+        });
+      });
+    }).then(() => {
+      // السيطرة على الصفحات المفتوحة فوراً
+      return self.clients.claim();
     })
   );
+});
+
+// استماع لرسائل من الصفحة الرئيسية
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('[SW] جاري تخطي انتظار الـ Service Worker');
+    self.skipWaiting();
+  }
+  
+  if (event.data && event.data.type === 'CLEAR_CACHE') {
+    console.log('[SW] جاري مسح الكاش بالكامل');
+    caches.delete(CACHE_NAME).then(() => {
+      event.ports[0].postMessage({ success: true });
+    });
+  }
 });
