@@ -1,102 +1,12 @@
-<script type="module">
-// =======================
-// 🔥 Firebase Import
-// =======================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-// =======================
-// ⚙️ Firebase Config (بتاعك)
-// =======================
-const firebaseConfig = {
-  apiKey: "AIzaSyCU_SbahasitvYtx9lzgimkCyTb7wZ2DIs",
-  authDomain: "hr-app-710f3.firebaseapp.com",
-  databaseURL: "https://hr-app-710f3-default-rtdb.firebaseio.com",
-  projectId: "hr-app-710f3",
-  storageBucket: "hr-app-710f3.firebasestorage.app",
-  messagingSenderId: "324936659395",
-  appId: "1:324936659395:web:bb5d491b52be3013c00d76"
-};
-
-// =======================
-// 🚀 Initialize
-// =======================
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-// =======================
-// 🧠 البيانات (Global)
-// =======================
-let users = [];
-let companyData = {};
-let jobs = [];
-let policies = [];
-
-// =======================
-// ☁️ حفظ البيانات
-// =======================
-window.saveAll = async function () {
-  await set(ref(db, "hr-data"), {
-    users,
-    companyData,
-    jobs,
-    policies
-  });
-
-  console.log("✅ تم الحفظ في Firebase");
-};
-
-// =======================
-// 🔄 قراءة مباشرة (Realtime)
-// =======================
-window.startRealtime = function () {
-  onValue(ref(db, "hr-data"), (snapshot) => {
-    const data = snapshot.val();
-
-    if (!data) {
-      console.log("📭 لا توجد بيانات");
-      return;
-    }
-
-    users = data.users || [];
-    companyData = data.companyData || {};
-    jobs = data.jobs || [];
-    policies = data.policies || [];
-
-    console.log("🔄 تم التحديث من Firebase", data);
-
-    // 👇 مهم جدًا: يحدث الواجهة
-    if (window.renderApp) {
-      window.renderApp();
-    }
-  });
-};
-
-// =======================
-// 🧪 تشغيل
-// =======================
-startRealtime();
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>HR System | نظام إدارة الموارد البشرية</title>
     
-    <!-- 🔧 منع التخزين المؤقت لحل مشكلة التحديث -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    <!-- PWA Settings -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0a1a2f">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="HR System">
-    <link rel="apple-touch-icon" href="icon-192x192.png">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -118,7 +28,8 @@ startRealtime();
         }
         .login-card h2 { text-align: center; color: #d4af37; margin-bottom: 20px; }
         .login-card input { width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.3); border-radius: 30px; color: white; }
-        .btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; }
+        .btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; transition: 0.2s; }
+        .btn:hover { transform: scale(1.02); }
         .register-link { text-align: center; margin-top: 15px; font-size: 13px; }
         .register-link span { color: #d4af37; cursor: pointer; }
         .register-form { display: none; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(212,175,55,0.2); }
@@ -153,7 +64,7 @@ startRealtime();
             border-radius: 20px; margin-bottom: 20px;
         }
         .page-title { font-size: 22px; color: #d4af37; font-weight: bold; }
-        .avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         
         .bottom-nav {
             display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #0a1a2f;
@@ -171,14 +82,14 @@ startRealtime();
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
         .stat-card { background: rgba(10, 26, 47, 0.9); border-radius: 16px; padding: 15px; text-align: center; }
         .stat-number { font-size: 28px; font-weight: bold; color: #d4af37; }
+        .stat-card i { font-size: 24px; margin-bottom: 8px; color: #d4af37; }
         
         .hero-section {
             background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(10,26,47,0.9));
             border-radius: 25px; padding: 20px; margin-bottom: 20px;
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .hero-image { width: 70px; height: 70px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .hero-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .hero-image { width: 70px; height: 70px; background: linear-gradient(135deg, #d4af37, #b8960c); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .hero-image i { font-size: 35px; color: #0a1a2f; }
         
         .guide-tabs { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
@@ -199,7 +110,7 @@ startRealtime();
         
         .modal {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.8);
             display: flex; align-items: center; justify-content: center; z-index: 1000;
         }
         .modal-content {
@@ -229,46 +140,17 @@ startRealtime();
             transition: all 0.2s;
         }
         .admin-card:hover { background: rgba(212,175,55,0.15); transform: translateY(-2px); }
-        .admin-card i { font-size: 26px; color: #d4af37; margin-bottom: 6px; }
+        .admin-card i { font-size: 26px; color: #d4af37; margin-bottom: 6px; display: block; }
         
-        .performance-score { font-size: 48px; font-weight: bold; color: #d4af37; text-align: center; }
-        .score-bar { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 15px 0; overflow: hidden; }
-        .score-fill { height: 100%; background: linear-gradient(90deg, #d4af37, #b8960c); }
-        .criteria-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
-        }
-        .criteria-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 14px;
-        }
-        .criteria-name { font-size: 14px; font-weight: bold; color: #d4af37; margin-bottom: 8px; }
-        .criteria-progress { width: 100%; height: 5px; background: rgba(255,255,255,0.1); border-radius: 5px; margin: 8px 0; overflow: hidden; }
-        .criteria-progress-fill { height: 100%; background: linear-gradient(90deg, #d4af37, #b8960c); }
-        
-        .org-grid {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
         .org-ceo {
             background: linear-gradient(135deg, #d4af37, #b8960c);
             border-radius: 18px;
-            padding: 15px 30px;
+            padding: 15px;
             text-align: center;
             color: #0a1a2f;
             cursor: pointer;
         }
-        .org-departments {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-        }
+        .org-departments { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px; }
         .org-dept {
             background: rgba(10, 26, 47, 0.8);
             border-radius: 14px;
@@ -288,45 +170,123 @@ startRealtime();
             align-items: center;
             justify-content: center;
             margin: 0 auto 15px;
-            overflow: hidden;
         }
-        .company-logo-img img { width: 100%; height: 100%; object-fit: cover; }
         
         .menu-toggle { display: none; background: none; border: none; font-size: 24px; color: white; cursor: pointer; }
         
-        .update-toast {
+        .toast {
             position: fixed;
             bottom: 20px;
             right: 20px;
             left: 20px;
-            max-width: 380px;
+            max-width: 350px;
             margin: 0 auto;
-            background: linear-gradient(135deg, #d4af37, #b8960c);
-            color: #0a1a2f;
-            padding: 14px 20px;
+            background: #4caf50;
+            color: white;
+            padding: 12px 20px;
             border-radius: 30px;
-            cursor: pointer;
             z-index: 10000;
-            font-weight: bold;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            text-align: center;
+            transform: translateY(100px);
+            transition: 0.3s ease;
+        }
+        .toast.show { transform: translateY(0); }
+        .toast.error { background: #ef4444; }
+        
+        .ai-fab {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #d4af37, #b8960c);
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 12px;
-            direction: rtl;
-            font-family: 'Cairo', sans-serif;
-            transform: translateY(100px);
-            transition: transform 0.3s ease;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 300;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
         }
-        .update-toast.show {
-            transform: translateY(0);
+        .ai-fab:hover { transform: scale(1.1); }
+        .ai-fab i { font-size: 28px; color: #0a1a2f; }
+        
+        .ai-chat {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 350px;
+            max-width: calc(100vw - 40px);
+            background: rgba(10, 26, 47, 0.98);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            z-index: 301;
+            transition: all 0.3s ease;
+            transform: scale(0);
+            opacity: 0;
+            transform-origin: bottom left;
         }
-        .update-toast i:first-child {
-            font-size: 20px;
-            animation: spin 1s infinite;
+        .ai-chat.open {
+            transform: scale(1);
+            opacity: 1;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .ai-header {
+            padding: 12px 15px;
+            background: linear-gradient(135deg, #d4af37, #b8960c);
+            border-radius: 20px 20px 0 0;
+            color: #0a1a2f;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+        .ai-messages {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 15px;
+            max-width: 85%;
+            font-size: 14px;
+        }
+        .user-message {
+            background: rgba(212, 175, 55, 0.2);
+            margin-right: auto;
+            text-align: right;
+        }
+        .ai-message {
+            background: rgba(255, 255, 255, 0.1);
+            margin-left: auto;
+            text-align: left;
+        }
+        .ai-input-area {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            gap: 10px;
+        }
+        .ai-input-area input {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 25px;
+            color: white;
+        }
+        .ai-input-area button {
+            width: auto;
+            padding: 8px 15px;
+        }
+        .typing {
+            color: #d4af37;
+            font-size: 12px;
+            padding: 5px 12px;
         }
         
         @media (max-width: 768px) {
@@ -337,7 +297,8 @@ startRealtime();
             .menu-toggle { display: block; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .admin-grid { grid-template-columns: repeat(2, 1fr); }
-            .criteria-grid { grid-template-columns: 1fr; }
+            .ai-chat { width: 300px; left: 10px; bottom: 10px; }
+            .ai-fab { bottom: 70px; left: 10px; }
         }
     </style>
 </head>
@@ -345,13 +306,16 @@ startRealtime();
 <div id="app"></div>
 
 <script>
-    // نظام إدارة الموارد البشرية - الإصدار 3.0 (مع PWA بدون رفراش تلقائي)
+    // ========================================
+    // نظام إدارة الموارد البشرية - الإصدار 6.0
+    // ========================================
     
-    // ========== بيانات النظام ==========
+    // ---------- البيانات الأساسية ----------
     let users = [{ id: 1, email: "admin@hr.com", password: "admin123", name: "أحمد المدير", role: "admin", jobTitle: "مدير الموارد البشرية" }];
     let currentUser = null;
+    let currentPageVar = "home";
+    let guideTab = "policies";
     
-    // بيانات الشركة
     let companyData = {
         name: "شركة التميز للاستشارات",
         logo: null,
@@ -364,7 +328,6 @@ startRealtime();
         ]
     };
     
-    // المسميات الوظيفية
     let jobs = [
         { id: 1, title: "مدير الموارد البشرية", department: "الموارد البشرية" },
         { id: 2, title: "محاسب", department: "المالية" },
@@ -372,13 +335,11 @@ startRealtime();
         { id: 4, title: "مسوق رقمي", department: "التسويق" }
     ];
     
-    // السياسات
     let policies = [
         { id: 1, title: "سياسة الإجازة السنوية", description: "21 يوم إجازة سنوية مدفوعة", content: "جميع الموظفين يحق لهم 21 يوم إجازة سنوية مدفوعة الأجر بعد إتمام 6 أشهر." },
         { id: 2, title: "سياسة سلفة الراتب", description: "سلفة تصل 50% من الراتب", content: "بعد 6 أشهر عمل، يحق للموظف طلب سلفة تصل 50% من الراتب، تسدد على 6 دفعات." }
     ];
     
-    // السلوكيات
     let behaviors = [
         { id: 1, title: "الاحترافية", desc: "الحفاظ على سلوك محترم مع جميع الزملاء والعملاء" },
         { id: 2, title: "الالتزام بالمواعيد", desc: "الحضور في الوقت المحدد وإخطار المدير عند التأخر" },
@@ -386,25 +347,21 @@ startRealtime();
         { id: 4, title: "الابتكار", desc: "اقتراح التحسينات وتطوير أساليب العمل" }
     ];
     
-    // الإجراءات
     let procedures = [
         { id: 1, step: 1, title: "تقديم طلب إجازة", desc: "سجل الدخول → اختار الإجازات → حدد التواريخ → أرسل للمدير" },
         { id: 2, step: 2, title: "تقديم طلب سلفة", desc: "الراتب والسلف → طلب سلفة → حدد المبلغ → انتظر الموافقة" },
         { id: 3, step: 3, title: "تقديم شكوى", desc: "قسم الشكاوى → اكتب الشكوى → اختر التصنيف → إرسال" }
     ];
     
-    // الأسئلة الشائعة
     let faq = [
         { id: 1, question: "ما هي سياسة الإجازة السنوية?", answer: "21 يوم إجازة سنوية مدفوعة الأجر." },
         { id: 2, question: "كيف أطلب سلفة راتب?", answer: "بعد 6 أشهر عمل، بحد أقصى 50% من الراتب." }
     ];
     
-    // الإعلانات
     let announcements = [
         { id: 1, title: "تحديث السياسات", content: "تم تحديث سياسة الإجازات", date: new Date().toLocaleDateString() }
     ];
     
-    // الهيكل التنظيمي
     let orgStructure = {
         ceo: { name: "مجلس الإدارة", head: "أحمد الراشد", members: 5 },
         departments: [
@@ -415,7 +372,6 @@ startRealtime();
         ]
     };
     
-    // تقييم الأداء - 5 معايير لكل وظيفة
     let performance = {
         "مدير الموارد البشرية": {
             criteria: [
@@ -446,30 +402,7 @@ startRealtime();
         }
     };
     
-    function loadDataFromLocalStorage() {
-        const savedUsers = localStorage.getItem('hr_users');
-        const savedCompany = localStorage.getItem('hr_company');
-        const savedJobs = localStorage.getItem('hr_jobs');
-        const savedPolicies = localStorage.getItem('hr_policies');
-        const savedBehaviors = localStorage.getItem('hr_behaviors');
-        const savedProcedures = localStorage.getItem('hr_procedures');
-        const savedFaq = localStorage.getItem('hr_faq');
-        const savedAnnouncements = localStorage.getItem('hr_announcements');
-        const savedOrg = localStorage.getItem('hr_org_structure');
-        const savedPerf = localStorage.getItem('hr_performance');
-        
-        if (savedUsers) users = JSON.parse(savedUsers);
-        if (savedCompany) companyData = JSON.parse(savedCompany);
-        if (savedJobs) jobs = JSON.parse(savedJobs);
-        if (savedPolicies) policies = JSON.parse(savedPolicies);
-        if (savedBehaviors) behaviors = JSON.parse(savedBehaviors);
-        if (savedProcedures) procedures = JSON.parse(savedProcedures);
-        if (savedFaq) faq = JSON.parse(savedFaq);
-        if (savedAnnouncements) announcements = JSON.parse(savedAnnouncements);
-        if (savedOrg) orgStructure = JSON.parse(savedOrg);
-        if (savedPerf) performance = JSON.parse(savedPerf);
-    }
-    
+    // ---------- دوال التخزين ----------
     function saveAll() {
         localStorage.setItem('hr_users', JSON.stringify(users));
         localStorage.setItem('hr_company', JSON.stringify(companyData));
@@ -483,6 +416,120 @@ startRealtime();
         localStorage.setItem('hr_performance', JSON.stringify(performance));
     }
     
+    function loadDataFromLocalStorage() {
+        const savedUsers = localStorage.getItem('hr_users');
+        if (savedUsers) users = JSON.parse(savedUsers);
+        const savedCompany = localStorage.getItem('hr_company');
+        if (savedCompany) companyData = JSON.parse(savedCompany);
+        const savedJobs = localStorage.getItem('hr_jobs');
+        if (savedJobs) jobs = JSON.parse(savedJobs);
+        const savedPolicies = localStorage.getItem('hr_policies');
+        if (savedPolicies) policies = JSON.parse(savedPolicies);
+        const savedBehaviors = localStorage.getItem('hr_behaviors');
+        if (savedBehaviors) behaviors = JSON.parse(savedBehaviors);
+        const savedProcedures = localStorage.getItem('hr_procedures');
+        if (savedProcedures) procedures = JSON.parse(savedProcedures);
+        const savedFaq = localStorage.getItem('hr_faq');
+        if (savedFaq) faq = JSON.parse(savedFaq);
+        const savedAnnouncements = localStorage.getItem('hr_announcements');
+        if (savedAnnouncements) announcements = JSON.parse(savedAnnouncements);
+        const savedOrg = localStorage.getItem('hr_org_structure');
+        if (savedOrg) orgStructure = JSON.parse(savedOrg);
+        const savedPerf = localStorage.getItem('hr_performance');
+        if (savedPerf) performance = JSON.parse(savedPerf);
+    }
+    
+    // ---------- المساعد الذكي ----------
+    let aiMessages = [];
+    
+    function getAIResponse(question) {
+        const q = question.toLowerCase();
+        
+        const policy = policies.find(p => q.includes(p.title.toLowerCase()) || q.includes(p.description.toLowerCase()));
+        if (policy) return `📜 ${policy.title}\n\n${policy.content}`;
+        
+        const behavior = behaviors.find(b => q.includes(b.title.toLowerCase()));
+        if (behavior) return `🤝 ${behavior.title}\n\n${behavior.desc}`;
+        
+        const procedure = procedures.find(p => q.includes(p.title.toLowerCase()));
+        if (procedure) return `📋 ${procedure.title}\n\n${procedure.desc}`;
+        
+        const faqItem = faq.find(f => q.includes(f.question.toLowerCase()));
+        if (faqItem) return `❓ ${faqItem.question}\n\n${faqItem.answer}`;
+        
+        if (q.includes('راتب') || q.includes('سلفة')) {
+            return "💰 معلومات السلفة:\n• يمكن طلب سلفة بعد 6 أشهر عمل\n• الحد الأقصى 50% من الراتب\n• تسدد على 6 دفعات متساوية";
+        }
+        if (q.includes('إجازة') || q.includes('عطلة')) {
+            return "🌴 معلومات الإجازات:\n• 21 يوم إجازة سنوية مدفوعة\n• يمكن التقديم من خلال النظام\n• يجب إخطار المدير قبل أسبوع";
+        }
+        if (q.includes('تقييم') || q.includes('أداء')) {
+            return "⭐ تقييم الأداء:\n• يتم التقييم سنوياً\n• 5 معايير مختلفة\n• كل معيار له وزن محدد";
+        }
+        if (q.includes('شركة') || q.includes('عن الشركة')) {
+            return `🏢 ${companyData.name}\n\nالرؤية: ${companyData.vision}\nالرسالة: ${companyData.mission}`;
+        }
+        
+        return "🙏 شكراً لسؤالك. يمكنك مراجعة دليل الموظف للحصول على معلومات أكثر تفصيلاً، أو التواصل مع قسم الموارد البشرية.";
+    }
+    
+    function addAIMessage(text, isUser = false) {
+        const messagesDiv = document.getElementById('aiMessages');
+        if (!messagesDiv) return;
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+        msgDiv.innerHTML = isUser ? `<i class="fas fa-user"></i> ${text}` : `<i class="fas fa-robot"></i> ${text.replace(/\n/g, '<br>')}`;
+        messagesDiv.appendChild(msgDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    
+    function showTyping() {
+        const messagesDiv = document.getElementById('aiMessages');
+        if (!messagesDiv) return;
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'typing';
+        typingDiv.id = 'typingIndicator';
+        typingDiv.innerHTML = '<i class="fas fa-robot"></i> المساعد يكتب...';
+        messagesDiv.appendChild(typingDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    
+    function removeTyping() {
+        const typing = document.getElementById('typingIndicator');
+        if (typing) typing.remove();
+    }
+    
+    function askAI() {
+        const input = document.getElementById('aiInput');
+        const question = input.value.trim();
+        if (!question) return;
+        addAIMessage(question, true);
+        input.value = '';
+        showTyping();
+        setTimeout(() => {
+            removeTyping();
+            const answer = getAIResponse(question);
+            addAIMessage(answer, false);
+        }, 500);
+    }
+    
+    function toggleAI() {
+        const chat = document.getElementById('aiChat');
+        const fab = document.getElementById('aiFab');
+        chat.classList.toggle('open');
+    }
+    
+    // ---------- دوال التطبيق الأساسية ----------
+    function showToast(msg, isError = false) {
+        let toast = document.createElement('div');
+        toast.className = 'toast';
+        if (isError) toast.classList.add('error');
+        toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> ${msg}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 100);
+        setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 500); }, 3000);
+    }
+    
     function login(email, pass) {
         let u = users.find(u => u.email === email && u.password === pass);
         if(u) { currentUser = u; sessionStorage.setItem('user', JSON.stringify(u)); renderApp(); return true; }
@@ -490,10 +537,11 @@ startRealtime();
     }
     
     function register(name, email, pass, confirm) {
-        if(pass !== confirm) { alert("كلمة المرور غير متطابقة"); return false; }
-        if(users.find(u => u.email === email)) { alert("البريد موجود"); return false; }
+        if(pass !== confirm) { showToast("كلمة المرور غير متطابقة", true); return false; }
+        if(users.find(u => u.email === email)) { showToast("البريد موجود", true); return false; }
         users.push({ id: Date.now(), name, email, password: pass, role: "employee", jobTitle: "موظف" });
         saveAll();
+        showToast("تم التسجيل بنجاح");
         return true;
     }
     
@@ -503,7 +551,7 @@ startRealtime();
         return `
         <div class="login-container">
             <div class="login-card">
-                <div style="text-align:center; margin-bottom:20px;"><div style="width:60px;height:60px;background:linear-gradient(135deg,#d4af37,#b8960c);border-radius:20px;margin:0 auto;display:flex;align-items:center;justify-content:center;"><i class="fas fa-crown"></i></div><h2>HR SYSTEM</h2><p style="font-size:12px; text-align:center;">تسجيل الدخول إلى النظام</p></div>
+                <div style="text-align:center; margin-bottom:20px;"><div style="width:60px;height:60px;background:linear-gradient(135deg,#d4af37,#b8960c);border-radius:20px;margin:0 auto;display:flex;align-items:center;justify-content:center;"><i class="fas fa-chart-line"></i></div><h2>HR SYSTEM</h2><p style="font-size:12px;">نظام إدارة الموارد البشرية</p></div>
                 <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" value="admin@hr.com">
                 <input type="password" id="loginPass" placeholder="كلمة المرور" value="admin123">
                 <button class="btn" onclick="doLogin()">دخول</button>
@@ -522,16 +570,18 @@ startRealtime();
     window.doLogin = function() {
         let email = document.getElementById('loginEmail').value;
         let pass = document.getElementById('loginPass').value;
-        if(login(email, pass)) alert('تم الدخول بنجاح ✅');
-        else alert('بيانات غير صحيحة ❌');
+        if(login(email, pass)) showToast("تم الدخول بنجاح");
+        else showToast("بيانات غير صحيحة", true);
     };
+    
     window.doRegister = function() {
         let name = document.getElementById('regName').value;
         let email = document.getElementById('regEmail').value;
         let pass = document.getElementById('regPass').value;
         let confirm = document.getElementById('regConfirm').value;
-        if(register(name, email, pass, confirm)) { alert('تم التسجيل بنجاح ✅'); toggleReg(); }
+        if(register(name, email, pass, confirm)) toggleReg();
     };
+    
     window.toggleReg = function() {
         let f = document.getElementById('regForm');
         f.classList.toggle('show');
@@ -540,33 +590,33 @@ startRealtime();
     function showDetail(title, content) {
         let modal = document.createElement('div');
         modal.className = 'modal';
-        modal.innerHTML = `<div class="modal-content"><h3 style="color:#d4af37;">${title}</h3><div style="margin:15px 0;">${content}</div><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div>`;
+        modal.innerHTML = `<div class="modal-content"><h3 style="color:#d4af37;"><i class="fas fa-info-circle"></i> ${title}</h3><div style="margin:15px 0; line-height:1.6;">${content}</div><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div>`;
         document.body.appendChild(modal);
     }
     
-    let guideTab = "policies";
     function renderGuide() {
         let items = [];
         if(guideTab === 'policies') {
-            items = policies.map(p => `<div class="guide-item" onclick="showDetail('${p.title}', '<strong>الوصف:</strong><br>${p.description}<br><br><strong>المحتوى:</strong><br>${p.content}')"><div><strong>${p.title}</strong><br><small>${p.description.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
+            items = policies.map(p => `<div class="guide-item" onclick="showDetail('${p.title}', '<strong>الوصف:</strong><br>${p.description}<br><br><strong>المحتوى:</strong><br>${p.content}')"><div><i class="fas fa-file-alt" style="margin-left:8px;color:#d4af37;"></i> <strong>${p.title}</strong><br><small>${p.description.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
         } else if(guideTab === 'procedures') {
-            items = procedures.map(p => `<div class="guide-item" onclick="showDetail('${p.title}', '<strong>الوصف:</strong><br>${p.desc}')"><div><strong>${p.title}</strong><br><small>${p.desc.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
+            items = procedures.map(p => `<div class="guide-item" onclick="showDetail('${p.title}', '<strong>الوصف:</strong><br>${p.desc}')"><div><i class="fas fa-list-ol" style="margin-left:8px;color:#d4af37;"></i> <strong>${p.title}</strong><br><small>${p.desc.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
+        } else if(guideTab === 'faq') {
+            items = faq.map(f => `<div class="guide-item" onclick="showDetail('${f.question}', '<strong>السؤال:</strong><br>${f.question}<br><br><strong>الإجابة:</strong><br>${f.answer}')"><div><i class="fas fa-question-circle" style="margin-left:8px;color:#d4af37;"></i> <strong>${f.question}</strong><br><small>${f.answer.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
         } else {
-            items = behaviors.map(b => `<div class="guide-item" onclick="showDetail('${b.title}', '<strong>الوصف:</strong><br>${b.desc}')"><div><strong>${b.title}</strong><br><small>${b.desc.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
+            items = behaviors.map(b => `<div class="guide-item" onclick="showDetail('${b.title}', '<strong>الوصف:</strong><br>${b.desc}')"><div><i class="fas fa-handshake" style="margin-left:8px;color:#d4af37;"></i> <strong>${b.title}</strong><br><small>${b.desc.substring(0,40)}</small></div><i class="fas fa-chevron-left"></i></div>`);
         }
         return `
         <div class="card">
             <div class="guide-tabs">
-                <div class="guide-tab ${guideTab === 'policies' ? 'active' : ''}" onclick="setGuideTab('policies')">📜 السياسات</div>
-                <div class="guide-tab ${guideTab === 'procedures' ? 'active' : ''}" onclick="setGuideTab('procedures')">📋 الإجراءات</div>
-                <div class="guide-tab ${guideTab === 'behaviors' ? 'active' : ''}" onclick="setGuideTab('behaviors')">🤝 السلوكيات</div>
+                <div class="guide-tab ${guideTab === 'policies' ? 'active' : ''}" onclick="setGuideTab('policies')"><i class="fas fa-file-alt"></i> السياسات</div>
+                <div class="guide-tab ${guideTab === 'procedures' ? 'active' : ''}" onclick="setGuideTab('procedures')"><i class="fas fa-list-ol"></i> الإجراءات</div>
+                <div class="guide-tab ${guideTab === 'behaviors' ? 'active' : ''}" onclick="setGuideTab('behaviors')"><i class="fas fa-handshake"></i> السلوكيات</div>
+                <div class="guide-tab ${guideTab === 'faq' ? 'active' : ''}" onclick="setGuideTab('faq')"><i class="fas fa-question-circle"></i> الأسئلة</div>
             </div>
             ${items.join('')}
         </div>`;
     }
     window.setGuideTab = function(tab) { guideTab = tab; renderApp(); };
-    
-    let currentPageVar = "home";
     
     function getGreeting() {
         let h = new Date().getHours();
@@ -576,30 +626,28 @@ startRealtime();
     }
     
     function renderHome() {
-        let logoHtml = companyData.logo ? `<img src="${companyData.logo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '<i class="fas fa-users"></i>';
         return `
         <div class="hero-section">
             <div class="hero-text">
                 <div style="font-size:24px; font-weight:bold; color:#d4af37;">${getGreeting()}، ${currentUser?.name?.split(' ')[0] || 'موظف'} 👋</div>
                 <div style="margin:8px 0;"><i class="fas fa-briefcase"></i> ${currentUser?.jobTitle || 'موظف'}</div>
-                <div><i class="fas fa-lightbulb"></i> "خير الناس أنفعهم للناس"</div>
-                <div style="font-size:11px; opacity:0.6; margin-top:8px;">الإصدار 3.0</div>
+                <div><i class="fas fa-robot"></i> "اسأل المساعد الذكي"</div>
+                <div style="font-size:11px; opacity:0.6; margin-top:8px;">الإصدار 6.0</div>
             </div>
-            <div class="hero-image">${logoHtml}</div>
+            <div class="hero-image"><i class="fas fa-chart-line"></i></div>
         </div>
         <div class="stats-grid">
-            <div class="stat-card"><div class="stat-number">${jobs.length}</div><div>المسميات</div></div>
-            <div class="stat-card"><div class="stat-number">${policies.length}</div><div>سياسات</div></div>
-            <div class="stat-card"><div class="stat-number">${faq.length}</div><div>أسئلة</div></div>
-            <div class="stat-card"><div class="stat-number">${currentUser?.role === 'admin' ? 'مدير' : 'موظف'}</div><div>صلاحية</div></div>
+            <div class="stat-card"><i class="fas fa-briefcase"></i><div class="stat-number">${jobs.length}</div><div>المسميات</div></div>
+            <div class="stat-card"><i class="fas fa-file-alt"></i><div class="stat-number">${policies.length}</div><div>سياسات</div></div>
+            <div class="stat-card"><i class="fas fa-question-circle"></i><div class="stat-number">${faq.length}</div><div>أسئلة</div></div>
+            <div class="stat-card"><i class="fas fa-user-tie"></i><div class="stat-number">${currentUser?.role === 'admin' ? 'مدير' : 'موظف'}</div><div>صلاحية</div></div>
         </div>`;
     }
     
     function renderCompany() {
-        let logoHtml = companyData.logo ? `<img src="${companyData.logo}" style="width:100px;height:100px;object-fit:cover;border-radius:50%;">` : '<i class="fas fa-building" style="font-size:50px;"></i>';
         return `
         <div class="card">
-            <div class="company-logo-img">${logoHtml}</div>
+            <div class="company-logo-img"><i class="fas fa-building" style="font-size:50px;"></i></div>
             <h2 style="color:#d4af37; text-align:center;">${companyData.name}</h2>
         </div>
         <div class="card"><h3><i class="fas fa-eye"></i> رؤيتنا</h3><p>${companyData.vision}</p></div>
@@ -610,24 +658,22 @@ startRealtime();
     function renderOrg() {
         return `
         <div class="card">
-            <h3>🏢 الهيكل التنظيمي</h3>
-            <div class="org-grid">
-                <div class="org-ceo" onclick="if(${currentUser?.role === 'admin'}) editOrgItem('ceo')">
-                    <i class="fas fa-crown" style="font-size:28px;"></i>
-                    <h3>${orgStructure.ceo.name}</h3>
-                    <p>${orgStructure.ceo.head}</p>
-                    <small>${orgStructure.ceo.members} أعضاء</small>
-                </div>
-                <div class="org-departments">
-                    ${orgStructure.departments.map(d => `
-                        <div class="org-dept" onclick="if(${currentUser?.role === 'admin'}) editOrgDept(${d.id})">
-                            <i class="fas fa-building"></i>
-                            <h4>${d.name}</h4>
-                            <p>${d.head}</p>
-                            <small>${d.members} عضو</small>
-                        </div>
-                    `).join('')}
-                </div>
+            <h3><i class="fas fa-sitemap"></i> الهيكل التنظيمي</h3>
+            <div class="org-ceo">
+                <i class="fas fa-crown"></i>
+                <h3>${orgStructure.ceo.name}</h3>
+                <p>${orgStructure.ceo.head}</p>
+                <small>${orgStructure.ceo.members} أعضاء</small>
+            </div>
+            <div class="org-departments">
+                ${orgStructure.departments.map(d => `
+                    <div class="org-dept">
+                        <i class="fas fa-building"></i>
+                        <h4>${d.name}</h4>
+                        <p>${d.head}</p>
+                        <small>${d.members} عضو</small>
+                    </div>
+                `).join('')}
             </div>
         </div>`;
     }
@@ -659,18 +705,18 @@ startRealtime();
     }
     
     function renderNotifications() {
-        return `<div class="card"><h3>🔔 الإشعارات</h3>${announcements.map(a => `<div style="padding:10px; border-bottom:1px solid rgba(212,175,55,0.1);"><strong>${a.title}</strong><br>${a.content}<br><small>📅 ${a.date}</small></div>`).join('')}</div>`;
+        return `<div class="card"><h3><i class="fas fa-bell"></i> الإشعارات</h3>${announcements.map(a => `<div style="padding:10px; border-bottom:1px solid rgba(212,175,55,0.1);"><strong><i class="fas fa-megaphone"></i> ${a.title}</strong><br>${a.content}<br><small><i class="fas fa-calendar"></i> ${a.date}</small></div>`).join('')}</div>`;
     }
     
     function renderProfile() {
         return `
         <div class="card">
-            <h3>👤 حسابي</h3>
-            <div class="form-group"><label>الاسم</label><input id="pName" value="${currentUser?.name || ''}"></div>
-            <div class="form-group"><label>البريد</label><input id="pEmail" value="${currentUser?.email || ''}"></div>
-            <div class="form-group"><label>المسمى</label><select id="pJob">${jobs.map(j => `<option ${currentUser?.jobTitle === j.title ? 'selected' : ''}>${j.title}</option>`).join('')}</select></div>
-            <button class="btn" onclick="updateProfile()">💾 حفظ</button>
-            <button class="btn" style="margin-top:10px;background:#ef4444;" onclick="logout()">🚪 تسجيل الخروج</button>
+            <h3><i class="fas fa-user-circle"></i> حسابي</h3>
+            <div class="form-group"><label><i class="fas fa-user"></i> الاسم</label><input id="pName" value="${currentUser?.name || ''}"></div>
+            <div class="form-group"><label><i class="fas fa-envelope"></i> البريد</label><input id="pEmail" value="${currentUser?.email || ''}"></div>
+            <div class="form-group"><label><i class="fas fa-briefcase"></i> المسمى</label><select id="pJob">${jobs.map(j => `<option ${currentUser?.jobTitle === j.title ? 'selected' : ''}>${j.title}</option>`).join('')}</select></div>
+            <button class="btn" onclick="updateProfile()"><i class="fas fa-save"></i> حفظ</button>
+            <button class="btn" style="margin-top:10px;background:#ef4444;" onclick="logout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
         </div>`;
     }
     
@@ -681,7 +727,7 @@ startRealtime();
         let idx = users.findIndex(u => u.id === currentUser.id);
         if(idx !== -1) users[idx] = currentUser;
         saveAll();
-        alert('تم حفظ البيانات ✅');
+        showToast("تم حفظ البيانات");
         renderApp();
     }
     
@@ -689,85 +735,47 @@ startRealtime();
         if(currentUser?.role !== 'admin') return '<div class="card">🔒 هذه الصفحة للمدير فقط</div>';
         return `
         <div class="card">
-            <h3>⚙️ لوحة تحكم المدير</h3>
+            <h3><i class="fas fa-cog"></i> لوحة تحكم المدير</h3>
             <div class="admin-grid">
                 <div class="admin-card" onclick="showAddModal('job')"><i class="fas fa-briefcase"></i><div>إضافة مسمى</div></div>
                 <div class="admin-card" onclick="showAddModal('policy')"><i class="fas fa-file-alt"></i><div>إضافة سياسة</div></div>
                 <div class="admin-card" onclick="showAddModal('behavior')"><i class="fas fa-handshake"></i><div>إضافة سلوك</div></div>
                 <div class="admin-card" onclick="showAddModal('procedure')"><i class="fas fa-list-ol"></i><div>إضافة إجراء</div></div>
-                <div class="admin-card" onclick="showAddModal('faq')"><i class="fas fa-question-circle"></i><div>إضافة سؤال</div></div>
+                <div class="admin-card" onclick="showAddModal('faq')"><i class="fas fa-question-circle"></i><div>إضافة سؤال وجواب</div></div>
                 <div class="admin-card" onclick="showAddModal('dept')"><i class="fas fa-building"></i><div>إضافة قسم</div></div>
                 <div class="admin-card" onclick="showAddModal('announcement')"><i class="fas fa-bell"></i><div>إضافة إعلان</div></div>
-                <div class="admin-card" onclick="editCompanyData()"><i class="fas fa-building"></i><div>تعديل بيانات الشركة</div></div>
+                <div class="admin-card" onclick="editCompanyData()"><i class="fas fa-building"></i><div>تعديل الشركة</div></div>
             </div>
         </div>
-        
-        <div class="card"><h4>📋 المسميات الوظيفية</h4>${jobs.map(j => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${j.title}</strong> (${j.department})</span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('job',${j.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('job',${j.id})">🗑️</button></div></div>`).join('')}</div>
-        
-        <div class="card"><h4>📜 السياسات</h4>${policies.map(p => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${p.title}</strong><br><small>${p.description}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('policy',${p.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('policy',${p.id})">🗑️</button></div></div>`).join('')}</div>
-        
-        <div class="card"><h4>🤝 السلوكيات</h4>${behaviors.map(b => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${b.title}</strong><br><small>${b.desc.substring(0,50)}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('behavior',${b.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('behavior',${b.id})">🗑️</button></div></div>`).join('')}</div>
-        
-        <div class="card"><h4>📋 الإجراءات</h4>${procedures.map(p => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${p.title}</strong><br><small>${p.desc.substring(0,50)}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('procedure',${p.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('procedure',${p.id})">🗑️</button></div></div>`).join('')}</div>
-        
-        <div class="card"><h4>❓ الأسئلة الشائعة</h4>${faq.map(f => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${f.question}</strong><br><small>${f.answer.substring(0,40)}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('faq',${f.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('faq',${f.id})">🗑️</button></div></div>`).join('')}</div>
-        
-        <div class="card"><h4>🏢 الأقسام</h4><div class="org-departments" style="display:flex;flex-direction:column;">${orgStructure.departments.map(d => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${d.name}</strong> - المدير: ${d.head} (${d.members} عضو)</span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editOrgDept(${d.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteOrgDept(${d.id})">🗑️</button></div></div>`).join('')}</div>
-        <button class="btn" style="margin-top:10px;" onclick="showAddDeptModal()">+ إضافة قسم جديد</button></div>
-        
-        <div class="card"><h4>🔔 الإعلانات</h4>${announcements.map(a => `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><strong>${a.title}</strong><br><small>${a.content}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('announcement',${a.id})">✏️</button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('announcement',${a.id})">🗑️</button></div></div>`).join('')}</div>
-        
-        <div class="card"><h4>⭐ تقييم الأداء</h4>
-        ${Object.keys(performance).map(jobTitle => `
-            <div style="margin-bottom:15px; padding:10px; background:rgba(212,175,55,0.1); border-radius:12px;">
-                <strong>${jobTitle}</strong>
-                <button class="btn" style="width:auto;padding:3px 10px;margin-right:10px;" onclick="editPerformance('${jobTitle}')">تعديل المعايير</button>
-            </div>
-        `).join('')}</div>`;
+        <div class="card"><h4><i class="fas fa-briefcase"></i> المسميات الوظيفية</h4>${jobs.map(j => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><i class="fas fa-briefcase"></i> <strong>${j.title}</strong> (${j.department})</span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('job',${j.id})"><i class="fas fa-edit"></i></button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('job',${j.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>
+        <div class="card"><h4><i class="fas fa-file-alt"></i> السياسات</h4>${policies.map(p => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><i class="fas fa-file-alt"></i> <strong>${p.title}</strong><br><small>${p.description.substring(0,50)}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('policy',${p.id})"><i class="fas fa-edit"></i></button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('policy',${p.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>
+        <div class="card"><h4><i class="fas fa-handshake"></i> السلوكيات</h4>${behaviors.map(b => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><i class="fas fa-handshake"></i> <strong>${b.title}</strong><br><small>${b.desc.substring(0,50)}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('behavior',${b.id})"><i class="fas fa-edit"></i></button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('behavior',${b.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>
+        <div class="card"><h4><i class="fas fa-list-ol"></i> الإجراءات</h4>${procedures.map(p => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><i class="fas fa-list-ol"></i> <strong>${p.title}</strong><br><small>${p.desc.substring(0,50)}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('procedure',${p.id})"><i class="fas fa-edit"></i></button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('procedure',${p.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>
+        <div class="card"><h4><i class="fas fa-question-circle"></i> الأسئلة الشائعة</h4>${faq.map(f => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><i class="fas fa-question-circle"></i> <strong>${f.question}</strong><br><small>${f.answer.substring(0,50)}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('faq',${f.id})"><i class="fas fa-edit"></i></button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('faq',${f.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>
+        <div class="card"><h4><i class="fas fa-building"></i> الأقسام</h4>${orgStructure.departments.map(d => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><i class="fas fa-building"></i> <strong>${d.name}</strong> - ${d.head} (${d.members} عضو)</span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editOrgDept(${d.id})"><i class="fas fa-edit"></i></button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteOrgDept(${d.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>
+        <button class="btn" style="margin-top:10px;" onclick="showAddDeptModal()">+ إضافة قسم جديد</button>
+        <div class="card"><h4><i class="fas fa-bell"></i> الإعلانات</h4>${announcements.map(a => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid rgba(212,175,55,0.1);"><span><i class="fas fa-bell"></i> <strong>${a.title}</strong><br><small>${a.content}</small></span><div><button class="btn" style="width:auto;padding:3px 10px;" onclick="editItem('announcement',${a.id})"><i class="fas fa-edit"></i></button> <button class="btn" style="width:auto;padding:3px 10px;background:#ef4444;" onclick="deleteItem('announcement',${a.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>`;
     }
     
     window.editCompanyData = function() {
-        let logoPreview = companyData.logo ? `<img src="${companyData.logo}" style="width:80px;height:80px;border-radius:50%;margin-bottom:10px;">` : '<div style="width:80px;height:80px;background:rgba(212,175,55,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;"><i class="fas fa-building" style="font-size:40px;"></i></div>';
-        
         showModal('تعديل بيانات الشركة', `
-            <div style="text-align:center; margin-bottom:15px;">
-                ${logoPreview}
-                <div class="form-group"><label>شعار الشركة (رابط الصورة)</label><input id="compLogo" placeholder="أدخل رابط الصورة" value="${companyData.logo || ''}"></div>
-                <button class="btn" style="margin-top:5px; width:auto; padding:5px 15px;" onclick="uploadCompanyLogo()">اختيار صورة</button>
-                <input type="file" id="logoFileInput" accept="image/*" style="display:none" onchange="handleCompanyLogoUpload(this)">
-            </div>
-            <div class="form-group"><label>اسم الشركة</label><input id="compName" value="${companyData.name}"></div>
-            <div class="form-group"><label>الرؤية</label><textarea id="compVision" rows="2">${companyData.vision}</textarea></div>
-            <div class="form-group"><label>الرسالة</label><textarea id="compMission" rows="2">${companyData.mission}</textarea></div>
+            <div class="form-group"><label><i class="fas fa-building"></i> اسم الشركة</label><input id="compName" value="${companyData.name}"></div>
+            <div class="form-group"><label><i class="fas fa-eye"></i> الرؤية</label><textarea id="compVision" rows="2">${companyData.vision}</textarea></div>
+            <div class="form-group"><label><i class="fas fa-bullseye"></i> الرسالة</label><textarea id="compMission" rows="2">${companyData.mission}</textarea></div>
         `, () => {
             companyData.name = document.getElementById('compName').value;
             companyData.vision = document.getElementById('compVision').value;
             companyData.mission = document.getElementById('compMission').value;
-            if(document.getElementById('compLogo').value) companyData.logo = document.getElementById('compLogo').value;
             saveAll(); 
             renderApp(); 
-            alert('تم تحديث بيانات الشركة ✅');
+            showToast("تم تحديث بيانات الشركة");
         });
-    };
-    
-    window.handleCompanyLogoUpload = function(input) {
-        if(input.files && input.files[0]) {
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('compLogo').value = e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    };
-    
-    window.uploadCompanyLogo = function() {
-        document.getElementById('logoFileInput').click();
     };
     
     function showModal(title, html, onSave) {
         let modal = document.createElement('div');
         modal.className = 'modal';
-        modal.innerHTML = `<div class="modal-content"><h3>${title}</h3>${html}<div style="margin-top:15px;"><button class="btn" onclick="saveModal(this)">حفظ</button><button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()">إلغاء</button></div></div>`;
+        modal.innerHTML = `<div class="modal-content"><h3 style="color:#d4af37;"><i class="fas fa-edit"></i> ${title}</h3>${html}<div style="margin-top:15px; display:flex; gap:10px;"><button class="btn" onclick="saveModal(this)"><i class="fas fa-save"></i> حفظ</button><button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()"><i class="fas fa-times"></i> إلغاء</button></div></div>`;
         document.body.appendChild(modal);
         window.saveModal = (btn) => { 
             onSave(); 
@@ -795,7 +803,7 @@ startRealtime();
             else if(type === 'dept') orgStructure.departments.push({ id: Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) });
             saveAll(); 
             renderApp(); 
-            alert('تم الإضافة ✅');
+            showToast("تم الإضافة بنجاح");
         });
     };
     
@@ -816,12 +824,12 @@ startRealtime();
             else if(type === 'announcement') { item.title = document.getElementById('title').value; item.content = document.getElementById('content').value; item.date = new Date().toLocaleDateString(); }
             saveAll(); 
             renderApp(); 
-            alert('تم التعديل ✅');
+            showToast("تم التعديل بنجاح");
         });
     };
     
     window.deleteItem = function(type, id) {
-        if(confirm('حذف؟')) {
+        if(confirm('هل أنت متأكد من الحذف؟')) {
             if(type === 'job') jobs = jobs.filter(i => i.id !== id);
             else if(type === 'policy') policies = policies.filter(i => i.id !== id);
             else if(type === 'behavior') behaviors = behaviors.filter(i => i.id !== id);
@@ -830,7 +838,7 @@ startRealtime();
             else if(type === 'announcement') announcements = announcements.filter(i => i.id !== id);
             saveAll(); 
             renderApp(); 
-            alert('تم الحذف ✅');
+            showToast("تم الحذف بنجاح");
         }
     };
     
@@ -846,7 +854,7 @@ startRealtime();
             dept.members = parseInt(document.getElementById('members').value);
             saveAll(); 
             renderApp(); 
-            alert('تم تعديل القسم ✅');
+            showToast("تم تعديل القسم");
         });
     };
     
@@ -855,7 +863,7 @@ startRealtime();
             orgStructure.departments = orgStructure.departments.filter(d => d.id !== id);
             saveAll(); 
             renderApp(); 
-            alert('تم الحذف ✅');
+            showToast("تم الحذف");
         }
     };
     
@@ -868,58 +876,7 @@ startRealtime();
             orgStructure.departments.push({ id: Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) });
             saveAll(); 
             renderApp(); 
-            alert('تم إضافة القسم ✅');
-        });
-    };
-    
-    window.editOrgItem = function(type) {
-        if(type === 'ceo') {
-            showModal('تعديل الإدارة العليا', `
-                <div class="form-group"><label>الاسم</label><input id="name" value="${orgStructure.ceo.name}"></div>
-                <div class="form-group"><label>رئيس الإدارة</label><input id="head" value="${orgStructure.ceo.head}"></div>
-                <div class="form-group"><label>عدد الأعضاء</label><input id="members" value="${orgStructure.ceo.members}" type="number"></div>
-            `, () => {
-                orgStructure.ceo.name = document.getElementById('name').value;
-                orgStructure.ceo.head = document.getElementById('head').value;
-                orgStructure.ceo.members = parseInt(document.getElementById('members').value);
-                saveAll(); 
-                renderApp(); 
-                alert('تم التعديل ✅');
-            });
-        }
-    };
-    
-    window.editPerformance = function(jobTitle) {
-        let perf = performance[jobTitle];
-        let criteriaHtml = perf.criteria.map((c, idx) => `
-            <div style="margin-bottom:10px; padding:10px; background:rgba(255,255,255,0.05); border-radius:10px;">
-                <div class="form-group"><label>اسم المعيار</label><input id="cName${idx}" value="${c.name}"></div>
-                <div style="display:flex; gap:10px;">
-                    <div class="form-group" style="flex:1"><label>الدرجة الحالية</label><input id="cValue${idx}" type="number" value="${c.value}"></div>
-                    <div class="form-group" style="flex:1"><label>الدرجة القصوى</label><input id="cMax${idx}" type="number" value="${c.max}"></div>
-                    <div class="form-group" style="flex:1"><label>الوزن %</label><input id="cWeight${idx}" type="number" value="${c.weight}"></div>
-                </div>
-            </div>
-        `).join('');
-        
-        showModal(`تعديل معايير التقييم - ${jobTitle} (5 معايير)`, `
-            ${criteriaHtml}
-        `, () => {
-            let newCriteria = [];
-            for(let i = 0; i < perf.criteria.length; i++) {
-                if(document.getElementById(`cName${i}`)) {
-                    newCriteria.push({
-                        name: document.getElementById(`cName${i}`).value,
-                        value: parseInt(document.getElementById(`cValue${i}`).value),
-                        max: parseInt(document.getElementById(`cMax${i}`).value),
-                        weight: parseInt(document.getElementById(`cWeight${i}`).value)
-                    });
-                }
-            }
-            performance[jobTitle].criteria = newCriteria;
-            saveAll(); 
-            renderApp(); 
-            alert('تم تعديل معايير التقييم ✅');
+            showToast("تم إضافة القسم");
         });
     };
     
@@ -928,7 +885,7 @@ startRealtime();
         let isAdmin = currentUser.role === 'admin';
         document.getElementById('app').innerHTML = `
         <div class="sidebar" id="sidebar">
-            <div class="sidebar-header"><div class="logo">🏢 HR SYSTEM</div><div style="font-size:10px; opacity:0.6;">الإصدار 3.0</div></div>
+            <div class="sidebar-header"><div class="logo"><i class="fas fa-chart-line"></i> HR SYSTEM</div><div style="font-size:10px; opacity:0.6;">الإصدار 6.0</div></div>
             <div class="nav-item ${currentPageVar === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
             <div class="nav-item ${currentPageVar === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i> دليل الموظف</div>
             <div class="nav-item ${currentPageVar === 'org' ? 'active' : ''}" data-page="org"><i class="fas fa-building"></i> الهيكل التنظيمي</div>
@@ -940,7 +897,7 @@ startRealtime();
             <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</div>
         </div>
         <div class="main-content">
-            <div class="top-bar"><button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button><div class="page-title">${getTitle()}</div><div class="avatar"><i class="fas fa-user"></i></div></div>
+            <div class="top-bar"><button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button><div class="page-title">${getTitle()}</div><div class="avatar"><i class="fas fa-user"></i></div></div>
             <div id="pageContent"></div>
         </div>
         <div class="bottom-nav">
@@ -948,9 +905,30 @@ startRealtime();
             <div class="bottom-nav-item ${currentPageVar === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i><span>الدليل</span></div>
             <div class="bottom-nav-item ${currentPageVar === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i><span>حسابي</span></div>
             <div class="bottom-nav-item ${currentPageVar === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i><span>إشعارات</span></div>
+        </div>
+        <div class="ai-fab" id="aiFab" onclick="toggleAI()">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="ai-chat" id="aiChat">
+            <div class="ai-header" onclick="toggleAI()">
+                <i class="fas fa-robot"></i>
+                <span>المساعد الذكي</span>
+                <i class="fas fa-times" style="margin-right: auto;"></i>
+            </div>
+            <div class="ai-messages" id="aiMessages"></div>
+            <div class="ai-input-area">
+                <input type="text" id="aiInput" placeholder="اسألني عن السياسات، الإجراءات، الإجازات..." onkeypress="if(event.key==='Enter') askAI()">
+                <button class="btn" style="width:auto; padding:8px 15px;" onclick="askAI()"><i class="fas fa-paper-plane"></i></button>
+            </div>
         </div>`;
         renderPage();
         attachEvents();
+        
+        window.askAI = askAI;
+        window.toggleAI = toggleAI;
+        if(document.getElementById('aiMessages').children.length === 0 && document.getElementById('aiMessages')){
+            addAIMessage("👋 مرحباً! أنا المساعد الذكي.\n\nاسألني عن:\n• السياسات والإجراءات\n• السلوكيات الوظيفية\n• الإجازات والسلفة\n• تقييم الأداء\n• أي استفسار آخر", false);
+        }
     }
     
     function getTitle() {
@@ -970,100 +948,12 @@ startRealtime();
         });
     }
     
+    // بدء التطبيق
     loadDataFromLocalStorage();
-    
     let savedUser = sessionStorage.getItem('user');
     if(savedUser) currentUser = JSON.parse(savedUser);
     renderApp();
     saveAll();
 </script>
-
-<!-- PWA Service Worker Registration - بدون رفراش تلقائي -->
-<script>
-// ========================================
-// تسجيل Service Worker - بدون إعادة تحميل تلقائي
-// ========================================
-
-if ('serviceWorker' in navigator) {
-    let swRegistration = null;
-    let updateAvailable = false;
-    
-    // إنشاء عنصر الإشعار المنبثق
-    function showUpdateToast() {
-        // التأكد من عدم وجود إشعار مكرر
-        if (document.getElementById('updateToast')) return;
-        
-        let toast = document.createElement('div');
-        toast.id = 'updateToast';
-        toast.className = 'update-toast';
-        toast.innerHTML = `
-            <i class="fas fa-sync-alt"></i>
-            <span style="flex: 1;">📱 يتوفر تحديث جديد للتطبيق</span>
-            <i class="fas fa-chevron-left"></i>
-        `;
-        toast.onclick = () => {
-            console.log('🔄 المستخدم وافق على التحديث');
-            toast.remove();
-            window.location.reload();
-        };
-        document.body.appendChild(toast);
-        setTimeout(() => toast.classList.add('show'), 100);
-        
-        // إخفاء الإشعار بعد 15 ثانية إذا لم ينقر عليه المستخدم
-        setTimeout(() => {
-            if (toast && toast.remove) {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 500);
-            }
-        }, 15000);
-    }
-    
-    // استقبال رسائل من Service Worker
-    navigator.serviceWorker.addEventListener('message', event => {
-        if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
-            console.log('✨ نسخة جديدة متاحة:', event.data.version);
-            if (!updateAvailable) {
-                updateAvailable = true;
-                showUpdateToast();
-            }
-        }
-    });
-    
-    // لا نقوم بإعادة التحميل التلقائي عند تغيير الـ Controller
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-        console.log('🔄 تم تغيير Service Worker، تحديث متاح');
-        if (!updateAvailable) {
-            updateAvailable = true;
-            showUpdateToast();
-        }
-    });
-    
-    // تسجيل Service Worker
-    navigator.serviceWorker.register('sw.js')
-        .then(registration => {
-            swRegistration = registration;
-            console.log('✅ Service Worker Registered بنجاح');
-            
-            // التحقق من وجود تحديث كل ساعة (بدون إعادة تحميل)
-            setInterval(() => {
-                registration.update();
-                console.log('🔍 جاري التحقق من وجود تحديثات جديدة...');
-            }, 60 * 60 * 1000);
-            
-            // التحقق عند عودة الاتصال بالإنترنت
-            window.addEventListener('online', () => {
-                console.log('🌐 تم استعادة الاتصال، جاري التحقق من التحديثات...');
-                registration.update();
-            });
-        })
-        .catch(err => {
-            console.log('❌ Service Worker Registration Error:', err);
-        });
-}
-
-console.log('🚀 PWA System Ready - تحديث يدوي فقط (بدون رفراش تلقائي)');
-</script>
 </body>
 </html>
-
-</script>
