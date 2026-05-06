@@ -45,8 +45,10 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
+            transition: 0.2s;
         }
         .btn:hover { opacity: 0.9; transform: scale(1.02); }
+        .btn-small { width: auto; padding: 5px 12px; margin: 0 3px; display: inline-block; }
         .register-link { margin-top: 15px; font-size: 13px; }
         .register-link span { color: #d4af37; cursor: pointer; }
         .register-form { display: none; margin-top: 15px; }
@@ -63,6 +65,7 @@
             padding: 20px 0;
             transition: 0.3s;
             z-index: 100;
+            overflow-y: auto;
         }
         .sidebar-header { text-align: center; padding: 20px; border-bottom: 1px solid rgba(212,175,55,0.3); }
         .logo { font-size: 22px; color: #d4af37; font-weight: bold; }
@@ -118,6 +121,7 @@
             border: 1px solid rgba(212,175,55,0.2);
         }
         .stat-number { font-size: 32px; font-weight: bold; color: #d4af37; }
+        .stat-card i { font-size: 28px; margin-bottom: 8px; display: block; color: #d4af37; }
         
         .hero-section {
             background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(10,26,47,0.9));
@@ -145,6 +149,7 @@
             border-radius: 30px;
             cursor: pointer;
             background: rgba(212,175,55,0.1);
+            transition: 0.2s;
         }
         .guide-tab.active { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
         .guide-item {
@@ -158,6 +163,7 @@
             justify-content: space-between;
             align-items: center;
         }
+        .guide-item:hover { border-color: #d4af37; }
         
         .modal {
             position: fixed;
@@ -192,7 +198,7 @@
         
         .admin-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 10px;
             margin-bottom: 20px;
         }
@@ -203,9 +209,23 @@
             text-align: center;
             cursor: pointer;
             border: 1px solid rgba(212,175,55,0.2);
+            transition: 0.2s;
         }
         .admin-card:hover { background: rgba(212,175,55,0.15); transform: translateY(-2px); }
-        .admin-card i { font-size: 30px; color: #d4af37; margin-bottom: 8px; display: block; }
+        .admin-card i { font-size: 28px; color: #d4af37; margin-bottom: 8px; display: block; }
+        
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid rgba(212,175,55,0.1);
+        }
+        .list-item:last-child { border-bottom: none; }
+        .list-item-info { flex: 1; }
+        .list-item-title { font-weight: bold; color: #d4af37; }
+        .list-item-desc { font-size: 12px; opacity: 0.7; margin-top: 3px; }
+        .list-item-actions { display: flex; gap: 5px; }
         
         .org-ceo {
             background: linear-gradient(135deg, #d4af37, #b8960c);
@@ -221,7 +241,7 @@
             border-radius: 12px;
             padding: 15px;
             flex: 1;
-            min-width: 150px;
+            min-width: 140px;
             text-align: center;
             border: 1px solid rgba(212,175,55,0.3);
             cursor: pointer;
@@ -262,7 +282,9 @@
             cursor: pointer;
             z-index: 300;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
         }
+        .ai-fab:hover { transform: scale(1.1); }
         .ai-fab i { font-size: 28px; color: #0a1a2f; }
         .ai-chat {
             position: fixed;
@@ -302,540 +324,53 @@
         .ai-input-area { display: flex; padding: 10px; gap: 10px; border-top: 1px solid rgba(212,175,55,0.2); }
         .ai-input-area input { flex: 1; padding: 10px; background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.3); border-radius: 25px; color: white; }
         .ai-input-area button { width: auto; padding: 8px 15px; }
+        .typing { color: #d4af37; font-size: 12px; padding: 5px 12px; }
+        
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0a1a2f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 100000;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(212,175,55,0.3);
+            border-top-color: #d4af37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.open { transform: translateX(0); }
-            .main-content { margin-right: 0; }
+            .main-content { margin-right: 0; padding-bottom: 70px; }
             .menu-toggle { display: block; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .admin-grid { grid-template-columns: repeat(2, 1fr); }
+            .ai-chat { width: 300px; left: 10px; bottom: 10px; }
+            .ai-fab { bottom: 70px; left: 10px; }
         }
     </style>
 </head>
 <body>
 <div id="app">
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-        <div class="loading-spinner" style="width:50px;height:50px;border:4px solid rgba(212,175,55,0.3);border-top-color:#d4af37;border-radius:50%;animation:spin 1s linear infinite;"></div>
-        <div style="color:#d4af37; margin-top:20px;">جاري تحميل البيانات من السحابة...</div>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div style="color: #d4af37;">جاري تحميل البيانات من السحابة...</div>
     </div>
 </div>
-<style>
-    @keyframes spin { to { transform: rotate(360deg); } }
-</style>
 
-<script>
-    // ========================================
-    // نظام إدارة الموارد البشرية - النسخة السحابية
-    // تم تصحيح جميع الأخطاء
-    // ========================================
-    
-    // -------------------- بيانات أولية آمنة --------------------
-    let users = [{ id: 1, email: "admin@hr.com", password: "admin123", name: "أحمد المدير", role: "admin", jobTitle: "مدير الموارد البشرية" }];
-    let currentUser = null;
-    let currentPage = "home";
-    let guideTab = "policies";
-    let lastUpdated = 0;  // ✅ حل مشكلة JSON.stringify
-    
-    // بيانات افتراضية
-    let policies = [
-        { id: 1, title: "سياسة الإجازة السنوية", description: "21 يوم إجازة مدفوعة", content: "يحق للموظف 21 يوم إجازة سنوية مدفوعة الأجر" },
-        { id: 2, title: "سياسة سلفة الراتب", description: "سلفة تصل 50%", content: "بعد 6 أشهر يحق للموظف طلب سلفة" }
-    ];
-    
-    let behaviors = [
-        { id: 1, title: "الاحترافية", desc: "الحفاظ على سلوك محترم مع الزملاء" },
-        { id: 2, title: "الالتزام بالمواعيد", desc: "الحضور في الوقت المحدد" }
-    ];
-    
-    let procedures = [
-        { id: 1, title: "تقديم إجازة", desc: "سجل الدخول واختر الإجازات" },
-        { id: 2, title: "تقديم شكوى", desc: "اكتب الشكوى في قسم الشكاوى" }
-    ];
-    
-    let faq = [
-        { id: 1, question: "ما هي سياسة الإجازة؟", answer: "21 يوم إجازة سنوية" }
-    ];
-    
-    let announcements = [
-        { id: 1, title: "مرحباً", content: "مرحباً بكم في دليل الموظف", date: new Date().toLocaleDateString() }
-    ];
-    
-    let companyData = {
-        name: "شركة التميز للاستشارات",
-        vision: "الريادة في تقديم الحلول المتميزة",
-        mission: "تقديم خدمات مبتكرة لعملائنا"
-    };
-    
-    let orgStructure = {
-        ceo: { name: "مجلس الإدارة", head: "المدير التنفيذي", members: 5 },
-        departments: [
-            { id: 1, name: "الموارد البشرية", head: "مدير الموارد", members: 12 },
-            { id: 2, name: "التقنية", head: "مدير التقنية", members: 20 }
-        ]
-    };
-    
-    // ✅ حل مشكلة الأداء - Default performance
-    let performance = {
-        "مدير الموارد البشرية": {
-            criteria: [
-                { name: "التخطيط الاستراتيجي", value: 88, max: 100, weight: 20 },
-                { name: "إدارة الموارد البشرية", value: 92, max: 100, weight: 20 }
-            ]
-        },
-        "محاسب": {
-            criteria: [
-                { name: "دقة التقارير", value: 98, max: 100, weight: 20 },
-                { name: "الالتزام بالمعايير", value: 95, max: 100, weight: 20 }
-            ]
-        },
-        "مبرمج": {
-            criteria: [
-                { name: "جودة الكود", value: 88, max: 100, weight: 20 },
-                { name: "الالتزام بالمهل", value: 90, max: 100, weight: 20 }
-            ]
-        },
-        "موظف": {  // ✅ Default للموظفين الجدد
-            criteria: [
-                { name: "الأداء العام", value: 85, max: 100, weight: 50 },
-                { name: "الالتزام", value: 90, max: 100, weight: 50 }
-            ]
-        }
-    };
-    
-    // -------------------- Firebase (مع انتظار التحميل) --------------------
-    let firebaseReady = false;
-    let pendingCallback = null;
-    
-    // ✅ انتظار تحميل Firebase
-    window.waitForFirebase = function(callback) {
-        if (firebaseReady) {
-            callback();
-        } else {
-            pendingCallback = callback;
-        }
-    };
-    
-    // ✅ تسجيل Firebase بعد تحميل الصفحة
-    window.addEventListener("load", () => {
-        // Firebase script سيتم تحميله بعد قليل
-        setTimeout(() => {
-            if (window.db) {
-                firebaseReady = true;
-                if (pendingCallback) pendingCallback();
-                initApp();
-            }
-        }, 500);
-    });
-    
-    // ✅ دوال Firebase مع التحقق من الجاهزية
-    async function saveToFirebase(data) {
-        if (!window.db || !window.set) {
-            console.warn("Firebase not ready");
-            return false;
-        }
-        try {
-            await window.set(window.ref(window.db, 'hr-system-data'), {
-                ...data,
-                lastUpdated: Date.now()
-            });
-            return true;
-        } catch(e) { return false; }
-    }
-    
-    async function loadFromFirebase() {
-        if (!window.db || !window.get) {
-            console.warn("Firebase not ready");
-            return null;
-        }
-        try {
-            const snapshot = await window.get(window.ref(window.db, 'hr-system-data'));
-            return snapshot.exists() ? snapshot.val() : null;
-        } catch(e) { return null; }
-    }
-    
-    function listenToFirebase(callback) {
-        if (!window.db || !window.onValue) return;
-        window.onValue(window.ref(window.db, 'hr-system-data'), (snapshot) => {
-            if (snapshot.exists()) callback(snapshot.val());
-        });
-    }
-    
-    // ✅ حفظ البيانات (بدون LocalStorage)
-    async function saveAll() {
-        if (!firebaseReady) return;
-        const data = {
-            users, policies, behaviors, procedures, faq,
-            announcements, companyData, orgStructure, performance
-        };
-        await saveToFirebase(data);
-        showToast("✅ تم الحفظ في السحابة");
-    }
-    
-    // ✅ تحميل البيانات من Firebase فقط
-    async function loadFromCloud() {
-        const data = await loadFromFirebase();
-        if (data) {
-            users = data.users || users;
-            policies = data.policies || policies;
-            behaviors = data.behaviors || behaviors;
-            procedures = data.procedures || procedures;
-            faq = data.faq || faq;
-            announcements = data.announcements || announcements;
-            companyData = data.companyData || companyData;
-            orgStructure = data.orgStructure || orgStructure;
-            performance = data.performance || performance;
-            lastUpdated = data.lastUpdated || 0;
-            return true;
-        }
-        return false;
-    }
-    
-    // ✅ الاستماع للتغييرات الفورية باستخدام timestamp
-    function setupRealtimeSync() {
-        listenToFirebase((data) => {
-            if (data && data.lastUpdated && data.lastUpdated > lastUpdated) {
-                users = data.users || users;
-                policies = data.policies || policies;
-                behaviors = data.behaviors || behaviors;
-                procedures = data.procedures || procedures;
-                faq = data.faq || faq;
-                announcements = data.announcements || announcements;
-                companyData = data.companyData || companyData;
-                orgStructure = data.orgStructure || orgStructure;
-                performance = data.performance || performance;
-                lastUpdated = data.lastUpdated;
-                if (currentUser) renderApp();
-                showToast("🔄 تم تحديث البيانات من جهاز آخر");
-            }
-        });
-    }
-    
-    // -------------------- دوال آمنة --------------------
-    function escapeHtml(text) {
-        if (!text) return '';
-        return text.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    
-    function showToast(msg, isError = false) {
-        let toast = document.createElement('div');
-        toast.className = 'toast';
-        if (isError) toast.classList.add('error');
-        toast.textContent = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.classList.add('show'), 100);
-        setTimeout(() => toast.remove(), 3000);
-    }
-    
-    // ✅ login عادي
-    function login(email, pass) {
-        let user = users.find(u => u.email === email && u.password === pass);
-        if (user) {
-            currentUser = user;
-            sessionStorage.setItem('user', JSON.stringify(user));
-            renderApp();
-            return true;
-        }
-        return false;
-    }
-    
-    async function register(name, email, pass, confirm) {
-        if (pass !== confirm) { showToast("كلمة المرور غير متطابقة", true); return false; }
-        if (users.find(u => u.email === email)) { showToast("البريد موجود", true); return false; }
-        users.push({ id: Date.now(), name, email, password: pass, role: "employee", jobTitle: "موظف" });
-        await saveAll();
-        showToast("تم التسجيل");
-        return true;
-    }
-    
-    function logout() {
-        currentUser = null;
-        sessionStorage.removeItem('user');
-        renderApp();
-    }
-    
-    // -------------------- المساعد الذكي --------------------
-    function getAIResponse(question) {
-        const q = question.toLowerCase();
-        const policy = policies.find(p => q.includes(p.title.toLowerCase()));
-        if (policy) return policy.content;
-        const behavior = behaviors.find(b => q.includes(b.title.toLowerCase()));
-        if (behavior) return behavior.desc;
-        const procedure = procedures.find(p => q.includes(p.title.toLowerCase()));
-        if (procedure) return procedure.desc;
-        const faqItem = faq.find(f => q.includes(f.question.toLowerCase()));
-        if (faqItem) return faqItem.answer;
-        if (q.includes('راتب') || q.includes('سلفة')) return "يمكن طلب سلفة بعد 6 أشهر عمل، الحد الأقصى 50% من الراتب";
-        if (q.includes('إجازة')) return "21 يوم إجازة سنوية مدفوعة الأجر";
-        return "شكراً لسؤالك. يمكنك مراجعة دليل الموظف لمزيد من المعلومات.";
-    }
-    
-    function askAI() {
-        const input = document.getElementById('aiInput');
-        if (!input) return;
-        const question = input.value.trim();
-        if (!question) return;
-        
-        const messagesDiv = document.getElementById('aiMessages');
-        if (!messagesDiv) return;
-        
-        const userMsg = document.createElement('div');
-        userMsg.className = 'message user-message';
-        userMsg.innerHTML = `<i class="fas fa-user"></i> ${escapeHtml(question)}`;
-        messagesDiv.appendChild(userMsg);
-        
-        input.value = '';
-        
-        const typingDiv = document.createElement('div');
-        typingDiv.className = 'typing';
-        typingDiv.id = 'typingIndicator';
-        typingDiv.innerHTML = '<i class="fas fa-robot"></i> المساعد يكتب...';
-        messagesDiv.appendChild(typingDiv);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        
-        setTimeout(() => {
-            document.getElementById('typingIndicator')?.remove();
-            const aiMsg = document.createElement('div');
-            aiMsg.className = 'message ai-message';
-            aiMsg.innerHTML = `<i class="fas fa-robot"></i> ${escapeHtml(getAIResponse(question))}`;
-            messagesDiv.appendChild(aiMsg);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }, 500);
-    }
-    
-    function toggleAI() {
-        const chat = document.getElementById('aiChat');
-        if (chat) chat.classList.toggle('open');
-    }
-    
-    // -------------------- عرض الصفحات --------------------
-    function renderLogin() {
-        return `
-        <div class="login-container">
-            <div class="login-card">
-                <div class="hero-image" style="margin: 0 auto 20px;"><i class="fas fa-cloud"></i></div>
-                <h2>نظام الموارد البشرية</h2>
-                <p style="font-size:12px; margin-bottom:20px;">متزامن مع السحابة ☁️</p>
-                <input type="email" id="loginEmail" placeholder="البريد" value="admin@hr.com">
-                <input type="password" id="loginPass" placeholder="كلمة المرور" value="admin123">
-                <button class="btn" onclick="doLogin()">دخول</button>
-                <div class="register-link">حساب جديد؟ <span onclick="toggleReg()">إنشاء حساب</span></div>
-                <div id="regForm" class="register-form">
-                    <input type="text" id="regName" placeholder="الاسم">
-                    <input type="email" id="regEmail" placeholder="البريد">
-                    <input type="password" id="regPass" placeholder="كلمة المرور">
-                    <input type="password" id="regConfirm" placeholder="تأكيد">
-                    <button class="btn" onclick="doRegister()">تسجيل</button>
-                </div>
-            </div>
-        </div>`;
-    }
-    
-    window.doLogin = function() {
-        let email = document.getElementById('loginEmail')?.value;
-        let pass = document.getElementById('loginPass')?.value;
-        if (!login(email, pass)) showToast("بيانات غير صحيحة", true);
-    };
-    
-    window.doRegister = async function() {
-        let n = document.getElementById('regName')?.value;
-        let e = document.getElementById('regEmail')?.value;
-        let p = document.getElementById('regPass')?.value;
-        let c = document.getElementById('regConfirm')?.value;
-        if (await register(n, e, p, c)) toggleReg();
-    };
-    
-    window.toggleReg = function() {
-        let f = document.getElementById('regForm');
-        if (f) f.classList.toggle('show');
-    };
-    
-    function showDetail(title, content) {
-        let modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.innerHTML = `<div class="modal-content"><h3 style="color:#d4af37;">${escapeHtml(title)}</h3><div style="margin:15px 0;">${escapeHtml(content).replace(/\n/g, '<br>')}</div><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div>`;
-        document.body.appendChild(modal);
-    }
-    
-    function renderGuide() {
-        let items = [];
-        if (guideTab === 'policies') {
-            items = policies.map(p => `<div class="guide-item" onclick="showDetail('${escapeHtml(p.title)}', '<strong>${escapeHtml(p.description)}</strong><br><br>${escapeHtml(p.content)}')"><div><strong>${escapeHtml(p.title)}</strong><br><small>${escapeHtml(p.description.substring(0,40))}</small></div><i class="fas fa-chevron-left"></i></div>`);
-        } else if (guideTab === 'procedures') {
-            items = procedures.map(p => `<div class="guide-item" onclick="showDetail('${escapeHtml(p.title)}', '${escapeHtml(p.desc)}')"><div><strong>${escapeHtml(p.title)}</strong><br><small>${escapeHtml(p.desc.substring(0,40))}</small></div><i class="fas fa-chevron-left"></i></div>`);
-        } else {
-            items = behaviors.map(b => `<div class="guide-item" onclick="showDetail('${escapeHtml(b.title)}', '${escapeHtml(b.desc)}')"><div><strong>${escapeHtml(b.title)}</strong><br><small>${escapeHtml(b.desc.substring(0,40))}</small></div><i class="fas fa-chevron-left"></i></div>`);
-        }
-        return `<div class="card">
-            <div class="guide-tabs">
-                <div class="guide-tab ${guideTab === 'policies' ? 'active' : ''}" onclick="setGuideTab('policies')"><i class="fas fa-file-alt"></i> السياسات</div>
-                <div class="guide-tab ${guideTab === 'procedures' ? 'active' : ''}" onclick="setGuideTab('procedures')"><i class="fas fa-list-ol"></i> الإجراءات</div>
-                <div class="guide-tab ${guideTab === 'behaviors' ? 'active' : ''}" onclick="setGuideTab('behaviors')"><i class="fas fa-handshake"></i> السلوكيات</div>
-            </div>
-            ${items.join('')}
-        </div>
-        <div class="card">
-            <h3><i class="fas fa-question-circle"></i> الأسئلة الشائعة</h3>
-            ${faq.map(f => `<div style="padding:10px;"><strong>${escapeHtml(f.question)}</strong><br>${escapeHtml(f.answer)}</div>`).join('')}
-        </div>`;
-    }
-    
-    window.setGuideTab = function(tab) { guideTab = tab; renderApp(); };
-    
-    function getGreeting() {
-        let h = new Date().getHours();
-        if (h < 12) return "صباح الخير";
-        if (h < 17) return "مساء الخير";
-        return "مساء النور";
-    }
-    
-    function renderHome() {
-        return `<div class="hero-section">
-            <div><div style="font-size:22px; font-weight:bold; color:#d4af37;">${getGreeting()}، ${escapeHtml(currentUser?.name || 'موظف')} 👋</div>
-            <div style="margin-top:5px;"><i class="fas fa-briefcase"></i> ${escapeHtml(currentUser?.jobTitle || 'موظف')}</div>
-            <div style="margin-top:5px;"><i class="fas fa-cloud"></i> نظام متزامن مع السحابة</div></div>
-            <div class="hero-image"><i class="fas fa-cloud"></i></div>
-        </div>
-        <div class="stats-grid">
-            <div class="stat-card"><i class="fas fa-file-alt"></i><div class="stat-number">${policies.length}</div><div>سياسات</div></div>
-            <div class="stat-card"><i class="fas fa-handshake"></i><div class="stat-number">${behaviors.length}</div><div>سلوكيات</div></div>
-            <div class="stat-card"><i class="fas fa-list-ol"></i><div class="stat-number">${procedures.length}</div><div>إجراءات</div></div>
-            <div class="stat-card"><i class="fas fa-question-circle"></i><div class="stat-number">${faq.length}</div><div>أسئلة</div></div>
-        </div>`;
-    }
-    
-    function renderCompany() {
-        return `<div class="card"><h2 style="color:#d4af37; text-align:center;">${escapeHtml(companyData.name)}</h2></div>
-        <div class="card"><h3><i class="fas fa-eye"></i> الرؤية</h3><p>${escapeHtml(companyData.vision)}</p></div>
-        <div class="card"><h3><i class="fas fa-bullseye"></i> الرسالة</h3><p>${escapeHtml(companyData.mission)}</p></div>`;
-    }
-    
-    function renderOrg() {
-        return `<div class="card">
-            <h3><i class="fas fa-sitemap"></i> الهيكل التنظيمي</h3>
-            <div class="org-ceo"><i class="fas fa-crown"></i><h3>${escapeHtml(orgStructure.ceo.name)}</h3><p>${escapeHtml(orgStructure.ceo.head)}</p></div>
-            <div class="org-departments">${orgStructure.departments.map(d => `<div class="org-dept"><i class="fas fa-building"></i><h4>${escapeHtml(d.name)}</h4><p>${escapeHtml(d.head)}</p></div>`).join('')}</div>
-        </div>`;
-    }
-    
-    function renderNotifications() {
-        return `<div class="card"><h3><i class="fas fa-bell"></i> الإشعارات</h3>${announcements.map(a => `<div style="padding:10px; border-bottom:1px solid rgba(212,175,55,0.1);"><strong>${escapeHtml(a.title)}</strong><br>${escapeHtml(a.content)}<br><small>${escapeHtml(a.date)}</small></div>`).join('')}</div>`;
-    }
-    
-    function renderProfile() {
-        return `<div class="card">
-            <h3><i class="fas fa-user-circle"></i> حسابي</h3>
-            <div class="form-group"><label>الاسم</label><input id="pName" value="${escapeHtml(currentUser?.name || '')}"></div>
-            <div class="form-group"><label>البريد</label><input id="pEmail" value="${escapeHtml(currentUser?.email || '')}"></div>
-            <button class="btn" onclick="updateProfile()">حفظ</button>
-            <button class="btn" style="margin-top:10px; background:#ef4444;" onclick="logout()">تسجيل الخروج</button>
-        </div>`;
-    }
-    
-    async function updateProfile() {
-        currentUser.name = document.getElementById('pName')?.value || currentUser.name;
-        currentUser.email = document.getElementById('pEmail')?.value || currentUser.email;
-        let idx = users.findIndex(u => u.id === currentUser.id);
-        if (idx !== -1) users[idx] = currentUser;
-        await saveAll();
-        showToast("تم حفظ البيانات");
-        renderApp();
-    }
-    
-    // ✅ حل مشكلة تقييم الأداء - مع Default
-    function renderPerformance() {
-        let perf = performance[currentUser?.jobTitle] || performance["موظف"];
-        if (!perf) return `<div class="card"><h3>⭐ تقييم الأداء</h3><p>جاري تحميل البيانات...</p></div>`;
-        let total = perf.criteria.reduce((s,c)=>s + c.value,0);
-        let maxTotal = perf.criteria.reduce((s,c)=>s + c.max,0);
-        let percent = Math.round((total/maxTotal)*100);
-        return `<div class="card">
-            <h3>⭐ تقييم الأداء - ${escapeHtml(currentUser?.jobTitle || 'موظف')}</h3>
-            <div style="font-size:48px; font-weight:bold; color:#d4af37; text-align:center;">${percent}%</div>
-            <div style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:10px; margin:15px 0;"><div style="width:${percent}%; height:100%; background:linear-gradient(90deg,#d4af37,#b8960c); border-radius:10px;"></div></div>
-            ${perf.criteria.map(c => `<div style="margin-bottom:15px;"><div>${escapeHtml(c.name)}</div><div style="display:flex; justify-content:space-between;"><span>${c.value}/${c.max}</span><span>الوزن: ${c.weight}%</span></div><div style="width:100%; height:5px; background:rgba(255,255,255,0.1); border-radius:5px; margin-top:5px;"><div style="width:${(c.value/c.max)*100}%; height:100%; background:linear-gradient(90deg,#d4af37,#b8960c); border-radius:5px;"></div></div></div>`).join('')}
-        </div>`;
-    }
-    
-    // باقي دوال لوحة التحكم (مختصرة للطول)
-    function renderAdmin() {
-        if (currentUser?.role !== 'admin') return '<div class="card">🔒 هذه الصفحة للمدير فقط</div>';
-        return `<div class="card"><h3><i class="fas fa-cog"></i> لوحة التحكم</h3>
-            <div class="admin-grid">
-                <div class="admin-card" onclick="alert('يمكن إضافة سياسات من هنا')"><i class="fas fa-file-alt"></i><div>إضافة سياسة</div></div>
-                <div class="admin-card" onclick="alert('يمكن إضافة سلوكيات من هنا')"><i class="fas fa-handshake"></i><div>إضافة سلوك</div></div>
-                <div class="admin-card" onclick="alert('يمكن إضافة إجراءات من هنا')"><i class="fas fa-list-ol"></i><div>إضافة إجراء</div></div>
-                <div class="admin-card" onclick="alert('يمكن إضافة أسئلة من هنا')"><i class="fas fa-question-circle"></i><div>إضافة سؤال</div></div>
-            </div>
-        </div>
-        <div class="card"><h4>السياسات</h4>${policies.map(p => `<div style="display:flex;justify-content:space-between;padding:10px;"><span>${escapeHtml(p.title)}</span></div>`).join('')}</div>`;
-    }
-    
-    function renderApp() {
-        if (!currentUser) {
-            document.getElementById('app').innerHTML = renderLogin();
-            return;
-        }
-        let isAdmin = currentUser.role === 'admin';
-        document.getElementById('app').innerHTML = `
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header"><div class="logo"><i class="fas fa-cloud"></i> HR SYSTEM</div></div>
-            <div class="nav-item ${currentPage === 'home' ? 'active' : ''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
-            <div class="nav-item ${currentPage === 'guide' ? 'active' : ''}" data-page="guide"><i class="fas fa-book"></i> دليل الموظف</div>
-            <div class="nav-item ${currentPage === 'org' ? 'active' : ''}" data-page="org"><i class="fas fa-building"></i> الهيكل التنظيمي</div>
-            <div class="nav-item ${currentPage === 'company' ? 'active' : ''}" data-page="company"><i class="fas fa-building"></i> عن الشركة</div>
-            <div class="nav-item ${currentPage === 'performance' ? 'active' : ''}" data-page="performance"><i class="fas fa-chart-line"></i> تقييم الأداء</div>
-            <div class="nav-item ${currentPage === 'notifications' ? 'active' : ''}" data-page="notifications"><i class="fas fa-bell"></i> الإشعارات</div>
-            <div class="nav-item ${currentPage === 'profile' ? 'active' : ''}" data-page="profile"><i class="fas fa-user"></i> حسابي</div>
-            ${isAdmin ? `<div class="nav-item ${currentPage === 'admin' ? 'active' : ''}" data-page="admin"><i class="fas fa-cog"></i> لوحة التحكم</div>` : ''}
-            <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</div>
-        </div>
-        <div class="main-content">
-            <div class="top-bar"><button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button><div class="page-title">${getTitle()}</div><div class="avatar"><i class="fas fa-user"></i></div></div>
-            <div id="pageContent"></div>
-        </div>
-        <div class="ai-fab" id="aiFab" onclick="toggleAI()"><i class="fas fa-robot"></i></div>
-        <div class="ai-chat" id="aiChat">
-            <div class="ai-header" onclick="toggleAI()"><i class="fas fa-robot"></i> المساعد الذكي <i class="fas fa-times" style="margin-right:auto;"></i></div>
-            <div class="ai-messages" id="aiMessages"></div>
-            <div class="ai-input-area"><input type="text" id="aiInput" placeholder="اسألني..." onkeypress="if(event.key==='Enter') askAI()"><button class="btn" style="width:auto; padding:8px 15px;" onclick="askAI()"><i class="fas fa-paper-plane"></i></button></div>
-        </div>`;
-        
-        let pages = { home: renderHome, guide: renderGuide, org: renderOrg, company: renderCompany, performance: renderPerformance, notifications: renderNotifications, profile: renderProfile, admin: renderAdmin };
-        document.getElementById('pageContent').innerHTML = (pages[currentPage] || renderHome)();
-        
-        document.querySelectorAll('.nav-item').forEach(el => {
-            let page = el.dataset.page;
-            if (page) el.onclick = () => { currentPage = page; renderApp(); };
-        });
-        
-        window.askAI = askAI;
-        window.toggleAI = toggleAI;
-    }
-    
-    function getTitle() {
-        let titles = { home: "الرئيسية", guide: "دليل الموظف", org: "الهيكل التنظيمي", company: "عن الشركة", performance: "تقييم الأداء", notifications: "الإشعارات", profile: "حسابي", admin: "لوحة التحكم" };
-        return titles[currentPage] || "الرئيسية";
-    }
-    
-    // ✅ بدء التطبيق بعد تحميل Firebase
-    async function initApp() {
-        await loadFromCloud();
-        setupRealtimeSync();
-        let savedUser = sessionStorage.getItem('user');
-        if (savedUser) currentUser = JSON.parse(savedUser);
-        renderApp();
-    }
-    
-    // ✅ انتظار Firebase قبل البدء
-    window.waitForFirebase(initApp);
-</script>
-
-<!-- Firebase SDK (تحميل بعد الـ CSS) -->
+<!-- Firebase SDK -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -859,8 +394,472 @@
     window.get = get;
     window.onValue = onValue;
     
-    // ✅ إشعار بجاهزية Firebase
-    if (window.waitForFirebase) window.waitForFirebase(() => {});
+    console.log("✅ Firebase متصل");
+    
+    setTimeout(() => {
+        const loading = document.getElementById('loading');
+        if (loading) loading.style.display = 'none';
+    }, 1000);
+</script>
+
+<script>
+    // ========================================
+    // HR SYSTEM - نسخة سحابية كاملة مع صلاحيات التعديل والحذف
+    // ========================================
+    
+    // -------------------- البيانات الأساسية --------------------
+    let users = [{ id: 1, email: "admin@hr.com", password: "admin123", name: "أحمد المدير", role: "admin", jobTitle: "مدير" }];
+    let currentUser = null;
+    let currentPage = "home";
+    let guideTab = "policies";
+    let lastUpdated = 0;
+    let isSyncing = false;
+    
+    let policies = [
+        { id: 1, title: "سياسة الإجازة السنوية", description: "21 يوم إجازة مدفوعة", content: "يحق للموظف 21 يوم إجازة سنوية مدفوعة الأجر" },
+        { id: 2, title: "سياسة سلفة الراتب", description: "سلفة تصل 50%", content: "بعد 6 أشهر يحق للموظف طلب سلفة" }
+    ];
+    
+    let behaviors = [
+        { id: 1, title: "الاحترافية", desc: "الحفاظ على سلوك محترم مع الزملاء" },
+        { id: 2, title: "الالتزام بالمواعيد", desc: "الحضور في الوقت المحدد" }
+    ];
+    
+    let procedures = [
+        { id: 1, title: "تقديم إجازة", desc: "سجل الدخول واختر الإجازات" },
+        { id: 2, title: "تقديم شكوى", desc: "اكتب الشكوى في قسم الشكاوى" }
+    ];
+    
+    let faq = [
+        { id: 1, question: "ما هي سياسة الإجازة؟", answer: "21 يوم إجازة سنوية" },
+        { id: 2, question: "كيف أطلب سلفة؟", answer: "بعد 6 أشهر عمل" }
+    ];
+    
+    let announcements = [
+        { id: 1, title: "مرحباً", content: "مرحباً بكم في دليل الموظف", date: new Date().toLocaleDateString() }
+    ];
+    
+    let companyData = {
+        name: "شركة التميز للاستشارات",
+        vision: "الريادة في تقديم الحلول المتميزة",
+        mission: "تقديم خدمات مبتكرة لعملائنا"
+    };
+    
+    let orgStructure = {
+        ceo: { name: "مجلس الإدارة", head: "المدير التنفيذي", members: 5 },
+        departments: [
+            { id: 1, name: "الموارد البشرية", head: "مدير الموارد", members: 12 },
+            { id: 2, name: "التقنية", head: "مدير التقنية", members: 20 }
+        ]
+    };
+    
+    let performance = {
+        "مدير": { criteria: [{ name: "التخطيط", value: 88, max: 100, weight: 50 }, { name: "الإدارة", value: 92, max: 100, weight: 50 }] },
+        "محاسب": { criteria: [{ name: "دقة التقارير", value: 98, max: 100, weight: 50 }, { name: "الالتزام", value: 95, max: 100, weight: 50 }] },
+        "مبرمج": { criteria: [{ name: "جودة الكود", value: 88, max: 100, weight: 50 }, { name: "الالتزام", value: 90, max: 100, weight: 50 }] },
+        "موظف": { criteria: [{ name: "الأداء العام", value: 85, max: 100, weight: 50 }, { name: "الالتزام", value: 90, max: 100, weight: 50 }] }
+    };
+    
+    // -------------------- دوال Firebase --------------------
+    async function saveToFirebase(data) {
+        if (!window.db || !window.set || isSyncing) return false;
+        try {
+            await window.set(window.ref(window.db, 'hr-system-data'), { ...data, lastUpdated: Date.now() });
+            return true;
+        } catch(e) { return false; }
+    }
+    
+    async function loadFromFirebase() {
+        if (!window.db || !window.get) return null;
+        try {
+            const snapshot = await window.get(window.ref(window.db, 'hr-system-data'));
+            return snapshot.exists() ? snapshot.val() : null;
+        } catch(e) { return null; }
+    }
+    
+    function listenToFirebase() {
+        if (!window.db || !window.onValue) return;
+        window.onValue(window.ref(window.db, 'hr-system-data'), (snapshot) => {
+            if (snapshot.exists() && !isSyncing) {
+                const data = snapshot.val();
+                if (data.lastUpdated && data.lastUpdated > lastUpdated) {
+                    isSyncing = true;
+                    if (data.policies) policies = data.policies;
+                    if (data.behaviors) behaviors = data.behaviors;
+                    if (data.procedures) procedures = data.procedures;
+                    if (data.faq) faq = data.faq;
+                    if (data.announcements) announcements = data.announcements;
+                    if (data.companyData) companyData = data.companyData;
+                    if (data.orgStructure) orgStructure = data.orgStructure;
+                    if (data.users) users = data.users;
+                    lastUpdated = data.lastUpdated;
+                    if (currentUser) {
+                        const updatedUser = users.find(u => u.id === currentUser.id);
+                        if (updatedUser) currentUser = updatedUser;
+                        renderApp();
+                        showToast("🔄 تم تحديث البيانات من جهاز آخر");
+                    }
+                    isSyncing = false;
+                }
+            }
+        });
+    }
+    
+    async function saveAll() {
+        if (isSyncing) return;
+        const data = { users, policies, behaviors, procedures, faq, announcements, companyData, orgStructure, performance };
+        await saveToFirebase(data);
+    }
+    
+    async function loadAllFromCloud() {
+        const data = await loadFromFirebase();
+        if (data) {
+            users = data.users || users;
+            policies = data.policies || policies;
+            behaviors = data.behaviors || behaviors;
+            procedures = data.procedures || procedures;
+            faq = data.faq || faq;
+            announcements = data.announcements || announcements;
+            companyData = data.companyData || companyData;
+            orgStructure = data.orgStructure || orgStructure;
+            performance = data.performance || performance;
+            lastUpdated = data.lastUpdated || 0;
+            return true;
+        } else {
+            await saveAll();
+            return true;
+        }
+    }
+    
+    // -------------------- دوال مساعدة --------------------
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    function showToast(msg, isError = false) {
+        let toast = document.createElement('div');
+        toast.className = 'toast';
+        if (isError) toast.classList.add('error');
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 100);
+        setTimeout(() => toast.remove(), 3000);
+    }
+    
+    // -------------------- المصادقة --------------------
+    function login(email, pass) {
+        let user = users.find(u => u.email === email && u.password === pass);
+        if (user) {
+            currentUser = user;
+            sessionStorage.setItem('user', JSON.stringify(user));
+            renderApp();
+            return true;
+        }
+        return false;
+    }
+    
+    async function register(name, email, pass, confirm) {
+        if (pass !== confirm) { showToast("كلمة المرور غير متطابقة", true); return false; }
+        if (users.find(u => u.email === email)) { showToast("البريد موجود", true); return false; }
+        users.push({ id: Date.now(), name, email, password: pass, role: "employee", jobTitle: "موظف" });
+        await saveAll();
+        showToast("تم التسجيل");
+        return true;
+    }
+    
+    function logout() { currentUser = null; sessionStorage.removeItem('user'); renderApp(); }
+    
+    // -------------------- المساعد الذكي --------------------
+    function getAIResponse(question) {
+        const q = question.toLowerCase();
+        const policy = policies.find(p => q.includes(p.title.toLowerCase()));
+        if (policy) return policy.content;
+        const behavior = behaviors.find(b => q.includes(b.title.toLowerCase()));
+        if (behavior) return behavior.desc;
+        const procedure = procedures.find(p => q.includes(p.title.toLowerCase()));
+        if (procedure) return procedure.desc;
+        const faqItem = faq.find(f => q.includes(f.question.toLowerCase()));
+        if (faqItem) return faqItem.answer;
+        if (q.includes('راتب') || q.includes('سلفة')) return "💰 يمكن طلب سلفة بعد 6 أشهر عمل، الحد الأقصى 50% من الراتب";
+        if (q.includes('إجازة')) return "🌴 21 يوم إجازة سنوية مدفوعة الأجر";
+        return "🙏 شكراً لسؤالك. يمكنك مراجعة دليل الموظف لمزيد من المعلومات.";
+    }
+    
+    function askAI() {
+        const input = document.getElementById('aiInput');
+        if (!input) return;
+        const question = input.value.trim();
+        if (!question) return;
+        const messagesDiv = document.getElementById('aiMessages');
+        if (!messagesDiv) return;
+        const userMsg = document.createElement('div');
+        userMsg.className = 'message user-message';
+        userMsg.innerHTML = `<i class="fas fa-user"></i> ${escapeHtml(question)}`;
+        messagesDiv.appendChild(userMsg);
+        input.value = '';
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'typing';
+        typingDiv.id = 'typingIndicator';
+        typingDiv.innerHTML = '<i class="fas fa-robot"></i> المساعد يكتب...';
+        messagesDiv.appendChild(typingDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        setTimeout(() => {
+            document.getElementById('typingIndicator')?.remove();
+            const aiMsg = document.createElement('div');
+            aiMsg.className = 'message ai-message';
+            aiMsg.innerHTML = `<i class="fas fa-robot"></i> ${escapeHtml(getAIResponse(question))}`;
+            messagesDiv.appendChild(aiMsg);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }, 500);
+    }
+    
+    function toggleAI() { const chat = document.getElementById('aiChat'); if (chat) chat.classList.toggle('open'); }
+    
+    // -------------------- نوافذ التعديل والإضافة --------------------
+    function showModal(title, html, onSave) {
+        let modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `<div class="modal-content"><h3 style="color:#d4af37;">${title}</h3>${html}<div style="margin-top:15px; display:flex; gap:10px;"><button class="btn" onclick="saveModal(this)">حفظ</button><button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()">إلغاء</button></div></div>`;
+        document.body.appendChild(modal);
+        window.saveModal = async (btn) => { await onSave(); btn.closest('.modal').remove(); };
+    }
+    
+    function showDetail(title, content) {
+        let modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `<div class="modal-content"><h3 style="color:#d4af37;">${escapeHtml(title)}</h3><div style="margin:15px 0;">${escapeHtml(content).replace(/\n/g, '<br>')}</div><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div>`;
+        document.body.appendChild(modal);
+    }
+    
+    // ==================== دوال الإدارة الكاملة ====================
+    
+    // ----- إضافة -----
+    window.showAddModal = function(type) {
+        let fields = {
+            policy: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><input id="desc"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="3"></textarea></div>',
+            behavior: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><textarea id="desc" rows="2"></textarea></div>',
+            procedure: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><textarea id="desc" rows="2"></textarea></div>',
+            faq: '<div class="form-group"><label>السؤال</label><input id="q"></div><div class="form-group"><label>الإجابة</label><textarea id="a" rows="3"></textarea></div>',
+            announcement: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="2"></textarea></div>',
+            dept: '<div class="form-group"><label>اسم القسم</label><input id="name"></div><div class="form-group"><label>رئيس القسم</label><input id="head"></div><div class="form-group"><label>عدد الأعضاء</label><input id="members" type="number"></div>',
+            company: '<div class="form-group"><label>اسم الشركة</label><input id="name" value="'+escapeHtml(companyData.name)+'"></div><div class="form-group"><label>الرؤية</label><textarea id="vision">'+escapeHtml(companyData.vision)+'</textarea></div><div class="form-group"><label>الرسالة</label><textarea id="mission">'+escapeHtml(companyData.mission)+'</textarea></div>'
+        };
+        showModal('إضافة', fields[type], async () => {
+            if (type === 'policy') policies.push({ id: Date.now(), title: document.getElementById('title').value, description: document.getElementById('desc').value, content: document.getElementById('content').value });
+            else if (type === 'behavior') behaviors.push({ id: Date.now(), title: document.getElementById('title').value, desc: document.getElementById('desc').value });
+            else if (type === 'procedure') procedures.push({ id: Date.now(), title: document.getElementById('title').value, desc: document.getElementById('desc').value });
+            else if (type === 'faq') faq.push({ id: Date.now(), question: document.getElementById('q').value, answer: document.getElementById('a').value });
+            else if (type === 'announcement') announcements.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, date: new Date().toLocaleDateString() });
+            else if (type === 'dept') orgStructure.departments.push({ id: Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) || 0 });
+            else if (type === 'company') { companyData.name = document.getElementById('name').value; companyData.vision = document.getElementById('vision').value; companyData.mission = document.getElementById('mission').value; }
+            await saveAll(); renderApp(); showToast("تمت الإضافة بنجاح");
+        });
+    };
+    
+    // ----- تعديل -----
+    window.editItem = function(type, id) {
+        let item, html;
+        if (type === 'policy') { item = policies.find(i => i.id === id); html = `<div class="form-group"><label>العنوان</label><input id="title" value="${escapeHtml(item.title)}"></div><div class="form-group"><label>الوصف</label><input id="desc" value="${escapeHtml(item.description)}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${escapeHtml(item.content)}</textarea></div>`; }
+        else if (type === 'behavior') { item = behaviors.find(i => i.id === id); html = `<div class="form-group"><label>العنوان</label><input id="title" value="${escapeHtml(item.title)}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${escapeHtml(item.desc)}</textarea></div>`; }
+        else if (type === 'procedure') { item = procedures.find(i => i.id === id); html = `<div class="form-group"><label>العنوان</label><input id="title" value="${escapeHtml(item.title)}"></div><div class="form-group"><label>الوصف</label><textarea id="desc">${escapeHtml(item.desc)}</textarea></div>`; }
+        else if (type === 'faq') { item = faq.find(i => i.id === id); html = `<div class="form-group"><label>السؤال</label><input id="q" value="${escapeHtml(item.question)}"></div><div class="form-group"><label>الإجابة</label><textarea id="a">${escapeHtml(item.answer)}</textarea></div>`; }
+        else if (type === 'announcement') { item = announcements.find(i => i.id === id); html = `<div class="form-group"><label>العنوان</label><input id="title" value="${escapeHtml(item.title)}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${escapeHtml(item.content)}</textarea></div>`; }
+        else if (type === 'dept') { item = orgStructure.departments.find(d => d.id === id); html = `<div class="form-group"><label>اسم القسم</label><input id="name" value="${escapeHtml(item.name)}"></div><div class="form-group"><label>رئيس القسم</label><input id="head" value="${escapeHtml(item.head)}"></div><div class="form-group"><label>عدد الأعضاء</label><input id="members" value="${item.members}" type="number"></div>`; }
+        else return;
+        
+        showModal('تعديل', html, async () => {
+            if (type === 'policy') { item.title = document.getElementById('title').value; item.description = document.getElementById('desc').value; item.content = document.getElementById('content').value; }
+            else if (type === 'behavior') { item.title = document.getElementById('title').value; item.desc = document.getElementById('desc').value; }
+            else if (type === 'procedure') { item.title = document.getElementById('title').value; item.desc = document.getElementById('desc').value; }
+            else if (type === 'faq') { item.question = document.getElementById('q').value; item.answer = document.getElementById('a').value; }
+            else if (type === 'announcement') { item.title = document.getElementById('title').value; item.content = document.getElementById('content').value; item.date = new Date().toLocaleDateString(); }
+            else if (type === 'dept') { item.name = document.getElementById('name').value; item.head = document.getElementById('head').value; item.members = parseInt(document.getElementById('members').value) || 0; }
+            await saveAll(); renderApp(); showToast("تم التعديل بنجاح");
+        });
+    };
+    
+    // ----- حذف -----
+    window.deleteItem = async function(type, id) {
+        if (confirm('هل أنت متأكد من الحذف؟')) {
+            if (type === 'policy') policies = policies.filter(i => i.id !== id);
+            else if (type === 'behavior') behaviors = behaviors.filter(i => i.id !== id);
+            else if (type === 'procedure') procedures = procedures.filter(i => i.id !== id);
+            else if (type === 'faq') faq = faq.filter(i => i.id !== id);
+            else if (type === 'announcement') announcements = announcements.filter(i => i.id !== id);
+            else if (type === 'dept') orgStructure.departments = orgStructure.departments.filter(d => d.id !== id);
+            await saveAll(); renderApp(); showToast("تم الحذف بنجاح");
+        }
+    };
+    
+    // ----- تعديل بيانات الشركة -----
+    window.editCompanyData = function() {
+        showModal('تعديل بيانات الشركة', `
+            <div class="form-group"><label>اسم الشركة</label><input id="compName" value="${escapeHtml(companyData.name)}"></div>
+            <div class="form-group"><label>الرؤية</label><textarea id="compVision">${escapeHtml(companyData.vision)}</textarea></div>
+            <div class="form-group"><label>الرسالة</label><textarea id="compMission">${escapeHtml(companyData.mission)}</textarea></div>
+        `, async () => {
+            companyData.name = document.getElementById('compName').value;
+            companyData.vision = document.getElementById('compVision').value;
+            companyData.mission = document.getElementById('compMission').value;
+            await saveAll(); renderApp(); showToast("تم تحديث بيانات الشركة");
+        });
+    };
+    
+    // ----- تعديل الهيكل التنظيمي -----
+    window.editOrgItem = function(type) {
+        if (type === 'ceo') {
+            showModal('تعديل الإدارة العليا', `
+                <div class="form-group"><label>الاسم</label><input id="name" value="${escapeHtml(orgStructure.ceo.name)}"></div>
+                <div class="form-group"><label>رئيس الإدارة</label><input id="head" value="${escapeHtml(orgStructure.ceo.head)}"></div>
+                <div class="form-group"><label>عدد الأعضاء</label><input id="members" value="${orgStructure.ceo.members}" type="number"></div>
+            `, async () => {
+                orgStructure.ceo.name = document.getElementById('name').value;
+                orgStructure.ceo.head = document.getElementById('head').value;
+                orgStructure.ceo.members = parseInt(document.getElementById('members').value) || 0;
+                await saveAll(); renderApp(); showToast("تم التعديل");
+            });
+        }
+    };
+    
+    // -------------------- عرض الصفحات --------------------
+    function renderLogin() {
+        return `<div class="login-container"><div class="login-card"><div class="hero-image" style="margin:0 auto 20px;"><i class="fas fa-cloud"></i></div><h2>HR SYSTEM</h2><p style="font-size:12px; margin-bottom:20px;">متزامن مع السحابة ☁️</p><input type="email" id="loginEmail" placeholder="البريد" value="admin@hr.com"><input type="password" id="loginPass" placeholder="كلمة المرور" value="admin123"><button class="btn" onclick="doLogin()">دخول</button><div class="register-link">حساب جديد؟ <span onclick="toggleReg()">إنشاء حساب</span></div><div id="regForm" class="register-form"><input type="text" id="regName" placeholder="الاسم"><input type="email" id="regEmail" placeholder="البريد"><input type="password" id="regPass" placeholder="كلمة المرور"><input type="password" id="regConfirm" placeholder="تأكيد"><button class="btn" onclick="doRegister()">تسجيل</button></div></div></div>`;
+    }
+    
+    window.doLogin = function() { let e=document.getElementById('loginEmail')?.value, p=document.getElementById('loginPass')?.value; if(!login(e,p)) showToast("بيانات غير صحيحة", true); };
+    window.doRegister = async function() { let n=document.getElementById('regName')?.value, e=document.getElementById('regEmail')?.value, p=document.getElementById('regPass')?.value, c=document.getElementById('regConfirm')?.value; if(await register(n,e,p,c)) toggleReg(); };
+    window.toggleReg = function() { let f=document.getElementById('regForm'); if(f) f.classList.toggle('show'); };
+    
+    function renderGuide() {
+        let items = [];
+        if (guideTab === 'policies') items = policies.map(p => `<div class="guide-item" onclick="showDetail('${escapeHtml(p.title)}', '<strong>${escapeHtml(p.description)}</strong><br><br>${escapeHtml(p.content)}')"><div><i class="fas fa-file-alt"></i> <strong>${escapeHtml(p.title)}</strong><br><small>${escapeHtml(p.description.substring(0,40))}</small></div><i class="fas fa-chevron-left"></i></div>`);
+        else if (guideTab === 'procedures') items = procedures.map(p => `<div class="guide-item" onclick="showDetail('${escapeHtml(p.title)}', '${escapeHtml(p.desc)}')"><div><i class="fas fa-list-ol"></i> <strong>${escapeHtml(p.title)}</strong><br><small>${escapeHtml(p.desc.substring(0,40))}</small></div><i class="fas fa-chevron-left"></i></div>`);
+        else items = behaviors.map(b => `<div class="guide-item" onclick="showDetail('${escapeHtml(b.title)}', '${escapeHtml(b.desc)}')"><div><i class="fas fa-handshake"></i> <strong>${escapeHtml(b.title)}</strong><br><small>${escapeHtml(b.desc.substring(0,40))}</small></div><i class="fas fa-chevron-left"></i></div>`);
+        return `<div class="card"><div class="guide-tabs"><div class="guide-tab ${guideTab==='policies'?'active':''}" onclick="setGuideTab('policies')"><i class="fas fa-file-alt"></i> السياسات</div><div class="guide-tab ${guideTab==='procedures'?'active':''}" onclick="setGuideTab('procedures')"><i class="fas fa-list-ol"></i> الإجراءات</div><div class="guide-tab ${guideTab==='behaviors'?'active':''}" onclick="setGuideTab('behaviors')"><i class="fas fa-handshake"></i> السلوكيات</div></div>${items.join('')}</div><div class="card"><h3><i class="fas fa-question-circle"></i> الأسئلة الشائعة</h3>${faq.map(f=>`<div style="padding:10px; border-bottom:1px solid rgba(212,175,55,0.1);"><strong>${escapeHtml(f.question)}</strong><br>${escapeHtml(f.answer)}</div>`).join('')}</div>`;
+    }
+    
+    window.setGuideTab = function(tab) { guideTab = tab; renderApp(); };
+    
+    function getGreeting() { let h=new Date().getHours(); if(h<12) return "صباح الخير"; if(h<17) return "مساء الخير"; return "مساء النور"; }
+    
+    function renderHome() {
+        return `<div class="hero-section"><div><div style="font-size:22px; font-weight:bold; color:#d4af37;">${getGreeting()}، ${escapeHtml(currentUser?.name || 'موظف')} 👋</div><div style="margin-top:5px;"><i class="fas fa-briefcase"></i> ${escapeHtml(currentUser?.jobTitle || 'موظف')}</div><div style="margin-top:5px;"><i class="fas fa-cloud"></i> نظام متزامن مع السحابة ☁️</div></div><div class="hero-image"><i class="fas fa-cloud"></i></div></div>
+        <div class="stats-grid"><div class="stat-card"><i class="fas fa-file-alt"></i><div class="stat-number">${policies.length}</div><div>سياسات</div></div><div class="stat-card"><i class="fas fa-handshake"></i><div class="stat-number">${behaviors.length}</div><div>سلوكيات</div></div><div class="stat-card"><i class="fas fa-list-ol"></i><div class="stat-number">${procedures.length}</div><div>إجراءات</div></div><div class="stat-card"><i class="fas fa-question-circle"></i><div class="stat-number">${faq.length}</div><div>أسئلة</div></div></div>`;
+    }
+    
+    function renderCompany() {
+        return `<div class="card"><h2 style="color:#d4af37; text-align:center;">${escapeHtml(companyData.name)}</h2></div><div class="card"><h3><i class="fas fa-eye"></i> الرؤية</h3><p>${escapeHtml(companyData.vision)}</p></div><div class="card"><h3><i class="fas fa-bullseye"></i> الرسالة</h3><p>${escapeHtml(companyData.mission)}</p></div>`;
+    }
+    
+    function renderOrg() {
+        return `<div class="card"><h3><i class="fas fa-sitemap"></i> الهيكل التنظيمي</h3><div class="org-ceo" onclick="if(${currentUser?.role==='admin'}) editOrgItem('ceo')"><i class="fas fa-crown"></i><h3>${escapeHtml(orgStructure.ceo.name)}</h3><p>${escapeHtml(orgStructure.ceo.head)}</p><small>${orgStructure.ceo.members} أعضاء</small></div><div class="org-departments">${orgStructure.departments.map(d=>`<div class="org-dept" onclick="if(${currentUser?.role==='admin'}) editItem('dept',${d.id})"><i class="fas fa-building"></i><h4>${escapeHtml(d.name)}</h4><p>${escapeHtml(d.head)}</p><small>${d.members} عضو</small></div>`).join('')}</div></div>`;
+    }
+    
+    function renderPerformance() {
+        let perf = performance[currentUser?.jobTitle] || performance["موظف"];
+        if (!perf) return `<div class="card"><h3>⭐ تقييم الأداء</h3><p>جاري تحميل البيانات...</p></div>`;
+        let total = perf.criteria.reduce((s,c)=>s + c.value,0);
+        let maxTotal = perf.criteria.reduce((s,c)=>s + c.max,0);
+        let percent = Math.round((total/maxTotal)*100);
+        return `<div class="card"><h3>⭐ تقييم الأداء - ${escapeHtml(currentUser?.jobTitle || 'موظف')}</h3><div style="font-size:48px; font-weight:bold; color:#d4af37; text-align:center;">${percent}%</div><div style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:10px; margin:15px 0;"><div style="width:${percent}%; height:100%; background:linear-gradient(90deg,#d4af37,#b8960c); border-radius:10px;"></div></div>${perf.criteria.map(c=>`<div style="margin-bottom:15px;"><div>${escapeHtml(c.name)}</div><div style="display:flex; justify-content:space-between;"><span>${c.value}/${c.max}</span><span>الوزن: ${c.weight}%</span></div><div style="width:100%; height:5px; background:rgba(255,255,255,0.1); border-radius:5px; margin-top:5px;"><div style="width:${(c.value/c.max)*100}%; height:100%; background:linear-gradient(90deg,#d4af37,#b8960c); border-radius:5px;"></div></div></div>`).join('')}</div>`;
+    }
+    
+    function renderNotifications() {
+        return `<div class="card"><h3><i class="fas fa-bell"></i> الإشعارات</h3>${announcements.map(a=>`<div style="padding:10px; border-bottom:1px solid rgba(212,175,55,0.1);"><strong>${escapeHtml(a.title)}</strong><br>${escapeHtml(a.content)}<br><small>${escapeHtml(a.date)}</small></div>`).join('')}</div>`;
+    }
+    
+    function renderProfile() {
+        return `<div class="card"><h3><i class="fas fa-user-circle"></i> حسابي</h3><div class="form-group"><label>الاسم</label><input id="pName" value="${escapeHtml(currentUser?.name || '')}"></div><div class="form-group"><label>البريد</label><input id="pEmail" value="${escapeHtml(currentUser?.email || '')}"></div><button class="btn" onclick="updateProfile()">حفظ</button><button class="btn" style="margin-top:10px; background:#ef4444;" onclick="logout()">تسجيل الخروج</button></div>`;
+    }
+    
+    async function updateProfile() {
+        currentUser.name = document.getElementById('pName')?.value || currentUser.name;
+        currentUser.email = document.getElementById('pEmail')?.value || currentUser.email;
+        let idx = users.findIndex(u => u.id === currentUser.id);
+        if (idx !== -1) users[idx] = currentUser;
+        await saveAll();
+        showToast("تم حفظ البيانات");
+        renderApp();
+    }
+    
+    // ==================== لوحة التحكم الكاملة ====================
+    function renderAdmin() {
+        if (currentUser?.role !== 'admin') return '<div class="card">🔒 هذه الصفحة للمدير فقط</div>';
+        return `
+        <div class="card">
+            <h3><i class="fas fa-cog"></i> لوحة التحكم</h3>
+            <div class="admin-grid">
+                <div class="admin-card" onclick="showAddModal('policy')"><i class="fas fa-file-alt"></i><div>إضافة سياسة</div></div>
+                <div class="admin-card" onclick="showAddModal('behavior')"><i class="fas fa-handshake"></i><div>إضافة سلوك</div></div>
+                <div class="admin-card" onclick="showAddModal('procedure')"><i class="fas fa-list-ol"></i><div>إضافة إجراء</div></div>
+                <div class="admin-card" onclick="showAddModal('faq')"><i class="fas fa-question-circle"></i><div>إضافة سؤال</div></div>
+                <div class="admin-card" onclick="showAddModal('announcement')"><i class="fas fa-bell"></i><div>إضافة إعلان</div></div>
+                <div class="admin-card" onclick="showAddModal('dept')"><i class="fas fa-building"></i><div>إضافة قسم</div></div>
+                <div class="admin-card" onclick="editCompanyData()"><i class="fas fa-building"></i><div>تعديل الشركة</div></div>
+                <div class="admin-card" onclick="syncNow()"><i class="fas fa-sync-alt"></i><div>مزامنة</div></div>
+            </div>
+        </div>
+        
+        <div class="card"><h4><i class="fas fa-file-alt"></i> السياسات</h4>${policies.map(p=>`<div class="list-item"><div class="list-item-info"><div class="list-item-title">${escapeHtml(p.title)}</div><div class="list-item-desc">${escapeHtml(p.description.substring(0,60))}</div></div><div class="list-item-actions"><button class="btn btn-small" onclick="editItem('policy',${p.id})"><i class="fas fa-edit"></i></button><button class="btn btn-small" style="background:#ef4444;" onclick="deleteItem('policy',${p.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>
+        
+        <div class="card"><h4><i class="fas fa-handshake"></i> السلوكيات</h4>${behaviors.map(b=>`<div class="list-item"><div class="list-item-info"><div class="list-item-title">${escapeHtml(b.title)}</div><div class="list-item-desc">${escapeHtml(b.desc.substring(0,60))}</div></div><div class="list-item-actions"><button class="btn btn-small" onclick="editItem('behavior',${b.id})"><i class="fas fa-edit"></i></button><button class="btn btn-small" style="background:#ef4444;" onclick="deleteItem('behavior',${b.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>
+        
+        <div class="card"><h4><i class="fas fa-list-ol"></i> الإجراءات</h4>${procedures.map(p=>`<div class="list-item"><div class="list-item-info"><div class="list-item-title">${escapeHtml(p.title)}</div><div class="list-item-desc">${escapeHtml(p.desc.substring(0,60))}</div></div><div class="list-item-actions"><button class="btn btn-small" onclick="editItem('procedure',${p.id})"><i class="fas fa-edit"></i></button><button class="btn btn-small" style="background:#ef4444;" onclick="deleteItem('procedure',${p.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>
+        
+        <div class="card"><h4><i class="fas fa-question-circle"></i> الأسئلة الشائعة</h4>${faq.map(f=>`<div class="list-item"><div class="list-item-info"><div class="list-item-title">${escapeHtml(f.question)}</div><div class="list-item-desc">${escapeHtml(f.answer.substring(0,60))}</div></div><div class="list-item-actions"><button class="btn btn-small" onclick="editItem('faq',${f.id})"><i class="fas fa-edit"></i></button><button class="btn btn-small" style="background:#ef4444;" onclick="deleteItem('faq',${f.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>
+        
+        <div class="card"><h4><i class="fas fa-bell"></i> الإعلانات</h4>${announcements.map(a=>`<div class="list-item"><div class="list-item-info"><div class="list-item-title">${escapeHtml(a.title)}</div><div class="list-item-desc">${escapeHtml(a.content.substring(0,60))}</div></div><div class="list-item-actions"><button class="btn btn-small" onclick="editItem('announcement',${a.id})"><i class="fas fa-edit"></i></button><button class="btn btn-small" style="background:#ef4444;" onclick="deleteItem('announcement',${a.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>
+        
+        <div class="card"><h4><i class="fas fa-building"></i> الأقسام</h4>${orgStructure.departments.map(d=>`<div class="list-item"><div class="list-item-info"><div class="list-item-title">${escapeHtml(d.name)}</div><div class="list-item-desc">المدير: ${escapeHtml(d.head)} | الأعضاء: ${d.members}</div></div><div class="list-item-actions"><button class="btn btn-small" onclick="editItem('dept',${d.id})"><i class="fas fa-edit"></i></button><button class="btn btn-small" style="background:#ef4444;" onclick="deleteItem('dept',${d.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>`;
+    }
+    
+    window.syncNow = async function() { showToast("🔄 جاري المزامنة..."); await loadAllFromCloud(); renderApp(); showToast("✅ تمت المزامنة"); };
+    
+    // -------------------- العرض الرئيسي --------------------
+    function renderApp() {
+        if (!currentUser) { document.getElementById('app').innerHTML = renderLogin(); return; }
+        let isAdmin = currentUser.role === 'admin';
+        document.getElementById('app').innerHTML = `
+        <div class="sidebar" id="sidebar"><div class="sidebar-header"><div class="logo"><i class="fas fa-cloud"></i> HR SYSTEM</div><div style="font-size:10px; opacity:0.7;">متزامن ☁️</div></div>
+            <div class="nav-item ${currentPage==='home'?'active':''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
+            <div class="nav-item ${currentPage==='guide'?'active':''}" data-page="guide"><i class="fas fa-book"></i> دليل الموظف</div>
+            <div class="nav-item ${currentPage==='org'?'active':''}" data-page="org"><i class="fas fa-building"></i> الهيكل التنظيمي</div>
+            <div class="nav-item ${currentPage==='company'?'active':''}" data-page="company"><i class="fas fa-flag-checkered"></i> عن الشركة</div>
+            <div class="nav-item ${currentPage==='performance'?'active':''}" data-page="performance"><i class="fas fa-chart-line"></i> تقييم الأداء</div>
+            <div class="nav-item ${currentPage==='notifications'?'active':''}" data-page="notifications"><i class="fas fa-bell"></i> الإشعارات</div>
+            <div class="nav-item ${currentPage==='profile'?'active':''}" data-page="profile"><i class="fas fa-user"></i> حسابي</div>
+            ${isAdmin ? `<div class="nav-item ${currentPage==='admin'?'active':''}" data-page="admin"><i class="fas fa-cog"></i> لوحة التحكم</div>` : ''}
+            <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</div>
+        </div>
+        <div class="main-content"><div class="top-bar"><button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button><div class="page-title">${getTitle()}</div><div class="avatar"><i class="fas fa-user"></i></div></div><div id="pageContent"></div></div>
+        <div class="ai-fab" id="aiFab" onclick="toggleAI()"><i class="fas fa-robot"></i></div>
+        <div class="ai-chat" id="aiChat"><div class="ai-header" onclick="toggleAI()"><i class="fas fa-robot"></i> المساعد الذكي <i class="fas fa-times" style="margin-right:auto;"></i></div><div class="ai-messages" id="aiMessages"></div><div class="ai-input-area"><input type="text" id="aiInput" placeholder="اسألني..." onkeypress="if(event.key==='Enter') askAI()"><button class="btn" style="width:auto; padding:8px 15px;" onclick="askAI()"><i class="fas fa-paper-plane"></i></button></div></div>`;
+        
+        let pages = { home: renderHome, guide: renderGuide, org: renderOrg, company: renderCompany, performance: renderPerformance, notifications: renderNotifications, profile: renderProfile, admin: renderAdmin };
+        document.getElementById('pageContent').innerHTML = (pages[currentPage] || renderHome)();
+        
+        document.querySelectorAll('.nav-item').forEach(el => { let page = el.dataset.page; if (page) el.onclick = () => { currentPage = page; renderApp(); }; });
+        window.askAI = askAI; window.toggleAI = toggleAI;
+    }
+    
+    function getTitle() { let t={home:"الرئيسية",guide:"دليل الموظف",org:"الهيكل التنظيمي",company:"عن الشركة",performance:"تقييم الأداء",notifications:"الإشعارات",profile:"حسابي",admin:"لوحة التحكم"}; return t[currentPage]||"الرئيسية"; }
+    
+    // -------------------- بدء التطبيق --------------------
+    async function initApp() {
+        await loadAllFromCloud();
+        listenToFirebase();
+        let savedUser = sessionStorage.getItem('user');
+        if (savedUser) currentUser = JSON.parse(savedUser);
+        renderApp();
+    }
+    
+    initApp();
 </script>
 </body>
 </html>
