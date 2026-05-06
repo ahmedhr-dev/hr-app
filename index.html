@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HR System | دليل الموظف - سحابي</title>
     
+    <!-- 🔥 منع التخزين المؤقت -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
@@ -639,7 +644,6 @@
     
     // ==================== دوال الإدارة الكاملة ====================
     
-    // ----- إضافة -----
     window.showAddModal = function(type) {
         let fields = {
             policy: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><input id="desc"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="3"></textarea></div>',
@@ -647,8 +651,7 @@
             procedure: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>الوصف</label><textarea id="desc" rows="2"></textarea></div>',
             faq: '<div class="form-group"><label>السؤال</label><input id="q"></div><div class="form-group"><label>الإجابة</label><textarea id="a" rows="3"></textarea></div>',
             announcement: '<div class="form-group"><label>العنوان</label><input id="title"></div><div class="form-group"><label>المحتوى</label><textarea id="content" rows="2"></textarea></div>',
-            dept: '<div class="form-group"><label>اسم القسم</label><input id="name"></div><div class="form-group"><label>رئيس القسم</label><input id="head"></div><div class="form-group"><label>عدد الأعضاء</label><input id="members" type="number"></div>',
-            company: '<div class="form-group"><label>اسم الشركة</label><input id="name" value="'+escapeHtml(companyData.name)+'"></div><div class="form-group"><label>الرؤية</label><textarea id="vision">'+escapeHtml(companyData.vision)+'</textarea></div><div class="form-group"><label>الرسالة</label><textarea id="mission">'+escapeHtml(companyData.mission)+'</textarea></div>'
+            dept: '<div class="form-group"><label>اسم القسم</label><input id="name"></div><div class="form-group"><label>رئيس القسم</label><input id="head"></div><div class="form-group"><label>عدد الأعضاء</label><input id="members" type="number"></div>'
         };
         showModal('إضافة', fields[type], async () => {
             if (type === 'policy') policies.push({ id: Date.now(), title: document.getElementById('title').value, description: document.getElementById('desc').value, content: document.getElementById('content').value });
@@ -657,12 +660,10 @@
             else if (type === 'faq') faq.push({ id: Date.now(), question: document.getElementById('q').value, answer: document.getElementById('a').value });
             else if (type === 'announcement') announcements.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, date: new Date().toLocaleDateString() });
             else if (type === 'dept') orgStructure.departments.push({ id: Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) || 0 });
-            else if (type === 'company') { companyData.name = document.getElementById('name').value; companyData.vision = document.getElementById('vision').value; companyData.mission = document.getElementById('mission').value; }
             await saveAll(); renderApp(); showToast("تمت الإضافة بنجاح");
         });
     };
     
-    // ----- تعديل -----
     window.editItem = function(type, id) {
         let item, html;
         if (type === 'policy') { item = policies.find(i => i.id === id); html = `<div class="form-group"><label>العنوان</label><input id="title" value="${escapeHtml(item.title)}"></div><div class="form-group"><label>الوصف</label><input id="desc" value="${escapeHtml(item.description)}"></div><div class="form-group"><label>المحتوى</label><textarea id="content">${escapeHtml(item.content)}</textarea></div>`; }
@@ -684,7 +685,6 @@
         });
     };
     
-    // ----- حذف -----
     window.deleteItem = async function(type, id) {
         if (confirm('هل أنت متأكد من الحذف؟')) {
             if (type === 'policy') policies = policies.filter(i => i.id !== id);
@@ -697,7 +697,6 @@
         }
     };
     
-    // ----- تعديل بيانات الشركة -----
     window.editCompanyData = function() {
         showModal('تعديل بيانات الشركة', `
             <div class="form-group"><label>اسم الشركة</label><input id="compName" value="${escapeHtml(companyData.name)}"></div>
@@ -711,7 +710,6 @@
         });
     };
     
-    // ----- تعديل الهيكل التنظيمي -----
     window.editOrgItem = function(type) {
         if (type === 'ceo') {
             showModal('تعديل الإدارة العليا', `
@@ -726,6 +724,8 @@
             });
         }
     };
+    
+    window.syncNow = async function() { showToast("🔄 جاري المزامنة..."); await loadAllFromCloud(); renderApp(); showToast("✅ تمت المزامنة"); };
     
     // -------------------- عرض الصفحات --------------------
     function renderLogin() {
@@ -788,7 +788,6 @@
         renderApp();
     }
     
-    // ==================== لوحة التحكم الكاملة ====================
     function renderAdmin() {
         if (currentUser?.role !== 'admin') return '<div class="card">🔒 هذه الصفحة للمدير فقط</div>';
         return `
@@ -818,8 +817,6 @@
         
         <div class="card"><h4><i class="fas fa-building"></i> الأقسام</h4>${orgStructure.departments.map(d=>`<div class="list-item"><div class="list-item-info"><div class="list-item-title">${escapeHtml(d.name)}</div><div class="list-item-desc">المدير: ${escapeHtml(d.head)} | الأعضاء: ${d.members}</div></div><div class="list-item-actions"><button class="btn btn-small" onclick="editItem('dept',${d.id})"><i class="fas fa-edit"></i></button><button class="btn btn-small" style="background:#ef4444;" onclick="deleteItem('dept',${d.id})"><i class="fas fa-trash"></i></button></div></div>`).join('')}</div>`;
     }
-    
-    window.syncNow = async function() { showToast("🔄 جاري المزامنة..."); await loadAllFromCloud(); renderApp(); showToast("✅ تمت المزامنة"); };
     
     // -------------------- العرض الرئيسي --------------------
     function renderApp() {
