@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR System | دليل الموظف - سحابي</title>
+    <title>الخزامى | بوابة الموارد البشرية</title>
+    <meta name="theme-color" content="#251736">
+    <meta name="description" content="بوابة الخزامى للموارد البشرية، السياسات، الإجراءات، تقييم الأداء والمساعد.">
     
     <!-- 🔥 منع التخزين المؤقت -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -11,370 +13,125 @@
     <meta http-equiv="Expires" content="0">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Cairo', Tahoma, sans-serif;
-            background: linear-gradient(135deg, #0a1a2f 0%, #061220 100%);
-            min-height: 100vh;
-            color: #fff;
-        }
-        .login-container { min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .login-card {
-            background: rgba(10, 26, 47, 0.95);
-            border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            border: 1px solid #d4af37;
-        }
-        .login-card h2 { color: #d4af37; margin: 20px 0; }
-        .login-card input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid #d4af37;
-            border-radius: 30px;
-            color: white;
-        }
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #d4af37, #b8960c);
-            border: none;
-            border-radius: 30px;
-            color: #0a1a2f;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.2s;
-        }
-        .btn:hover { opacity: 0.9; transform: scale(1.02); }
-        .btn-small { width: auto; padding: 5px 12px; margin: 0 3px; display: inline-block; }
-        .register-link { margin-top: 15px; font-size: 13px; }
-        .register-link span { color: #d4af37; cursor: pointer; }
-        .register-form { display: none; margin-top: 15px; }
-        .register-form.show { display: block; }
-        
-        .sidebar {
-            position: fixed;
-            right: 0;
-            top: 0;
-            width: 260px;
-            height: 100vh;
-            background: #0a1a2f;
-            border-left: 1px solid #d4af37;
-            padding: 20px 0;
-            transition: 0.3s;
-            z-index: 100;
-            overflow-y: auto;
-        }
-        .sidebar-header { text-align: center; padding: 20px; border-bottom: 1px solid rgba(212,175,55,0.3); }
-        .logo { font-size: 22px; color: #d4af37; font-weight: bold; }
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 20px;
-            margin: 5px 15px;
-            border-radius: 12px;
-            cursor: pointer;
-            color: #a0aec0;
-            transition: 0.2s;
-        }
-        .nav-item:hover { background: rgba(212,175,55,0.15); color: #d4af37; }
-        .nav-item.active { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
-        .nav-item i { width: 25px; }
-        
-        .main-content { margin-right: 260px; padding: 20px; }
-        .top-bar {
-            background: rgba(10, 26, 47, 0.9);
-            padding: 15px 20px;
-            border-radius: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .page-title { font-size: 20px; color: #d4af37; font-weight: bold; }
-        .avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #d4af37, #b8960c);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .card {
-            background: rgba(10, 26, 47, 0.9);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(212,175,55,0.2);
-        }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
-        .stat-card {
-            background: rgba(10, 26, 47, 0.9);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid rgba(212,175,55,0.2);
-        }
-        .stat-number { font-size: 32px; font-weight: bold; color: #d4af37; }
-        .stat-card i { font-size: 28px; margin-bottom: 8px; display: block; color: #d4af37; }
-        
-        .hero-section {
-            background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(10,26,47,0.9));
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .hero-image {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #d4af37, #b8960c);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .hero-image i { font-size: 35px; color: #0a1a2f; }
-        
-        .guide-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .guide-tab {
-            padding: 8px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            background: rgba(212,175,55,0.1);
-            transition: 0.2s;
-        }
-        .guide-tab.active { background: linear-gradient(135deg, #d4af37, #b8960c); color: #0a1a2f; }
-        .guide-item {
-            background: rgba(10, 26, 47, 0.7);
-            border: 1px solid rgba(212,175,55,0.2);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .guide-item:hover { border-color: #d4af37; }
-        
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        .modal-content {
-            background: #0a1a2f;
-            border-radius: 20px;
-            padding: 25px;
-            width: 90%;
-            max-width: 500px;
-            border: 1px solid #d4af37;
-        }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { color: #d4af37; display: block; margin-bottom: 5px; }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(212,175,55,0.3);
-            border-radius: 10px;
-            color: white;
-        }
-        
-        .admin-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .admin-card {
-            background: rgba(10, 26, 47, 0.7);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            border: 1px solid rgba(212,175,55,0.2);
-            transition: 0.2s;
-        }
-        .admin-card:hover { background: rgba(212,175,55,0.15); transform: translateY(-2px); }
-        .admin-card i { font-size: 28px; color: #d4af37; margin-bottom: 8px; display: block; }
-        
-        .list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            border-bottom: 1px solid rgba(212,175,55,0.1);
-        }
-        .list-item:last-child { border-bottom: none; }
-        .list-item-info { flex: 1; }
-        .list-item-title { font-weight: bold; color: #d4af37; }
-        .list-item-desc { font-size: 12px; opacity: 0.7; margin-top: 3px; }
-        .list-item-actions { display: flex; gap: 5px; }
-        
-        .org-ceo {
-            background: linear-gradient(135deg, #d4af37, #b8960c);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            color: #0a1a2f;
-            cursor: pointer;
-        }
-        .org-departments { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px; }
-        .org-dept {
-            background: rgba(10, 26, 47, 0.8);
-            border-radius: 12px;
-            padding: 15px;
-            flex: 1;
-            min-width: 140px;
-            text-align: center;
-            border: 1px solid rgba(212,175,55,0.3);
-            cursor: pointer;
-        }
-        
-        .menu-toggle { display: none; background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
-        
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            max-width: 350px;
-            margin: 0 auto;
-            background: #4caf50;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 30px;
-            text-align: center;
-            z-index: 10000;
-            transform: translateY(100px);
-            transition: 0.3s;
-        }
-        .toast.show { transform: translateY(0); }
-        .toast.error { background: #ef4444; }
-        
-        .ai-fab {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 55px;
-            height: 55px;
-            background: linear-gradient(135deg, #d4af37, #b8960c);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 300;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: 0.3s;
-        }
-        .ai-fab:hover { transform: scale(1.1); }
-        .ai-fab i { font-size: 28px; color: #0a1a2f; }
-        .ai-chat {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 320px;
-            background: rgba(10, 26, 47, 0.98);
-            border-radius: 15px;
-            border: 1px solid #d4af37;
-            z-index: 301;
-            transform: scale(0);
-            transition: 0.3s;
-            transform-origin: bottom left;
-        }
-        .ai-chat.open { transform: scale(1); }
-        .ai-header {
-            padding: 12px 15px;
-            background: linear-gradient(135deg, #d4af37, #b8960c);
-            border-radius: 15px 15px 0 0;
-            color: #0a1a2f;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: bold;
-        }
-        .ai-messages { max-height: 300px; overflow-y: auto; padding: 10px; }
-        .message {
-            margin-bottom: 10px;
-            padding: 8px 12px;
-            border-radius: 15px;
-            max-width: 85%;
-            font-size: 13px;
-        }
-        .user-message { background: rgba(212, 175, 55, 0.2); margin-right: auto; text-align: right; }
-        .ai-message { background: rgba(255, 255, 255, 0.1); margin-left: auto; text-align: left; }
-        .ai-input-area { display: flex; padding: 10px; gap: 10px; border-top: 1px solid rgba(212,175,55,0.2); }
-        .ai-input-area input { flex: 1; padding: 10px; background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.3); border-radius: 25px; color: white; }
-        .ai-input-area button { width: auto; padding: 8px 15px; }
-        .typing { color: #d4af37; font-size: 12px; padding: 5px 12px; }
-        
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #0a1a2f;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 20px;
-            z-index: 100000;
-        }
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(212,175,55,0.3);
-            border-top-color: #d4af37;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-right: 0; padding-bottom: 70px; }
-            .menu-toggle { display: block; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .admin-grid { grid-template-columns: repeat(2, 1fr); }
-            .ai-chat { width: 300px; left: 10px; bottom: 10px; }
-            .ai-fab { bottom: 70px; left: 10px; }
-        }
+/* KHOZAMA | HR Portal - responsive violet design system */
+:root {
+  color-scheme: dark;
+  --bg:#110c1c;--bg2:#1b1230;--surface:#231834;--surface2:#2e2144;
+  --surface-glass:rgba(34,24,52,.94);--text:#fbf8ff;--muted:#c1b4d3;
+  --accent:#b98be6;--accent-strong:#8751bd;--accent-deep:#61318e;
+  --outline:rgba(191,156,225,.19);--outline-focus:#bd90f0;
+  --hover:rgba(181,123,224,.12);--input:rgba(255,255,255,.052);
+  --shadow:0 18px 45px rgba(7,4,17,.27);--success:#35bf9e;
+  --gradient:linear-gradient(120deg,#9f63d0,#6e3da4);
+  --font:'Cairo',Tahoma,Arial,sans-serif;
+}
+body.light-mode {
+  color-scheme: light;
+  --bg:#f7f3fc;--bg2:#eee5f8;--surface:#fff;--surface2:#f6effd;
+  --surface-glass:rgba(255,255,255,.96);--text:#271638;--muted:#756582;
+  --accent:#7539aa;--accent-strong:#813fb6;--accent-deep:#5f2c8c;
+  --outline:rgba(108,61,142,.15);--outline-focus:#8b4cc0;
+  --hover:rgba(149,93,201,.09);--input:#faf7fd;
+  --shadow:0 16px 42px rgba(73,39,110,.09);
+  --gradient:linear-gradient(120deg,#9d64cb,#6d389f);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(circle at 18% -6%,rgba(158,94,206,.22),transparent 39%),linear-gradient(145deg,var(--bg),var(--bg2));color:var(--text);font:400 14px/1.8 var(--font);min-height:100vh}
+button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,.nav-item:focus-visible{outline:3px solid var(--outline-focus);outline-offset:3px}
+button:disabled{cursor:not-allowed;opacity:.55}
+a{color:var(--accent)}h1,h2,h3,h4{line-height:1.5}h2{font-size:21px}h3{font-size:17px}h4{font-size:15px}p{line-height:1.9}
+#app{min-height:100vh}
+.login-container{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:28px 18px;position:relative;overflow:hidden}
+.login-container:before,.login-container:after{content:'';position:absolute;width:320px;height:320px;border-radius:50%;background:rgba(167,94,227,.10);filter:blur(15px);pointer-events:none}
+.login-container:before{right:-120px;top:-150px}.login-container:after{left:-120px;bottom:-150px}
+.login-card{width:100%;max-width:450px;background:var(--surface-glass);border:1px solid var(--outline);border-radius:28px;padding:35px;box-shadow:var(--shadow);text-align:right;z-index:1}
+.login-card .hero-image{margin:0 auto 18px!important}.login-card h2{text-align:center;margin:12px 0 0;color:var(--text);font-size:25px;letter-spacing:-.5px}
+.login-card p{text-align:center;color:var(--muted)}
+.login-card input,.form-group input,.form-group textarea,.ai-input-area input{width:100%;background:var(--input);color:var(--text);padding:13px 15px;border:1px solid var(--outline);border-radius:12px;min-width:0;outline:none}
+.login-card input{margin:8px 0}.login-card input::placeholder,.form-group input::placeholder,.ai-input-area input::placeholder{color:var(--muted)}
+.login-card input:focus,.form-group input:focus,.form-group textarea:focus,.ai-input-area input:focus{border-color:var(--outline-focus);box-shadow:0 0 0 3px rgba(173,113,218,.12)}
+.btn{border:0;border-radius:12px;padding:11px 17px;font-weight:700;color:#fff;background:var(--gradient);box-shadow:0 7px 20px rgba(117,55,178,.16);transition:transform .18s ease,filter .18s ease;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:43px;width:100%;margin-top:10px}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}.btn-small{width:auto;min-height:33px;min-width:33px;padding:5px 11px;margin:0 2px;font-size:12px;border-radius:9px}
+.register-link{text-align:center;margin-top:17px;font-size:13px;color:var(--muted)}.register-link span{color:var(--accent);font-weight:700;cursor:pointer}.register-form{display:none;margin-top:15px}.register-form.show{display:block}
+.sidebar{position:fixed;right:0;top:0;width:274px;height:100vh;z-index:100;overflow-y:auto;overflow-x:hidden;padding:0 0 24px;background:var(--surface-glass);border-left:1px solid var(--outline);box-shadow:0 0 30px rgba(0,0,0,.07);scrollbar-width:thin;scrollbar-color:var(--outline) transparent;transition:transform .28s ease}
+.sidebar-header{text-align:right;padding:26px 22px 24px;border-bottom:1px solid var(--outline);margin-bottom:17px}
+.brand{display:flex;gap:12px;align-items:center}.brand-mark{width:49px;height:49px;display:grid;place-items:center;border-radius:15px;background:var(--gradient);font-size:23px;color:white;box-shadow:0 10px 25px rgba(137,74,193,.26)}
+.logo{font-size:18px;font-weight:800;color:var(--text);line-height:1.5}.brand-sub{font-size:11px;color:var(--muted)}.sidebar-section{font-size:10px;color:var(--muted);letter-spacing:.06em;margin:17px 22px 9px;font-weight:700}
+.nav-item{display:flex;align-items:center;gap:13px;min-height:45px;padding:10px 17px;margin:3px 12px;border-radius:12px;color:var(--muted);font-weight:650;cursor:pointer;transition:background .2s,color .2s;user-select:none}
+.nav-item i{font-size:15px;width:23px;text-align:center}.nav-item:hover{background:var(--hover);color:var(--accent)}.nav-item.active{background:var(--gradient);color:#fff;box-shadow:0 8px 24px rgba(116,55,170,.21)}.nav-item.active i{color:#fff}.nav-divider{height:1px;background:var(--outline);margin:15px 20px}
+.sidebar-foot{margin:24px 19px 0;padding:14px;background:var(--surface2);border:1px solid var(--outline);border-radius:13px;font-size:11px;color:var(--muted)}
+.main-content{margin-right:274px;padding:25px 28px 75px;max-width:1900px;min-height:100vh}
+.top-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--surface-glass);padding:13px 20px;border:1px solid var(--outline);border-radius:17px;box-shadow:0 8px 23px rgba(0,0,0,.035);margin-bottom:23px;min-height:72px}
+.top-actions{display:flex;align-items:center;gap:10px}.page-title{font-size:19px;color:var(--text);font-weight:800}.page-subtitle{font-size:11px;color:var(--muted)}.avatar{display:grid;place-items:center;width:42px;height:42px;flex-shrink:0;color:white;border-radius:13px;background:var(--gradient)}
+.icon-btn{width:40px;height:40px;border:1px solid var(--outline);border-radius:12px;color:var(--text);background:var(--surface2);display:grid;place-items:center;transition:.2s}.icon-btn:hover{background:var(--hover);color:var(--accent)}
+.menu-toggle{display:none}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:25px 0 14px;font-size:17px;font-weight:800}
+.card,.stat-card,.admin-card,.org-dept,.guide-item{background:var(--surface-glass);border:1px solid var(--outline);border-radius:17px;box-shadow:0 6px 20px rgba(0,0,0,.025)}
+.card{padding:23px;margin-bottom:19px}.card h3,.card h4{margin-bottom:12px}.card p{color:var(--muted)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:22px}.stat-card{text-align:right;padding:21px;min-height:136px;display:flex;flex-direction:column;gap:5px;color:var(--muted);font-weight:600}
+.stat-number{font-size:31px;font-weight:850;color:var(--text);font-family:var(--font);line-height:1.3}.stat-card i{width:39px;height:39px;border-radius:12px;background:var(--hover);display:grid;place-items:center;font-size:17px;color:var(--accent);margin-bottom:6px}
+.hero-section{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:28px 31px;margin-bottom:21px;border:1px solid rgba(195,144,240,.24);border-radius:20px;background:radial-gradient(circle at 93% 20%,rgba(205,162,244,.17),transparent 34%),linear-gradient(125deg,#4a2d69,#2d1c45);color:white;box-shadow:0 15px 38px rgba(43,21,71,.16)}
+.hero-greeting{font-size:23px;font-weight:850;line-height:1.5;color:white}.hero-description{font-size:12px;color:#e1cfe9;margin-top:4px}.hero-image{display:grid;place-items:center;width:70px;height:70px;flex-shrink:0;border-radius:19px;color:white;background:linear-gradient(135deg,#b58be3,#8151b8);font-size:30px}.hero-image i{color:white}
+.guide-tabs{display:flex;gap:9px;margin:0 0 18px;flex-wrap:wrap}.guide-tab{padding:7px 17px;border:1px solid var(--outline);border-radius:11px;background:var(--surface2);color:var(--muted);cursor:pointer;font-weight:700}.guide-tab.active{background:var(--gradient);color:white;border-color:transparent}
+.guide-item{padding:14px 15px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer}.guide-item:hover{border-color:var(--accent);background:var(--surface2)}
+.modal{position:fixed;inset:0;background:rgba(9,4,19,.72);z-index:1000;display:flex;align-items:center;justify-content:center;padding:15px;backdrop-filter:blur(5px)}.modal-content{width:min(520px,100%);max-height:90vh;overflow:auto;padding:27px;border:1px solid var(--outline);border-radius:22px;background:var(--surface);color:var(--text);box-shadow:var(--shadow)}.modal-content h3{margin-bottom:17px;color:var(--accent)}
+.form-group{margin:0 0 15px}.form-group label{display:block;color:var(--text);font-weight:650;margin:0 0 6px}.form-group textarea{resize:vertical;min-height:87px}
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin-bottom:20px}.admin-card{text-align:right;display:flex;align-items:center;gap:12px;padding:16px;min-height:85px;cursor:pointer;transition:transform .2s,background .2s}.admin-card:hover{background:var(--surface2);transform:translateY(-2px)}.admin-card i{display:grid;place-items:center;width:37px;height:37px;flex-shrink:0;border-radius:10px;background:var(--hover);color:var(--accent);font-size:17px;margin:0}
+.list-item{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--outline);padding:14px 0}.list-item:last-child{border:0}.list-item-info{flex:1;min-width:0}.list-item-title{font-weight:800;color:var(--text)}.list-item-desc{font-size:12px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}.list-item-actions{display:flex;gap:5px}
+.org-ceo{cursor:pointer;border-radius:15px;padding:22px;text-align:center;color:white;background:var(--gradient)}.org-departments{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}.org-dept{min-width:145px;flex:1;text-align:center;cursor:pointer;padding:18px}.org-dept:hover{border-color:var(--accent)}
+.toast{position:fixed;bottom:23px;left:50%;transform:translate(-50%,140px);max-width:min(480px,calc(100% - 30px));padding:12px 20px;border-radius:13px;background:#168a70;color:white;text-align:center;z-index:10000;box-shadow:var(--shadow);transition:transform .25s ease}.toast.show{transform:translate(-50%,0)}.toast.error{background:#b63150}
+.ai-fab{position:fixed;bottom:26px;left:26px;width:58px;height:58px;display:grid;place-items:center;cursor:pointer;z-index:300;border-radius:18px;background:var(--gradient);box-shadow:0 10px 26px rgba(105,55,147,.37);transition:transform .25s}.ai-fab:hover{transform:translateY(-3px)}.ai-fab i{font-size:25px;color:white}
+.ai-chat{position:fixed;bottom:96px;left:24px;width:min(380px,calc(100vw - 30px));max-height:min(590px,calc(100vh - 130px));display:flex;flex-direction:column;z-index:301;background:var(--surface);border:1px solid var(--outline);border-radius:19px;box-shadow:var(--shadow);overflow:hidden;transform:translateY(15px) scale(.95);opacity:0;visibility:hidden;transition:opacity .2s,transform .2s,visibility .2s;transform-origin:bottom left}
+.ai-chat.open{transform:translateY(0) scale(1);opacity:1;visibility:visible}
+.ai-header{display:flex;align-items:center;gap:12px;padding:16px 18px;background:var(--gradient);color:white;cursor:pointer;font-weight:800}.ai-header i{color:white}.ai-messages{overflow-y:auto;min-height:180px;max-height:330px;padding:16px;display:flex;flex-direction:column;gap:10px}.ai-note{color:var(--muted);background:var(--surface2);font-size:11px;padding:10px;border-radius:11px}
+.message{max-width:88%;border-radius:14px;padding:10px 13px;margin:0;font-size:12px;line-height:1.8;overflow-wrap:anywhere}.user-message{background:var(--hover);border:1px solid var(--outline);align-self:flex-start;text-align:right}.ai-message{background:var(--surface2);align-self:flex-end;text-align:right}.ai-input-area{display:flex;gap:9px;align-items:center;padding:10px;border-top:1px solid var(--outline)}.ai-input-area input{flex:1;border-radius:12px}.ai-input-area button{width:41px;height:41px;min-height:0;flex:0 0 41px;padding:0;margin:0}.typing{color:var(--accent);font-size:11px}
+.loading{position:fixed;inset:0;z-index:100000;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:17px;color:var(--muted)}.spinner{width:47px;height:47px;border-radius:50%;border:4px solid var(--outline);border-top-color:var(--accent);animation:spin .85s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.external-link-card{background:var(--surface);border:1px solid var(--outline);border-radius:17px;padding:19px;display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:19px}.external-link-card h3{font-size:16px;margin:0 0 3px}.external-link-card p{font-size:12px;color:var(--muted)}.external-link-card a{white-space:nowrap;text-decoration:none;color:white;background:var(--gradient);padding:9px 14px;border-radius:11px;font-weight:800;font-size:12px}
+.bottom-tabs{display:none}.sidebar-backdrop{display:none}.status-pill{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--success);background:rgba(53,191,158,.12)}
+@media(min-width:1500px){.main-content{padding:29px 42px 80px}}
+@media(max-width:1050px){.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.main-content{padding:18px 20px 75px}}
+@media(max-width:768px){
+  .sidebar{transform:translateX(110%);width:min(290px,87vw);box-shadow:var(--shadow)}.sidebar.open{transform:translateX(0)}
+  .sidebar-backdrop{position:fixed;inset:0;z-index:95;background:rgba(10,3,25,.5);display:none}.sidebar-backdrop.show{display:block}
+  .main-content{margin-right:0;padding:13px 13px 102px}.top-bar{margin-bottom:16px;min-height:64px;padding:10px 12px;border-radius:15px}
+  .menu-toggle{display:grid;place-items:center;width:40px;height:40px;background:var(--surface2);color:var(--text);border:1px solid var(--outline);border-radius:12px;font-size:18px;flex-shrink:0}
+  .page-title{font-size:16px}.top-actions{gap:6px}.top-actions .avatar{width:37px;height:37px}.top-actions .status-pill{display:none}
+  .hero-section{padding:20px 17px;border-radius:17px}.hero-greeting{font-size:18px}.hero-image{width:54px;height:54px;font-size:22px}
+  .card{padding:17px;border-radius:15px}.stats-grid{gap:11px}.stat-card{min-height:118px;padding:15px;border-radius:15px}.stat-number{font-size:25px}
+  .admin-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.admin-card{font-size:12px;padding:11px;min-height:75px}
+  .ai-fab{left:15px;bottom:85px;width:52px;height:52px;border-radius:15px}.ai-chat{left:10px;bottom:145px;max-height:calc(100dvh - 180px);width:min(380px,calc(100vw - 20px))}
+  .bottom-tabs{position:fixed;bottom:0;left:0;right:0;z-index:90;display:flex;justify-content:space-around;align-items:center;gap:4px;min-height:65px;padding:8px 8px max(8px,env(safe-area-inset-bottom));background:var(--surface-glass);border-top:1px solid var(--outline);backdrop-filter:blur(18px)}
+  .bottom-tab{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;flex:1;background:none;border:0;color:var(--muted);font-size:10px;font-weight:700;min-height:46px;border-radius:11px}.bottom-tab i{font-size:17px}.bottom-tab.active{color:var(--accent);background:var(--hover)}
+  .external-link-card{align-items:flex-start;flex-direction:column}
+  .list-item{align-items:flex-start}.list-item-actions{align-self:center}
+  .login-card{padding:26px 23px}.modal-content{padding:20px}
+}
+@media(max-width:380px){.stats-grid{gap:8px}.stat-card{padding:12px}.hero-greeting{font-size:16px}.admin-grid{grid-template-columns:1fr 1fr}.icon-btn{width:35px;height:35px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
     </style>
 </head>
 <body>
 <div id="app">
     <div class="loading" id="loading">
         <div class="spinner"></div>
-        <div style="color: #d4af37;">جاري تحميل البيانات من السحابة...</div>
+        <div style="color: var(--accent);">جاري الاتصال ببوابة الخزامى...</div>
     </div>
 </div>
 
+<!--
+  KHOZAMA HR PORTAL V2 - STAGING BUILD
+  Important: the legacy database schema still stores passwords in plaintext and controls roles client-side.
+  Do not publish to real employee users until Firebase Authentication, secure database rules,
+  authorization checks, and a credential migration are in place.
+  Only test on khozama-mobile-v2 branch. No attendance records are created in this file.
+-->
 <!-- Firebase SDK -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -399,12 +156,9 @@
     window.get = get;
     window.onValue = onValue;
     
-    console.log("✅ Firebase متصل");
-    
-    setTimeout(() => {
-        const loading = document.getElementById('loading');
-        if (loading) loading.style.display = 'none';
-    }, 1000);
+    console.log("Firebase SDK initialized");
+    window.khozamaFirebaseReady = true;
+    window.dispatchEvent(new Event('khozama:firebase-ready'));
 </script>
 
 <script>
@@ -413,7 +167,7 @@
     // ========================================
     
     // -------------------- البيانات الأساسية --------------------
-    let users = [{ id: 1, email: "admin@hr.com", password: "admin123", name: "أحمد المدير", role: "admin", jobTitle: "مدير" }];
+    let users = []; // الحسابات تُقرأ من القاعدة الحالية؛ لا نضع حساب مدير تجريبي داخل كود عام
     let currentUser = null;
     let currentPage = "home";
     let guideTab = "policies";
@@ -445,9 +199,9 @@
     ];
     
     let companyData = {
-        name: "شركة التميز للاستشارات",
-        vision: "الريادة في تقديم الحلول المتميزة",
-        mission: "تقديم خدمات مبتكرة لعملائنا"
+        name: "مجموعة الخزامى",
+        vision: "تطوير تجربة الموظف ورفع كفاءة العمل",
+        mission: "خدمات موارد بشرية مترابطة وسهلة الاستخدام"
     };
     
     let orgStructure = {
@@ -511,9 +265,11 @@
     }
     
     async function saveAll() {
-        if (isSyncing) return;
+        if (isSyncing) { showToast('المزامنة جارية، أعد المحاولة', true); return false; }
         const data = { users, policies, behaviors, procedures, faq, announcements, companyData, orgStructure, performance };
-        await saveToFirebase(data);
+        const saved = await saveToFirebase(data);
+        if (!saved) showToast('لم يتم الحفظ في السحابة. تحقق من الاتصال والصلاحيات.', true);
+        return saved;
     }
     
     async function loadAllFromCloud() {
@@ -531,8 +287,8 @@
             lastUpdated = data.lastUpdated || 0;
             return true;
         } else {
-            await saveAll();
-            return true;
+            // لا تكتب بيانات افتراضية عند انقطاع الاتصال أو عدم وجود بيانات.
+            return false;
         }
     }
     
@@ -562,7 +318,7 @@
         let user = users.find(u => u.email === email && u.password === pass);
         if (user) {
             currentUser = user;
-            sessionStorage.setItem('user', JSON.stringify(user));
+            sessionStorage.setItem('khozama-user-id', String(user.id));
             renderApp();
             return true;
         }
@@ -573,12 +329,12 @@
         if (pass !== confirm) { showToast("كلمة المرور غير متطابقة", true); return false; }
         if (users.find(u => u.email === email)) { showToast("البريد موجود", true); return false; }
         users.push({ id: Date.now(), name, email, password: pass, role: "employee", jobTitle: "موظف" });
-        await saveAll();
+        if (!(await saveAll())) return false;
         showToast("تم التسجيل");
         return true;
     }
     
-    function logout() { currentUser = null; sessionStorage.removeItem('user'); renderApp(); }
+    function logout() { currentUser = null; sessionStorage.removeItem('khozama-user-id'); sessionStorage.removeItem('user'); renderApp(); }
     
     // -------------------- المساعد الذكي --------------------
     function getAIResponse(question) {
@@ -630,15 +386,15 @@
     function showModal(title, html, onSave) {
         let modal = document.createElement('div');
         modal.className = 'modal';
-        modal.innerHTML = `<div class="modal-content"><h3 style="color:#d4af37;">${title}</h3>${html}<div style="margin-top:15px; display:flex; gap:10px;"><button class="btn" onclick="saveModal(this)">حفظ</button><button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()">إلغاء</button></div></div>`;
+        modal.innerHTML = `<div class="modal-content"><h3 style="color:var(--accent);">${title}</h3>${html}<div style="margin-top:15px; display:flex; gap:10px;"><button class="btn" onclick="saveModal(this)">حفظ</button><button class="btn" style="background:#ef4444;" onclick="this.closest('.modal').remove()">إلغاء</button></div></div>`;
         document.body.appendChild(modal);
-        window.saveModal = async (btn) => { await onSave(); btn.closest('.modal').remove(); };
+        window.saveModal = async (btn) => { const ok = await onSave(); if (ok !== false) btn.closest('.modal').remove(); };
     }
     
     function showDetail(title, content) {
         let modal = document.createElement('div');
         modal.className = 'modal';
-        modal.innerHTML = `<div class="modal-content"><h3 style="color:#d4af37;">${escapeHtml(title)}</h3><div style="margin:15px 0;">${escapeHtml(content).replace(/\n/g, '<br>')}</div><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div>`;
+        modal.innerHTML = `<div class="modal-content"><h3 style="color:var(--accent);">${escapeHtml(title)}</h3><div style="margin:15px 0;">${escapeHtml(content).replace(/\n/g, '<br>')}</div><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div>`;
         document.body.appendChild(modal);
     }
     
@@ -660,7 +416,7 @@
             else if (type === 'faq') faq.push({ id: Date.now(), question: document.getElementById('q').value, answer: document.getElementById('a').value });
             else if (type === 'announcement') announcements.push({ id: Date.now(), title: document.getElementById('title').value, content: document.getElementById('content').value, date: new Date().toLocaleDateString() });
             else if (type === 'dept') orgStructure.departments.push({ id: Date.now(), name: document.getElementById('name').value, head: document.getElementById('head').value, members: parseInt(document.getElementById('members').value) || 0 });
-            await saveAll(); renderApp(); showToast("تمت الإضافة بنجاح");
+            if (!(await saveAll())) return false; renderApp(); showToast("تمت الإضافة بنجاح"); return true;
         });
     };
     
@@ -681,7 +437,7 @@
             else if (type === 'faq') { item.question = document.getElementById('q').value; item.answer = document.getElementById('a').value; }
             else if (type === 'announcement') { item.title = document.getElementById('title').value; item.content = document.getElementById('content').value; item.date = new Date().toLocaleDateString(); }
             else if (type === 'dept') { item.name = document.getElementById('name').value; item.head = document.getElementById('head').value; item.members = parseInt(document.getElementById('members').value) || 0; }
-            await saveAll(); renderApp(); showToast("تم التعديل بنجاح");
+            if (!(await saveAll())) return false; renderApp(); showToast("تم التعديل بنجاح"); return true;
         });
     };
     
@@ -693,7 +449,7 @@
             else if (type === 'faq') faq = faq.filter(i => i.id !== id);
             else if (type === 'announcement') announcements = announcements.filter(i => i.id !== id);
             else if (type === 'dept') orgStructure.departments = orgStructure.departments.filter(d => d.id !== id);
-            await saveAll(); renderApp(); showToast("تم الحذف بنجاح");
+            if (!(await saveAll())) return; renderApp(); showToast("تم الحذف بنجاح");
         }
     };
     
@@ -706,7 +462,7 @@
             companyData.name = document.getElementById('compName').value;
             companyData.vision = document.getElementById('compVision').value;
             companyData.mission = document.getElementById('compMission').value;
-            await saveAll(); renderApp(); showToast("تم تحديث بيانات الشركة");
+            if (!(await saveAll())) return false; renderApp(); showToast("تم تحديث بيانات الشركة"); return true;
         });
     };
     
@@ -720,18 +476,70 @@
                 orgStructure.ceo.name = document.getElementById('name').value;
                 orgStructure.ceo.head = document.getElementById('head').value;
                 orgStructure.ceo.members = parseInt(document.getElementById('members').value) || 0;
-                await saveAll(); renderApp(); showToast("تم التعديل");
+                if (!(await saveAll())) return false; renderApp(); showToast("تم التعديل"); return true;
             });
         }
     };
     
-    window.syncNow = async function() { showToast("🔄 جاري المزامنة..."); await loadAllFromCloud(); renderApp(); showToast("✅ تمت المزامنة"); };
+    window.syncNow = async function() { showToast("جاري المزامنة..."); const ok = await loadAllFromCloud(); if(ok){renderApp();showToast("تمت المزامنة");}else showToast("تعذر جلب البيانات ولم يتم تغييرها",true); };
     
+
+    // -------------------- الواجهة والتصفح --------------------
+    const ATTENDANCE_URL = 'https://khozama-attendance-hub.blondiris1024.chatgpt.site/';
+    function applyTheme() {
+        let preference = 'dark';
+        try { preference = localStorage.getItem('khozama-theme') || 'dark'; } catch(e) {}
+        document.body.classList.toggle('light-mode', preference === 'light');
+    }
+    window.toggleTheme = function() {
+        const next = document.body.classList.contains('light-mode') ? 'dark' : 'light';
+        try { localStorage.setItem('khozama-theme', next); } catch(e) {}
+        applyTheme();
+        document.querySelectorAll('.theme-icon').forEach(i => {i.className='theme-icon fas fa-'+(next==='light'?'moon':'sun');});
+    };
+    window.navigateTo = function(page) {
+        currentPage = page;
+        renderApp();
+        window.scrollTo({ top:0, behavior:'instant' });
+    };
+    window.closeSidebar = function() {
+        document.getElementById('sidebar')?.classList.remove('open');
+        document.getElementById('sidebarBackdrop')?.classList.remove('show');
+    };
+    window.toggleSidebar = function() {
+        document.getElementById('sidebar')?.classList.toggle('open');
+        document.getElementById('sidebarBackdrop')?.classList.toggle('show');
+    };
+
     // -------------------- عرض الصفحات --------------------
     function renderLogin() {
-        return `<div class="login-container"><div class="login-card"><div class="hero-image" style="margin:0 auto 20px;"><i class="fas fa-cloud"></i></div><h2>HR SYSTEM</h2><p style="font-size:12px; margin-bottom:20px;">متزامن مع السحابة ☁️</p><input type="email" id="loginEmail" placeholder="البريد" value="admin@hr.com"><input type="password" id="loginPass" placeholder="كلمة المرور" value="admin123"><button class="btn" onclick="doLogin()">دخول</button><div class="register-link">حساب جديد؟ <span onclick="toggleReg()">إنشاء حساب</span></div><div id="regForm" class="register-form"><input type="text" id="regName" placeholder="الاسم"><input type="email" id="regEmail" placeholder="البريد"><input type="password" id="regPass" placeholder="كلمة المرور"><input type="password" id="regConfirm" placeholder="تأكيد"><button class="btn" onclick="doRegister()">تسجيل</button></div></div></div>`;
+        return `<div class="login-container">
+          <div class="login-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <span class="status-pill"><i class="fas fa-shield-alt"></i> بوابة الموظف</span>
+              <button type="button" class="icon-btn" title="تغيير المظهر" aria-label="تغيير المظهر" onclick="toggleTheme()"><i class="theme-icon fas fa-adjust"></i></button>
+            </div>
+            <div class="hero-image"><i class="fas fa-spa"></i></div>
+            <h2>مرحبًا بك في الخزامى</h2>
+            <p style="font-size:12px;margin:5px 0 22px">بوابة الموارد البشرية · تجربة موحّدة وسهلة</p>
+            <label for="loginEmail" style="font-size:12px;font-weight:700">البريد الإلكتروني</label>
+            <input type="email" id="loginEmail" autocomplete="username" placeholder="example@company.com">
+            <label for="loginPass" style="font-size:12px;font-weight:700">كلمة المرور</label>
+            <input type="password" id="loginPass" autocomplete="current-password" placeholder="أدخل كلمة المرور" onkeypress="if(event.key==='Enter')doLogin()">
+            <button class="btn" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
+            <div class="register-link">ليس لديك حساب؟ <span onclick="toggleReg()">إنشاء حساب</span></div>
+            <div id="regForm" class="register-form">
+                <input type="text" id="regName" placeholder="الاسم بالكامل">
+                <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
+                <input type="password" id="regPass" placeholder="كلمة المرور">
+                <input type="password" id="regConfirm" placeholder="تأكيد كلمة المرور">
+                <button class="btn" onclick="doRegister()">إنشاء الحساب</button>
+            </div>
+            <p style="margin-top:24px;font-size:10px">نسخة تطوير · لا تستخدم بيانات حساسة قبل استكمال تأمين الدخول</p>
+          </div>
+        </div>`;
     }
-    
+
     window.doLogin = function() { let e=document.getElementById('loginEmail')?.value, p=document.getElementById('loginPass')?.value; if(!login(e,p)) showToast("بيانات غير صحيحة", true); };
     window.doRegister = async function() { let n=document.getElementById('regName')?.value, e=document.getElementById('regEmail')?.value, p=document.getElementById('regPass')?.value, c=document.getElementById('regConfirm')?.value; if(await register(n,e,p,c)) toggleReg(); };
     window.toggleReg = function() { let f=document.getElementById('regForm'); if(f) f.classList.toggle('show'); };
@@ -741,7 +549,7 @@
         if (guideTab === 'policies') items = policies.map(p => `<div class="guide-item" onclick="showDetail('${escapeHtml(p.title)}', '<strong>${escapeHtml(p.description)}</strong><br><br>${escapeHtml(p.content)}')"><div><i class="fas fa-file-alt"></i> <strong>${escapeHtml(p.title)}</strong><br><small>${escapeHtml(p.description.substring(0,40))}</small></div><i class="fas fa-chevron-left"></i></div>`);
         else if (guideTab === 'procedures') items = procedures.map(p => `<div class="guide-item" onclick="showDetail('${escapeHtml(p.title)}', '${escapeHtml(p.desc)}')"><div><i class="fas fa-list-ol"></i> <strong>${escapeHtml(p.title)}</strong><br><small>${escapeHtml(p.desc.substring(0,40))}</small></div><i class="fas fa-chevron-left"></i></div>`);
         else items = behaviors.map(b => `<div class="guide-item" onclick="showDetail('${escapeHtml(b.title)}', '${escapeHtml(b.desc)}')"><div><i class="fas fa-handshake"></i> <strong>${escapeHtml(b.title)}</strong><br><small>${escapeHtml(b.desc.substring(0,40))}</small></div><i class="fas fa-chevron-left"></i></div>`);
-        return `<div class="card"><div class="guide-tabs"><div class="guide-tab ${guideTab==='policies'?'active':''}" onclick="setGuideTab('policies')"><i class="fas fa-file-alt"></i> السياسات</div><div class="guide-tab ${guideTab==='procedures'?'active':''}" onclick="setGuideTab('procedures')"><i class="fas fa-list-ol"></i> الإجراءات</div><div class="guide-tab ${guideTab==='behaviors'?'active':''}" onclick="setGuideTab('behaviors')"><i class="fas fa-handshake"></i> السلوكيات</div></div>${items.join('')}</div><div class="card"><h3><i class="fas fa-question-circle"></i> الأسئلة الشائعة</h3>${faq.map(f=>`<div style="padding:10px; border-bottom:1px solid rgba(212,175,55,0.1);"><strong>${escapeHtml(f.question)}</strong><br>${escapeHtml(f.answer)}</div>`).join('')}</div>`;
+        return `<div class="card"><div class="guide-tabs"><div class="guide-tab ${guideTab==='policies'?'active':''}" onclick="setGuideTab('policies')"><i class="fas fa-file-alt"></i> السياسات</div><div class="guide-tab ${guideTab==='procedures'?'active':''}" onclick="setGuideTab('procedures')"><i class="fas fa-list-ol"></i> الإجراءات</div><div class="guide-tab ${guideTab==='behaviors'?'active':''}" onclick="setGuideTab('behaviors')"><i class="fas fa-handshake"></i> السلوكيات</div></div>${items.join('')}</div><div class="card"><h3><i class="fas fa-question-circle"></i> الأسئلة الشائعة</h3>${faq.map(f=>`<div style="padding:10px; border-bottom:1px solid rgba(181,133,221,0.1);"><strong>${escapeHtml(f.question)}</strong><br>${escapeHtml(f.answer)}</div>`).join('')}</div>`;
     }
     
     window.setGuideTab = function(tab) { guideTab = tab; renderApp(); };
@@ -749,12 +557,33 @@
     function getGreeting() { let h=new Date().getHours(); if(h<12) return "صباح الخير"; if(h<17) return "مساء الخير"; return "مساء النور"; }
     
     function renderHome() {
-        return `<div class="hero-section"><div><div style="font-size:22px; font-weight:bold; color:#d4af37;">${getGreeting()}، ${escapeHtml(currentUser?.name || 'موظف')} 👋</div><div style="margin-top:5px;"><i class="fas fa-briefcase"></i> ${escapeHtml(currentUser?.jobTitle || 'موظف')}</div><div style="margin-top:5px;"><i class="fas fa-cloud"></i> نظام متزامن مع السحابة ☁️</div></div><div class="hero-image"><i class="fas fa-cloud"></i></div></div>
-        <div class="stats-grid"><div class="stat-card"><i class="fas fa-file-alt"></i><div class="stat-number">${policies.length}</div><div>سياسات</div></div><div class="stat-card"><i class="fas fa-handshake"></i><div class="stat-number">${behaviors.length}</div><div>سلوكيات</div></div><div class="stat-card"><i class="fas fa-list-ol"></i><div class="stat-number">${procedures.length}</div><div>إجراءات</div></div><div class="stat-card"><i class="fas fa-question-circle"></i><div class="stat-number">${faq.length}</div><div>أسئلة</div></div></div>`;
+        return `<div class="hero-section">
+          <div>
+            <div class="hero-greeting">${getGreeting()}، ${escapeHtml(currentUser?.name || 'موظف')} 👋</div>
+            <div class="hero-description"><i class="fas fa-briefcase"></i> ${escapeHtml(currentUser?.jobTitle || 'موظف')} &nbsp; · &nbsp; بوابة الموارد البشرية</div>
+            <div style="margin-top:12px"><span class="status-pill"><i class="fas fa-cloud"></i> متصل ببيانات الموارد البشرية</span></div>
+          </div><div class="hero-image"><i class="fas fa-spa"></i></div>
+        </div>
+        <div class="section-title">نظرة عامة <span style="font-size:11px;color:var(--muted);font-weight:400">ملخص الدليل الحالي</span></div>
+        <div class="stats-grid">
+          <div class="stat-card"><i class="fas fa-file-alt"></i><div class="stat-number">${policies.length}</div><div>السياسات</div></div>
+          <div class="stat-card"><i class="fas fa-list-ol"></i><div class="stat-number">${procedures.length}</div><div>الإجراءات</div></div>
+          <div class="stat-card"><i class="fas fa-handshake"></i><div class="stat-number">${behaviors.length}</div><div>السلوكيات</div></div>
+          <div class="stat-card"><i class="fas fa-question-circle"></i><div class="stat-number">${faq.length}</div><div>الأسئلة الشائعة</div></div>
+        </div>
+        <div class="external-link-card">
+          <div style="display:flex;align-items:center;gap:13px">
+            <div class="brand-mark"><i class="fas fa-fingerprint"></i></div>
+            <div><h3>منصة حضور الخزامى</h3><p>فتح منصة الحضور والانصراف في تبويب مستقل. لا يتم دمج البيانات تلقائيًا.</p></div>
+          </div>
+          <a href="${ATTENDANCE_URL}" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> فتح المنصة</a>
+        </div>
+        <div class="card"><h3><i class="fas fa-bullhorn" style="color:var(--accent)"></i> آخر الإعلانات</h3>
+        ${announcements.length?announcements.slice(-3).reverse().map(a=>`<div class="list-item"><div class="list-item-info"><div class="list-item-title">${escapeHtml(a.title)}</div><div class="list-item-desc">${escapeHtml(a.content)}</div></div><small>${escapeHtml(String(a.date||''))}</small></div>`).join(''):'<p>لا توجد إعلانات حاليًا.</p>'}</div>`;
     }
-    
+
     function renderCompany() {
-        return `<div class="card"><h2 style="color:#d4af37; text-align:center;">${escapeHtml(companyData.name)}</h2></div><div class="card"><h3><i class="fas fa-eye"></i> الرؤية</h3><p>${escapeHtml(companyData.vision)}</p></div><div class="card"><h3><i class="fas fa-bullseye"></i> الرسالة</h3><p>${escapeHtml(companyData.mission)}</p></div>`;
+        return `<div class="card"><h2 style="color:var(--accent); text-align:center;">${escapeHtml(companyData.name)}</h2></div><div class="card"><h3><i class="fas fa-eye"></i> الرؤية</h3><p>${escapeHtml(companyData.vision)}</p></div><div class="card"><h3><i class="fas fa-bullseye"></i> الرسالة</h3><p>${escapeHtml(companyData.mission)}</p></div>`;
     }
     
     function renderOrg() {
@@ -767,11 +596,11 @@
         let total = perf.criteria.reduce((s,c)=>s + c.value,0);
         let maxTotal = perf.criteria.reduce((s,c)=>s + c.max,0);
         let percent = Math.round((total/maxTotal)*100);
-        return `<div class="card"><h3>⭐ تقييم الأداء - ${escapeHtml(currentUser?.jobTitle || 'موظف')}</h3><div style="font-size:48px; font-weight:bold; color:#d4af37; text-align:center;">${percent}%</div><div style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:10px; margin:15px 0;"><div style="width:${percent}%; height:100%; background:linear-gradient(90deg,#d4af37,#b8960c); border-radius:10px;"></div></div>${perf.criteria.map(c=>`<div style="margin-bottom:15px;"><div>${escapeHtml(c.name)}</div><div style="display:flex; justify-content:space-between;"><span>${c.value}/${c.max}</span><span>الوزن: ${c.weight}%</span></div><div style="width:100%; height:5px; background:rgba(255,255,255,0.1); border-radius:5px; margin-top:5px;"><div style="width:${(c.value/c.max)*100}%; height:100%; background:linear-gradient(90deg,#d4af37,#b8960c); border-radius:5px;"></div></div></div>`).join('')}</div>`;
+        return `<div class="card"><h3>⭐ تقييم الأداء - ${escapeHtml(currentUser?.jobTitle || 'موظف')}</h3><div style="font-size:48px; font-weight:bold; color:var(--accent); text-align:center;">${percent}%</div><div style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:10px; margin:15px 0;"><div style="width:${percent}%; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-deep)); border-radius:10px;"></div></div>${perf.criteria.map(c=>`<div style="margin-bottom:15px;"><div>${escapeHtml(c.name)}</div><div style="display:flex; justify-content:space-between;"><span>${c.value}/${c.max}</span><span>الوزن: ${c.weight}%</span></div><div style="width:100%; height:5px; background:rgba(255,255,255,0.1); border-radius:5px; margin-top:5px;"><div style="width:${(c.value/c.max)*100}%; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-deep)); border-radius:5px;"></div></div></div>`).join('')}</div>`;
     }
     
     function renderNotifications() {
-        return `<div class="card"><h3><i class="fas fa-bell"></i> الإشعارات</h3>${announcements.map(a=>`<div style="padding:10px; border-bottom:1px solid rgba(212,175,55,0.1);"><strong>${escapeHtml(a.title)}</strong><br>${escapeHtml(a.content)}<br><small>${escapeHtml(a.date)}</small></div>`).join('')}</div>`;
+        return `<div class="card"><h3><i class="fas fa-bell"></i> الإشعارات</h3>${announcements.map(a=>`<div style="padding:10px; border-bottom:1px solid rgba(181,133,221,0.1);"><strong>${escapeHtml(a.title)}</strong><br>${escapeHtml(a.content)}<br><small>${escapeHtml(a.date)}</small></div>`).join('')}</div>`;
     }
     
     function renderProfile() {
@@ -783,7 +612,7 @@
         currentUser.email = document.getElementById('pEmail')?.value || currentUser.email;
         let idx = users.findIndex(u => u.id === currentUser.id);
         if (idx !== -1) users[idx] = currentUser;
-        await saveAll();
+        if (!(await saveAll())) return;
         showToast("تم حفظ البيانات");
         renderApp();
     }
@@ -820,43 +649,90 @@
     
     // -------------------- العرض الرئيسي --------------------
     function renderApp() {
-        if (!currentUser) { document.getElementById('app').innerHTML = renderLogin(); return; }
+        const root = document.getElementById('app');
+        if (!currentUser) { root.innerHTML = renderLogin(); return; }
         let isAdmin = currentUser.role === 'admin';
-        document.getElementById('app').innerHTML = `
-        <div class="sidebar" id="sidebar"><div class="sidebar-header"><div class="logo"><i class="fas fa-cloud"></i> HR SYSTEM</div><div style="font-size:10px; opacity:0.7;">متزامن ☁️</div></div>
-            <div class="nav-item ${currentPage==='home'?'active':''}" data-page="home"><i class="fas fa-home"></i> الرئيسية</div>
-            <div class="nav-item ${currentPage==='guide'?'active':''}" data-page="guide"><i class="fas fa-book"></i> دليل الموظف</div>
-            <div class="nav-item ${currentPage==='org'?'active':''}" data-page="org"><i class="fas fa-building"></i> الهيكل التنظيمي</div>
-            <div class="nav-item ${currentPage==='company'?'active':''}" data-page="company"><i class="fas fa-flag-checkered"></i> عن الشركة</div>
-            <div class="nav-item ${currentPage==='performance'?'active':''}" data-page="performance"><i class="fas fa-chart-line"></i> تقييم الأداء</div>
-            <div class="nav-item ${currentPage==='notifications'?'active':''}" data-page="notifications"><i class="fas fa-bell"></i> الإشعارات</div>
-            <div class="nav-item ${currentPage==='profile'?'active':''}" data-page="profile"><i class="fas fa-user"></i> حسابي</div>
-            ${isAdmin ? `<div class="nav-item ${currentPage==='admin'?'active':''}" data-page="admin"><i class="fas fa-cog"></i> لوحة التحكم</div>` : ''}
-            <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</div>
-        </div>
-        <div class="main-content"><div class="top-bar"><button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button><div class="page-title">${getTitle()}</div><div class="avatar"><i class="fas fa-user"></i></div></div><div id="pageContent"></div></div>
-        <div class="ai-fab" id="aiFab" onclick="toggleAI()"><i class="fas fa-robot"></i></div>
-        <div class="ai-chat" id="aiChat"><div class="ai-header" onclick="toggleAI()"><i class="fas fa-robot"></i> المساعد الذكي <i class="fas fa-times" style="margin-right:auto;"></i></div><div class="ai-messages" id="aiMessages"></div><div class="ai-input-area"><input type="text" id="aiInput" placeholder="اسألني..." onkeypress="if(event.key==='Enter') askAI()"><button class="btn" style="width:auto; padding:8px 15px;" onclick="askAI()"><i class="fas fa-paper-plane"></i></button></div></div>`;
-        
+        let navItems = [
+          ['home','fa-home','الرئيسية'],['guide','fa-book-open','دليل الموظف'],
+          ['org','fa-sitemap','الهيكل التنظيمي'],['company','fa-building','عن المجموعة'],
+          ['performance','fa-chart-line','تقييم الأداء'],['notifications','fa-bell','الإشعارات'],
+          ['profile','fa-user-circle','حسابي']
+        ];
+        if(isAdmin) navItems.push(['admin','fa-cog','لوحة التحكم']);
+        let navHtml = navItems.map(([page,icon,label])=>`<div role="button" tabindex="0" class="nav-item ${currentPage===page?'active':''}" data-page="${page}"><i class="fas ${icon}"></i>${label}</div>`).join('');
+        root.innerHTML = `
+          <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
+          <aside class="sidebar" id="sidebar" aria-label="القائمة الرئيسية">
+            <div class="sidebar-header"><div class="brand"><div class="brand-mark"><i class="fas fa-spa"></i></div><div><div class="logo">مجموعة الخزامى</div><div class="brand-sub">بوابة الموارد البشرية</div></div></div></div>
+            <div class="sidebar-section">القائمة الرئيسية</div>
+            ${navHtml}
+            <div class="nav-divider"></div>
+            <a class="nav-item" href="${ATTENDANCE_URL}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><i class="fas fa-fingerprint"></i> منصة الحضور والانصراف <i class="fas fa-external-link-alt" style="font-size:9px;margin-right:auto"></i></a>
+            <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</div>
+            <div class="sidebar-foot"><i class="fas fa-info-circle"></i> الواجهة قيد التطوير. تتم إدارة بيانات الموارد البشرية في قاعدة التطبيق الحالية، ومنصة البصمة مستقلة.</div>
+          </aside>
+          <main class="main-content">
+            <div class="top-bar">
+              <div style="display:flex;align-items:center;gap:12px"><button class="menu-toggle" title="فتح القائمة" aria-label="فتح القائمة" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><div><div class="page-title">${getTitle()}</div><div class="page-subtitle">مجموعة الخزامى / الموارد البشرية</div></div></div>
+              <div class="top-actions"><span class="status-pill"><i class="fas fa-check-circle"></i> بوابة الموظف</span><button class="icon-btn" title="تغيير المظهر" aria-label="تغيير المظهر" onclick="toggleTheme()"><i class="theme-icon fas fa-adjust"></i></button><button class="icon-btn" title="الإشعارات" onclick="navigateTo('notifications')"><i class="fas fa-bell"></i></button><div class="avatar" title="${escapeHtml(currentUser?.name||'')}"><i class="fas fa-user"></i></div></div>
+            </div>
+            <div id="pageContent"></div>
+          </main>
+          <nav class="bottom-tabs" aria-label="التنقل السريع">
+            ${[['home','fa-home','الرئيسية'],['guide','fa-book-open','الدليل'],['performance','fa-chart-line','التقييم'],['profile','fa-user','حسابي']].map(([p,i,l])=>`<button class="bottom-tab ${currentPage===p?'active':''}" onclick="navigateTo('${p}')"><i class="fas ${i}"></i><span>${l}</span></button>`).join('')}
+            <button class="bottom-tab" onclick="toggleSidebar()"><i class="fas fa-th-large"></i><span>المزيد</span></button>
+          </nav>
+          <div class="ai-fab" id="aiFab" role="button" tabindex="0" title="المساعد" aria-label="فتح المساعد" onclick="toggleAI()"><i class="fas fa-robot"></i></div>
+          <div class="ai-chat" id="aiChat" role="dialog" aria-label="المساعد الذكي">
+            <div class="ai-header" onclick="toggleAI()"><i class="fas fa-robot"></i><span style="flex:1">مساعد الخزامى <small style="display:block;font-size:10px;font-weight:400;opacity:.85">مساعد معلومات الدليل</small></span><i class="fas fa-times"></i></div>
+            <div class="ai-messages" id="aiMessages"><div class="ai-note"><i class="fas fa-lightbulb"></i> أهلًا بك! اسألني عن السياسات والإجراءات والأسئلة الشائعة. إجاباتي مبنية على محتويات الدليل، وليست استشارة قانونية أو اتصالًا بنموذج ذكاء اصطناعي خارجي.</div></div>
+            <div class="ai-input-area"><input type="text" id="aiInput" placeholder="اكتب سؤالك هنا..." aria-label="سؤالك للمساعد" onkeypress="if(event.key==='Enter') askAI()"><button class="btn" aria-label="إرسال" onclick="askAI()"><i class="fas fa-paper-plane"></i></button></div>
+          </div>`;
         let pages = { home: renderHome, guide: renderGuide, org: renderOrg, company: renderCompany, performance: renderPerformance, notifications: renderNotifications, profile: renderProfile, admin: renderAdmin };
         document.getElementById('pageContent').innerHTML = (pages[currentPage] || renderHome)();
-        
-        document.querySelectorAll('.nav-item').forEach(el => { let page = el.dataset.page; if (page) el.onclick = () => { currentPage = page; renderApp(); }; });
+        document.querySelectorAll('.nav-item[data-page]').forEach(el => {
+          const page = el.dataset.page;
+          el.onclick = () => navigateTo(page);
+          el.onkeydown = e => {if(e.key==='Enter'||e.key===' '){e.preventDefault();navigateTo(page);}};
+        });
         window.askAI = askAI; window.toggleAI = toggleAI;
     }
-    
-    function getTitle() { let t={home:"الرئيسية",guide:"دليل الموظف",org:"الهيكل التنظيمي",company:"عن الشركة",performance:"تقييم الأداء",notifications:"الإشعارات",profile:"حسابي",admin:"لوحة التحكم"}; return t[currentPage]||"الرئيسية"; }
+
+    function getTitle() { let t={home:"الرئيسية",guide:"دليل الموظف",org:"الهيكل التنظيمي",company:"عن المجموعة",performance:"تقييم الأداء",notifications:"الإشعارات",profile:"حسابي",admin:"لوحة التحكم"}; return t[currentPage]||"الرئيسية"; }
     
     // -------------------- بدء التطبيق --------------------
     async function initApp() {
-        await loadAllFromCloud();
-        listenToFirebase();
-        let savedUser = sessionStorage.getItem('user');
-        if (savedUser) currentUser = JSON.parse(savedUser);
+        applyTheme();
+        const loaded = await loadAllFromCloud();
+        if(loaded) listenToFirebase();
+        try {
+            const savedId = sessionStorage.getItem('khozama-user-id');
+            if(savedId) currentUser = users.find(u => String(u.id) === savedId) || null;
+        } catch(e) { currentUser = null; }
         renderApp();
+        if(!loaded) showToast('تعذر تحميل بيانات السحابة أو لا توجد بيانات؛ لم نُغيّر أي بيانات.', true);
     }
-    
-    initApp();
+    applyTheme();
+    let __started = false;
+    function startAppOnce() {
+        if (__started) return;
+        __started = true;
+        initApp().catch(e => {
+            console.error('Khozama initialization error:', e);
+            renderApp();
+            showToast('حدث خطأ أثناء التحميل. لم يتم حفظ أو تغيير أي بيانات.',true);
+        });
+    }
+    if (window.khozamaFirebaseReady) startAppOnce();
+    else window.addEventListener('khozama:firebase-ready', startAppOnce, {once:true});
+    // في حال تعطل تحميل مكتبات Firebase، اعرض صفحة الدخول بدل البقاء على شاشة التحميل.
+    setTimeout(() => {
+        if (!__started) {
+            __started = true;
+            renderApp();
+            showToast('تعذر الاتصال بخدمة البيانات. تحقق من الشبكة والصلاحيات.',true);
+        }
+    }, 12000);
 </script>
 </body>
 </html>
